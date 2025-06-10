@@ -7,15 +7,15 @@ interface UserData {
   email: string;
   phone: string;
   surname: string;
-  role?: "farmer" | "exporter" | "analyst";
+  role: 'farmer' | 'exporter' | 'analyst' | string;
   region?: string;
-  token: string;
   // Add other user fields as needed
 }
 
 interface UserStoreState {
   user: UserData | null;
   token: string | null;
+  isAuthenticated: boolean; // Add this for easier checks in protected routes
   // The login action now explicitly takes the user data and the token separately
   login: (userData: UserData, userToken: string) => void;
   logout: () => void;
@@ -24,14 +24,25 @@ interface UserStoreState {
 const userStore = create<UserStoreState>((set) => ({
   user: null,
   token: null,
+  isAuthenticated: false, // Initial state
+
   login: (userData, userToken) => {
-    set({ user: userData, token: userToken });
+    set({
+      user: userData,
+      token: userToken,
+      isAuthenticated: true, // Set to true on successful login
+    });
     // You might want to save token to localStorage here as well
     localStorage.setItem('authToken', userToken);
-    localStorage.setItem('userData', JSON.stringify(userData));
+    localStorage.setItem('userData', JSON.stringify(userData)); // Stringify for localStorage
   },
+
   logout: () => {
-    set({ user: null, token: null });
+    set({
+      user: null,
+      token: null,
+      isAuthenticated: false, // Set to false on logout
+    });
     // Clear from localStorage
     localStorage.removeItem('authToken');
     localStorage.removeItem('userData');

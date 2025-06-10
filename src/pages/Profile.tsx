@@ -63,12 +63,12 @@ const Profile = () => {
           // Default profile data if none exists
           const defaultProfile = {
             id: "1",
-            name: "Sarah Johnson",
+            name: "Sarah",
             email: "sarah@gmail.uz",
             phone: "+998 90 123 45 67",
             role: "farmer",
             region: "tashkent",
-            organization: "Green Valley Agricultural Co.",
+            surname: "Johnson",
             joinDate: "2024-01-15",
             verified: true,
             rating: 4.8,

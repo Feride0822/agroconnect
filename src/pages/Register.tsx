@@ -59,7 +59,8 @@ const Register = () => {
       !formData.email ||
       !formData.password ||
       !formData.role ||
-      !formData.region
+      !formData.region ||
+      !formData.phone
     ) {
       setError("Please fill in all required fields");
       return false;
@@ -80,6 +81,11 @@ const Register = () => {
       setError("Please enter a valid email address");
       return false;
     }
+    const phoneRegex = /^\+?\d{9,15}$/; // Example: +998901234567 or 901234567
+    if (!phoneRegex.test(formData.phone)) {
+      setError("Please enter a valid phone number (9-15 digits, optional +).");
+      return false;
+    }
 
     return true;
   };
@@ -92,15 +98,58 @@ const Register = () => {
     setIsLoading(true);
     setError("");
 
-    axios.post(`${Base_Url}/users`, formData).then((res) => {
-      console.log(res.data, "user created");
+    try {
+      // 1. Check for existing user (email or phone) in CRUDCrud
+      // Fetch all users to check for uniqueness (basic, not scalable for real apps)
+      const existingUsersResponse = await axios.get(`${Base_Url}/users`);
+      const existingUsers = existingUsersResponse.data;
+
+      const isEmailTaken = existingUsers.some((u: any) => u.email === formData.email);
+      const isPhoneTaken = existingUsers.some((u: any) => u.phone === formData.phone);
+
+      if (isEmailTaken) {
+        setError("This email is already registered.");
+        setIsLoading(false);
+        return;
+      }
+      if (isPhoneTaken) {
+        setError("This phone number is already registered.");
+        setIsLoading(false);
+        return;
+      }
+
+      // 2. If unique, then POST the new user data to CRUDCrud
+      // We explicitly send the fields needed for the user object, and ensure 'phone' is there.
+      const res = await axios.post(`${Base_Url}/users`, {
+        name: formData.name,
+        surname: formData.surname,
+        email: formData.email,
+        password: formData.password, // WARNING: Storing plain text password is BAD for real apps!
+        role: formData.role,
+        region: formData.region,
+        phone: formData.phone,
+      });
+
+      console.log("Registration successful on CRUDCrud:", res.data);
       setSuccess(true);
-      setIsLoading(false);
-      navigate("/");
-    }).catch((err) => {
-      setIsLoading(false);
-      setError(err.message);
-    })
+
+      // Use a timeout before navigating to allow toast to be seen
+      setTimeout(() => {
+        navigate("/login"); // Navigate to login page after successful registration
+      }, 1500); // 1.5 seconds delay
+
+    } catch (err: any) {
+      console.error("Registration error:", err);
+      if (axios.isAxiosError(err) && err.response) {
+        setError(`Registration failed: ${err.response.status} - ${err.response.data?.message || err.message}`);
+        setError(`Registration failed: ${err.response.status}`);
+      } else {
+        setError(err.message || "An unexpected error occurred during registration.");
+        setError("Registration failed!");
+      }
+    } finally {
+      setIsLoading(false); // Ensure isLoading is always set to false
+    }
 
     // // Simulate API call
     // setTimeout(() => {

@@ -30,45 +30,97 @@ const Login = () => {
       position: "top-right",
     });
   };
+  interface CrudCrudUser {
+    _id: string; // CRUDCrud adds this automatically
+    email?: string;
+    phone?: string; // If you store phone as a separate field
+    password: string; // WARNING: Storing plain text password is BAD for real apps!
+    role: "farmer" | "exporter" | "analyst" | string;
+    name?: string;
+    surname?: string;
+    region?: string;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError(""); // Clear previous errors
 
     try {
-      const res = await axios.post(`${Base_Url}/login`, {
-        emailOrPhone,
-        password,
-      });
+      // 1. Fetch ALL "users" from CRUDCrud
+      // Replace 'users' with whatever resource name you use for users in CRUDCrud
+      const response = await axios.get<CrudCrudUser[]>(`${Base_Url}/users`);
+      const allCrudCrudUsers = response.data;
+      console.log("All users from CRUDCrud:", allCrudCrudUsers);
 
-      // Assuming your backend returns user data with a 'role' field
-      const { user, token } = res.data;
-      login(user, token);
+      // 2. Manually find the user based on emailOrPhone and password
+      const foundUser = allCrudCrudUsers.find(
+        (u) =>
+          (u.email === emailOrPhone || u.phone === emailOrPhone) && u.password === password
+      );
 
-      setIsLoading(false);
+      if (foundUser) {
+        // 3. Simulate a token (CRUDCrud doesn't provide one)
+        const mockToken = `crudcrud_mock_token_${foundUser._id}`; // Example mock token
 
-      // Determine the correct route based on the user's role
-      switch (user.role) {
-        case "farmer":
-          navigate("/statistics"); // Or a default farmer dashboard route
-          break;
-        case "exporter":
-          navigate("/farmers"); // Or a default exporter dashboard route
-          break;
-        case "analyst":
-          navigate("/dashboard"); // Or a default analyst dashboard route
-          break;
-        default:
-          navigate("/"); // Fallback for unknown roles or a general home page
-          break;
+        // 4. Transform CrudCrudUser to your userStore's expected User type
+        // Ensure your userStore.login expects an object like this:
+        const userForStore = {
+          id: foundUser._id, // Use CRUDCrud's _id as your user ID
+          email: foundUser.email,
+          role: foundUser.role,
+          name: foundUser.name || 'User', // Provide a default name if not present
+          // Add any other properties your userStore expects
+          phone: foundUser.phone, // If you store phone as a separate field
+          password: foundUser.password, 
+          surname: foundUser.surname,
+          region: foundUser.region,
+
+        };
+
+        // Basic validation before logging in
+        if (!userForStore.id || !userForStore.role) {
+            throw new Error("User data from CRUDCrud is incomplete (missing ID or role).");
+        }
+
+        login(userForStore, mockToken); // Log in to your user store
+
+        setIsLoading(false);
+        showToastMessage("Login successful!", "success");
+
+        // Determine the correct route based on the user's role
+        switch (userForStore.role) {
+          case "farmer":
+            navigate("/statistics");
+            break;
+          case "exporter":
+            navigate("/farmers");
+            break;
+          case "analyst":
+            navigate("/dashboard");
+            break;
+          default:
+            navigate("/");
+            break;
+        }
+      } else {
+        // No user found or password mismatch
+        setError("Invalid email/phone or password.");
+        showToastMessage("Invalid credentials", "error");
+        setIsLoading(false);
       }
-      showToastMessage("Login successful!", "success");
-    } catch (err) {
+    } catch (err: any) {
       setIsLoading(false);
-      showToastMessage("Invalid phone/email or password", "error");
-      console.error("Login error:", err); // Log the error for debugging
+      console.error("Login error during CRUDCrud fetch/process:", err);
+      if (axios.isAxiosError(err) && err.response) {
+        // Specific error from CRUDCrud (e.g., resource not found if /users is wrong)
+        setError(`API Error: ${err.response.status} - ${err.response.data || err.message}`);
+        showToastMessage(`API Error: ${err.response.status}`, "error");
+      } else {
+        setError(err.message || "An unexpected error occurred during login.");
+        showToastMessage("Login failed!", "error");
+      }
     }
-
     // // Simulate API call
     // setTimeout(() => {
     //   if (logenter === "demo@agroconnect.uz" && password === "demo123") {
