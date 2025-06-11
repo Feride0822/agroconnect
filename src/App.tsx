@@ -16,7 +16,8 @@ import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
-export const Base_Url = "https://crudcrud.com/api/a84d038489f541fea97be192b0b00d0a";
+export const Base_Url =
+  "https://crudcrud.com/api/a84d038489f541fea97be192b0b00d0a";
 // export const Base_Url = "http://example/api";
 const queryClient = new QueryClient();
 
@@ -31,33 +32,33 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            
-            {/* Farmer-only routes */}
-            <Route element={<ProtectedRoute allowedRoles={["farmer"]} />}>
+            <Route path="/news" element={<News />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route
+              element={
+                <ProtectedRoute
+                  allowedRoles={["farmer", "exporter", "analyst"]}
+                />
+              }
+            >
+              <Route path="/profile" element={<Profile />} />
+            </Route>
+            <Route
+              element={<ProtectedRoute allowedRoles={["farmer", "analyst"]} />}
+            >
               <Route path="/statistics" element={<Statistics />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/settings" element={<Settings />} />
-            </Route>
-            <Route element={<ProtectedRoute allowedRoles={["exporter"]} />}>
-              <Route path="/farmers" element={<Farmers />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/settings" element={<Settings />} />
-            </Route>
-            <Route element={<ProtectedRoute allowedRoles={["analyst"]} />}>
-              <Route path="/dashboard" element={<Statistics />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/settings" element={<Settings />} />
             </Route>
 
-            {/* <Route path="/" element={<Index />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/statistics" element={<Statistics />} />
-            <Route path="/farmers" element={<Farmers />} />
-            <Route path="/news" element={<News />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/settings" element={<Settings />} /> */}
+            <Route
+              element={<ProtectedRoute allowedRoles={["farmer"]} />}
+            ></Route>
+            <Route element={<ProtectedRoute allowedRoles={["exporter"]} />}>
+              <Route path="/farmers" element={<Farmers />} />
+            </Route>
+            <Route element={<ProtectedRoute allowedRoles={["analyst"]} />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+            </Route>
+
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

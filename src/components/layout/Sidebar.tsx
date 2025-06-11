@@ -40,7 +40,7 @@ const Sidebar = () => {
       ]
     : role === "analyst"
     ? [
-        { path: "/dashboard", label: "Dashboard", icon: BarChart3 },
+        { path: "/statistics", label: "Analytics", icon: BarChart3 },
         { path: "/profile", label: "Profile", icon: User },
         { path: "/settings", label: "Settings", icon: Settings },
       ]
@@ -50,6 +50,7 @@ const Sidebar = () => {
         { path: "/login", label: "Login", icon: LogIn },
         { path: "/register", label: "Register", icon: User },
         { path: "/news", label: "News", icon: BookOpen },
+        { path: "/settings", label: "Settings", icon: Settings },
       ];
 
   const sidebarClasses = cn(

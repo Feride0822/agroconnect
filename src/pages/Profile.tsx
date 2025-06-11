@@ -40,6 +40,8 @@ import {
   AlertCircle,
   Loader2,
 } from "lucide-react";
+import { Base_Url } from "@/App";
+import userStore from "@/store/UserStore";
 
 const Profile = () => {
   const { actualTheme } = useTheme();
@@ -51,45 +53,41 @@ const Profile = () => {
   const [saveStatus, setSaveStatus] = useState("idle");
   const [error, setError] = useState(null);
 
+  const { user } = userStore();
   // Load profile data on mount
   useEffect(() => {
-    const loadProfile = () => {
+    const fetchProfile = async () => {
+      setIsLoading(true);
       try {
-        const savedProfile = localStorage.getItem("agroconnect-user-profile");
-        if (savedProfile) {
-          const profileData = JSON.parse(savedProfile);
-          setProfile(profileData);
-        } else {
-          // Default profile data if none exists
-          const defaultProfile = {
-            id: "1",
-            name: "Sarah",
-            email: "sarah@gmail.uz",
-            phone: "+998 90 123 45 67",
-            role: "farmer",
-            region: "tashkent",
-            surname: "Johnson",
-            joinDate: "2024-01-15",
-            verified: true,
-            rating: 4.8,
-            completedTransactions: 32,
-            totalVolume: 1450,
-          };
-          setProfile(defaultProfile);
-          localStorage.setItem(
-            "agroconnect-user-profile",
-            JSON.stringify(defaultProfile),
-          );
+        if (!user?.email) {
+          throw new Error("No user email available from store");
         }
+        const response = await fetch(`${Base_Url}/users`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (!response.ok) {
+          throw new Error("Failed to fetch profile data");
+        }
+        const data = await response.json();
+        const matchedProfile = data.find((u) => u.email === user.email);
+        if (!matchedProfile) {
+          throw new Error("Profile not found for the current user");
+        }
+        if (!data || data.length === 0) {
+          throw new Error("No user profiles found");
+        }
+        setProfile(matchedProfile);
       } catch (error) {
-        console.error("Error loading profile:", error);
-        setError("Failed to load profile");
+        setError("Failed to fetch profile data");
+        console.log("Error fetching profile data:", error);
       } finally {
         setIsLoading(false);
       }
     };
-
-    loadProfile();
+    fetchProfile();
   }, []);
 
   const startEditing = () => {
@@ -150,7 +148,7 @@ const Profile = () => {
     phone: "",
     role: "",
     region: "",
-    organization: "",
+    surname: "",
   });
 
   // Initialize form data when profile loads
@@ -162,7 +160,7 @@ const Profile = () => {
         phone: profile.phone || "",
         role: profile.role || "",
         region: profile.region || "",
-        organization: profile.organization || "",
+        surname: profile.surname || "",
       });
     }
   }, [profile]);
@@ -176,7 +174,7 @@ const Profile = () => {
         phone: profile.phone || "",
         role: profile.role || "",
         region: profile.region || "",
-        organization: profile.organization || "",
+        surname: profile.surname || "",
       });
     }
   }, [profile, isEditing]);
@@ -189,7 +187,7 @@ const Profile = () => {
         phone: profile.phone || "",
         role: profile.role || "",
         region: profile.region || "",
-        organization: profile.organization || "",
+        surname: profile.surname || "",
       });
       startEditing();
     }
@@ -599,7 +597,11 @@ const Profile = () => {
                       actualTheme === "dark" ? "text-white" : "text-gray-900",
                     )}
                   >
-                    <img src="/AgroConnect 2.png" alt="Logo" className="w-8 h-8 mr-3"/>
+                    <img
+                      src="/AgroConnect 2.png"
+                      alt="Logo"
+                      className="w-8 h-8 mr-3"
+                    />
                     {/* <Leaf className="h-6 w-6 mr-2 text-green-500" /> */}
                     Personal Information
                     {saveStatus === "success" && (
@@ -667,7 +669,7 @@ const Profile = () => {
                             : "text-gray-700",
                         )}
                       >
-                        Full Name
+                        First Name
                       </Label>
                       <Input
                         id="name"
@@ -675,6 +677,34 @@ const Profile = () => {
                         disabled={!isEditing}
                         onChange={(e) =>
                           handleInputChange("name", e.target.value)
+                        }
+                        className={cn(
+                          "focus:ring-green-500 focus:border-green-500",
+                          actualTheme === "dark"
+                            ? "bg-gray-700 border-gray-600 text-white disabled:bg-gray-700/50 disabled:text-gray-400"
+                            : "bg-white border-gray-300 disabled:bg-gray-50 disabled:text-gray-500",
+                        )}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor="surname"
+                        className={cn(
+                          "font-medium",
+                          actualTheme === "dark"
+                            ? "text-gray-300"
+                            : "text-gray-700",
+                        )}
+                      >
+                        Last Name
+                      </Label>
+                      <Input
+                        id="surname"
+                        value={isEditing ? formData.surname : profile.surname}
+                        disabled={!isEditing}
+                        onChange={(e) =>
+                          handleInputChange("surname", e.target.value)
                         }
                         className={cn(
                           "focus:ring-green-500 focus:border-green-500",
@@ -732,38 +762,6 @@ const Profile = () => {
                         disabled={!isEditing}
                         onChange={(e) =>
                           handleInputChange("phone", e.target.value)
-                        }
-                        className={cn(
-                          "focus:ring-green-500 focus:border-green-500",
-                          actualTheme === "dark"
-                            ? "bg-gray-700 border-gray-600 text-white disabled:bg-gray-700/50 disabled:text-gray-400"
-                            : "bg-white border-gray-300 disabled:bg-gray-50 disabled:text-gray-500",
-                        )}
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label
-                        htmlFor="organization"
-                        className={cn(
-                          "font-medium",
-                          actualTheme === "dark"
-                            ? "text-gray-300"
-                            : "text-gray-700",
-                        )}
-                      >
-                        Organization
-                      </Label>
-                      <Input
-                        id="organization"
-                        value={
-                          isEditing
-                            ? formData.organization
-                            : profile.organization
-                        }
-                        disabled={!isEditing}
-                        onChange={(e) =>
-                          handleInputChange("organization", e.target.value)
                         }
                         className={cn(
                           "focus:ring-green-500 focus:border-green-500",
