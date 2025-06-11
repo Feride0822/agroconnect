@@ -92,11 +92,11 @@ const handleSubmit = async (e: React.FormEvent) => {
         navigate("/farmers");
         break;
       case "analyst":
-        navigate("/dashboard");
+        navigate("/statistics");
         break;
       default:
         // If no specific role or default 'user' role, go to a default page
-        navigate("/dashboard"); // or wherever you want default users to go
+        navigate("/home"); // or wherever you want default users to go
         break;
     }
 

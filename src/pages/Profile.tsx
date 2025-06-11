@@ -169,12 +169,12 @@ const Profile = () => {
   useEffect(() => {
     if (profile && isEditing) {
       setFormData({
-        name: profile.name || "",
+        name: profile.first_name || "",
         email: profile.email || "",
         phone: profile.phone || "",
         role: profile.role || "",
         region: profile.region || "",
-        surname: profile.surname || "",
+        surname: profile.last_name || "",
       });
     }
   }, [profile, isEditing]);
@@ -182,12 +182,12 @@ const Profile = () => {
   const handleEdit = () => {
     if (profile) {
       setFormData({
-        name: profile.name || "",
+        name: profile.first_name || "",
         email: profile.email || "",
         phone: profile.phone || "",
         role: profile.role || "",
         region: profile.region || "",
-        surname: profile.surname || "",
+        surname: profile.last_name || "",
       });
       startEditing();
     }
@@ -338,7 +338,7 @@ const Profile = () => {
                       src={profile.avatar || "/placeholder-user.jpg"}
                     />
                     <AvatarFallback className="text-2xl bg-green-500 text-white font-bold">
-                      {profile.name
+                      {profile.first_name
                         .split(" ")
                         .map((n) => n[0])
                         .join("")}
@@ -357,7 +357,7 @@ const Profile = () => {
                             : "text-gray-900",
                         )}
                       >
-                        {profile.name}
+                        {profile.first_name}
                       </h1>
                       <div className="flex flex-wrap items-center gap-3 mb-4">
                         <Badge className={getRoleBadge(profile.role).color}>

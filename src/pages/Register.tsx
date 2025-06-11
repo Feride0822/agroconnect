@@ -101,7 +101,7 @@ const Register = () => {
     try {
       // 1. Check for existing user (email or phone) in CRUDCrud
       // Fetch all users to check for uniqueness (basic, not scalable for real apps)
-      const existingUsersResponse = await axios.get(`${Base_Url}/users`);
+      const existingUsersResponse = await axios.get(`${Base_Url}/accounts/register/`);
       const existingUsers = existingUsersResponse.data;
 
       const isEmailTaken = existingUsers.some((u: any) => u.email === formData.email);
@@ -120,7 +120,7 @@ const Register = () => {
 
       // 2. If unique, then POST the new user data to CRUDCrud
       // We explicitly send the fields needed for the user object, and ensure 'phone' is there.
-      const res = await axios.post(`${Base_Url}/users`, {
+      const res = await axios.post(`${Base_Url}/accounts/register/`, {
         name: formData.name,
         surname: formData.surname,
         email: formData.email,
@@ -130,7 +130,7 @@ const Register = () => {
         phone: formData.phone,
       });
 
-      console.log("Registration successful on CRUDCrud:", res.data);
+      console.log("Registration successful on backend:", res.data);
       setSuccess(true);
 
       // Use a timeout before navigating to allow toast to be seen
