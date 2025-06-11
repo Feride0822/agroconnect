@@ -8,7 +8,7 @@
 // Configuration
 const API_CONFIG = {
   // Change these URLs based on your backend deployment
-  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api",
+  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:8000",
   timeout: 10000,
   retries: 3,
 };
@@ -305,7 +305,7 @@ class ApiClient {
    * Login user
    */
   async login(credentials: LoginRequest): Promise<ApiResponse<AuthResponse>> {
-    const response = await this.post<AuthResponse>("/auth/login", credentials);
+    const response = await this.post<AuthResponse>("/accounts/login", credentials);
 
     if (response.success && response.data?.token) {
       this.saveTokenToStorage(response.data.token);
@@ -320,7 +320,7 @@ class ApiClient {
   async register(
     userData: RegisterRequest,
   ): Promise<ApiResponse<AuthResponse>> {
-    const response = await this.post<AuthResponse>("/auth/register", userData);
+    const response = await this.post<AuthResponse>("/accounts/register", userData);
 
     if (response.success && response.data?.token) {
       this.saveTokenToStorage(response.data.token);
@@ -333,7 +333,7 @@ class ApiClient {
    * Logout user
    */
   async logout(): Promise<ApiResponse<void>> {
-    const response = await this.post<void>("/auth/logout");
+    const response = await this.post<void>("/accounts/logout");
     this.removeTokenFromStorage();
     return response;
   }
@@ -351,7 +351,7 @@ class ApiClient {
       };
     }
 
-    const response = await this.post<AuthResponse>("/auth/refresh", {
+    const response = await this.post<AuthResponse>("/accounts/token/refresh", {
       refreshToken,
     });
 
@@ -370,7 +370,7 @@ class ApiClient {
    * Get current user profile
    */
   async getCurrentUser(): Promise<ApiResponse<UserProfile>> {
-    return this.get<UserProfile>("/user/profile");
+    return this.get<UserProfile>("/accounts/profile");
   }
 
   /**
@@ -379,7 +379,7 @@ class ApiClient {
   async updateProfile(
     updates: UpdateProfileRequest,
   ): Promise<ApiResponse<UserProfile>> {
-    return this.put<UserProfile>("/user/profile", updates);
+    return this.put<UserProfile>("/accounts/profile", updates);
   }
 
   /**

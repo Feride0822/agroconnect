@@ -41,97 +41,93 @@ const Login = () => {
     region?: string;
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError(""); // Clear previous errors
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setIsLoading(true);
+  setError(""); // Clear previous errors
 
-    try {
-      // 1. Fetch ALL "users" from CRUDCrud
-      // Replace 'users' with whatever resource name you use for users in CRUDCrud
-      const response = await axios.get<CrudCrudUser[]>(`${Base_Url}/users`);
-      const allCrudCrudUsers = response.data;
-      console.log("All users from CRUDCrud:", allCrudCrudUsers);
+  try {
+    // Send login request to your Django API
+    const response = await axios.post(`${Base_Url}/accounts/login/`, {
+      login_field: emailOrPhone,  // This matches your Django serializer field name
+      password: password
+    });
 
-      // 2. Manually find the user based on emailOrPhone and password
-      const foundUser = allCrudCrudUsers.find(
-        (u) =>
-          (u.email === emailOrPhone || u.phone === emailOrPhone) && u.password === password
-      );
+    // Your Django API returns: { message, tokens: { refresh, access }, user }
+    const { tokens, user } = response.data;
 
-      if (foundUser) {
-        // 3. Simulate a token (CRUDCrud doesn't provide one)
-        const mockToken = `crudcrud_mock_token_${foundUser._id}`; // Example mock token
+    console.log("Login successful:", response.data);
 
-        // 4. Transform CrudCrudUser to your userStore's expected User type
-        // Ensure your userStore.login expects an object like this:
-        const userForStore = {
-          id: foundUser._id, // Use CRUDCrud's _id as your user ID
-          email: foundUser.email,
-          role: foundUser.role,
-          name: foundUser.name || 'User', // Provide a default name if not present
-          // Add any other properties your userStore expects
-          phone: foundUser.phone, // If you store phone as a separate field
-          password: foundUser.password, 
-          surname: foundUser.surname,
-          region: foundUser.region,
+    // Store the JWT tokens
+    localStorage.setItem('access_token', tokens.access);
+    localStorage.setItem('refresh_token', tokens.refresh);
 
-        };
+    // Transform the user data for your store
+    const userForStore = {
+      id: user.id,
+      email: user.email,
+      role: user.role || 'user', // Provide default role if missing
+      name: user.first_name || 'User',
+      surname: user.last_name || '',
+      phone: user.phone_number || '',
+      region: user.region || '',
+    };
 
-        // Basic validation before logging in
-        if (!userForStore.id || !userForStore.role) {
-            throw new Error("User data from CRUDCrud is incomplete (missing ID or role).");
-        }
-
-        login(userForStore, mockToken); // Log in to your user store
-
-        setIsLoading(false);
-        showToastMessage("Login successful!", "success");
-
-        // Determine the correct route based on the user's role
-        switch (userForStore.role) {
-          case "farmer":
-            navigate("/statistics");
-            break;
-          case "exporter":
-            navigate("/farmers");
-            break;
-          case "analyst":
-            navigate("/dashboard");
-            break;
-          default:
-            navigate("/");
-            break;
-        }
-      } else {
-        // No user found or password mismatch
-        setError("Invalid email/phone or password.");
-        showToastMessage("Invalid credentials", "error");
-        setIsLoading(false);
-      }
-    } catch (err: any) {
-      setIsLoading(false);
-      console.error("Login error during CRUDCrud fetch/process:", err);
-      if (axios.isAxiosError(err) && err.response) {
-        // Specific error from CRUDCrud (e.g., resource not found if /users is wrong)
-        setError(`API Error: ${err.response.status} - ${err.response.data || err.message}`);
-        showToastMessage(`API Error: ${err.response.status}`, "error");
-      } else {
-        setError(err.message || "An unexpected error occurred during login.");
-        showToastMessage("Login failed!", "error");
-      }
+    // Updated validation - only check for ID since we provide default role
+    if (!userForStore.id) {
+      throw new Error("User data from API is incomplete (missing user ID).");
     }
-    // // Simulate API call
-    // setTimeout(() => {
-    //   if (logenter === "demo@agroconnect.uz" && password === "demo123") {
-    //     // Successful login - navigate to dashboard
-    //     navigate("/dashboard");
-    //   } else {
-    //     setError("Invalid credentials. Try demo@agroconnect.uz / demo123");
-    //   }
-    //   setIsLoading(false);
-    // }, 1000);
-  };
+
+    login(userForStore, tokens.access); // Use the real JWT token
+
+    setIsLoading(false);
+    showToastMessage("Login successful!", "success");
+
+    // Navigate based on user role
+    switch (userForStore.role) {
+      case "farmer":
+        navigate("/statistics");
+        break;
+      case "exporter":
+        navigate("/farmers");
+        break;
+      case "analyst":
+        navigate("/dashboard");
+        break;
+      default:
+        // If no specific role or default 'user' role, go to a default page
+        navigate("/dashboard"); // or wherever you want default users to go
+        break;
+    }
+
+  } catch (err: any) {
+    setIsLoading(false);
+    console.error("Login error:", err);
+    
+    if (axios.isAxiosError(err) && err.response) {
+      const status = err.response.status;
+      const errorData = err.response.data;
+      
+      if (status === 400) {
+        // Handle validation errors from Django
+        if (errorData.non_field_errors) {
+          setError(errorData.non_field_errors[0]);
+        } else if (errorData.detail) {
+          setError(errorData.detail);
+        } else {
+          setError("Invalid credentials");
+        }
+        showToastMessage("Invalid credentials", "error");
+      } else {
+        setError(`API Error: ${status} - ${errorData.detail || err.message}`);
+        showToastMessage(`Login failed: ${status}`, "error");
+      }
+    } else {
+      setError(err.message || "Network error occurred");
+      showToastMessage("Login failed!", "error");
+    }
+  }
+};
 
   return (
     <div

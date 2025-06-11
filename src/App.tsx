@@ -17,7 +17,7 @@ import NotFound from "./pages/NotFound";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 export const Base_Url =
-  "https://crudcrud.com/api/a84d038489f541fea97be192b0b00d0a";
+  "http://localhost:8000";
 // export const Base_Url = "http://example/api";
 const queryClient = new QueryClient();
 
