@@ -374,22 +374,7 @@ const Profile = () => {
                     </div>
 
                     <div className="flex items-center space-x-8">
-                      <div className="text-center">
-                        <div className="flex items-center space-x-1 mb-1">
-                          <Star className="h-5 w-5 text-yellow-500 fill-current" />
-                          <span
-                            className={cn(
-                              "font-bold text-xl",
-                              actualTheme === "dark"
-                                ? "text-white"
-                                : "text-gray-900",
-                            )}
-                          >
-                            {profile.rating}
-                          </span>
-                        </div>
-                        <p className="text-green-500 text-sm">Rating</p>
-                      </div>
+                      
                       <div className="text-center">
                         <p
                           className={cn(
