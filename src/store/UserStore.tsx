@@ -3,12 +3,13 @@ import { persist } from "zustand/middleware";
 
 // Define the user type and store interface
 interface UserData {
-  name: string;
+  first_name: string;
   email: string;
-  phone: string;
-  surname: string;
+  phone_number: string;
+  last_name: string;
   role: 'farmer' | 'exporter' | 'analyst' | string;
   region?: string;
+  re_password: string;
   // Add other user fields as needed
 }
 

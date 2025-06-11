@@ -16,8 +16,7 @@ import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
-export const Base_Url =
-  "http://localhost:8000";
+export const Base_Url = "http://192.168.16.123:8000";
 // export const Base_Url = "http://example/api";
 const queryClient = new QueryClient();
 

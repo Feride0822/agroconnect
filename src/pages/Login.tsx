@@ -33,12 +33,13 @@ const Login = () => {
   interface CrudCrudUser {
     _id: string; // CRUDCrud adds this automatically
     email?: string;
-    phone?: string; // If you store phone as a separate field
+    phone_number?: string; // If you store phone as a separate field
     password: string; // WARNING: Storing plain text password is BAD for real apps!
     role: "farmer" | "exporter" | "analyst" | string;
-    name?: string;
-    surname?: string;
+    first_name?: string;
+    last_name?: string;
     region?: string;
+    re_password: string;
   }
 
 const handleSubmit = async (e: React.FormEvent) => {
@@ -67,10 +68,12 @@ const handleSubmit = async (e: React.FormEvent) => {
       id: user.id,
       email: user.email,
       role: user.role || 'user', // Provide default role if missing
-      name: user.first_name || 'User',
-      surname: user.last_name || '',
-      phone: user.phone_number || '',
+      first_name: user.first_name || 'User',
+      last_name: user.last_name || '',
+      phone_number: user.phone_number || '',
       region: user.region || '',
+      re_password: user.re_password || '', // You might not need this
+
     };
 
     // Updated validation - only check for ID since we provide default role
@@ -83,22 +86,7 @@ const handleSubmit = async (e: React.FormEvent) => {
     setIsLoading(false);
     showToastMessage("Login successful!", "success");
 
-    // Navigate based on user role
-    switch (userForStore.role) {
-      case "farmer":
-        navigate("/statistics");
-        break;
-      case "exporter":
-        navigate("/farmers");
-        break;
-      case "analyst":
-        navigate("/statistics");
-        break;
-      default:
-        // If no specific role or default 'user' role, go to a default page
-        navigate("/home"); // or wherever you want default users to go
-        break;
-    }
+    navigate("/dashboard");
 
   } catch (err: any) {
     setIsLoading(false);
