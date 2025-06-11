@@ -44,8 +44,9 @@ const Login = () => {
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   setIsLoading(true);
-  setError(""); // Clear previous errors
+  setError(""); 
 
+  
   try {
     // Send login request to your Django API
     const response = await axios.post(`${Base_Url}/accounts/login/`, {
