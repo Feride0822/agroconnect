@@ -210,14 +210,14 @@ const Profile = () => {
 
   const getRoleBadge = (role: string) => {
     const roleConfig = {
-      farmer: { label: "Farmer", color: "bg-green-500 text-white border-0" },
-      exporter: { label: "Exporter", color: "bg-blue-500 text-white border-0" },
-      analyst: {
+      Farmers: { label: "Farmer", color: "bg-green-500 text-white border-0" },
+      Exporters: { label: "Exporter", color: "bg-blue-500 text-white border-0" },
+      Analysts: {
         label: "Market Analyst",
         color: "bg-purple-500 text-white border-0",
       },
     };
-    return roleConfig[role as keyof typeof roleConfig] || roleConfig.farmer;
+    return roleConfig[role as keyof typeof roleConfig] || roleConfig.Farmers;
   };
 
   // Show loading state
@@ -787,9 +787,9 @@ const Profile = () => {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="farmer">Farmer</SelectItem>
-                          <SelectItem value="exporter">Exporter</SelectItem>
-                          <SelectItem value="analyst">
+                          <SelectItem value="Farmers">Farmer</SelectItem>
+                          <SelectItem value="Exporters">Exporter</SelectItem>
+                          <SelectItem value="Analysts">
                             Market Analyst
                           </SelectItem>
                         </SelectContent>

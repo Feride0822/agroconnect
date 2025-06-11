@@ -557,9 +557,9 @@ const Register = () => {
                         <SelectValue placeholder="Select your role" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="farmer">Farmer</SelectItem>
-                        <SelectItem value="exporter">Exporter</SelectItem>
-                        <SelectItem value="analyst">Market Analyst</SelectItem>
+                        <SelectItem value="Farmers">Farmer</SelectItem>
+                        <SelectItem value="Exporters">Exporter</SelectItem>
+                        <SelectItem value="Analysts">Market Analyst</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>

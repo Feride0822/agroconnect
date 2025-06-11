@@ -12,8 +12,8 @@ import { Leaf, Eye, EyeOff, AlertCircle, Sprout } from "lucide-react";
 import userStore from "@/store/UserStore";
 import axios from "axios";
 import { Base_Url } from "@/App";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const { actualTheme } = useTheme();
@@ -35,89 +35,85 @@ const Login = () => {
     email?: string;
     phone_number?: string; // If you store phone as a separate field
     password: string; // WARNING: Storing plain text password is BAD for real apps!
-    role: "farmer" | "exporter" | "analyst" | string;
+    role: "Farmers" | "Exporters" | "Analysts" | string;
     first_name?: string;
     last_name?: string;
     region?: string;
     re_password: string;
   }
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setIsLoading(true);
-  setError(""); // Clear previous errors
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(""); // Clear previous errors
 
-  try {
-    // Send login request to your Django API
-    const response = await axios.post(`${Base_Url}/accounts/login/`, {
-      login_field: emailOrPhone,  // This matches your Django serializer field name
-      password: password
-    });
+    try {
+      // Send login request to your Django API
+      const response = await axios.post(`${Base_Url}/accounts/login/`, {
+        login_field: emailOrPhone, // This matches your Django serializer field name
+        password: password,
+      });
 
-    // Your Django API returns: { message, tokens: { refresh, access }, user }
-    const { tokens, user } = response.data;
+      // Your Django API returns: { message, tokens: { refresh, access }, user }
+      const { tokens, user } = response.data;
 
-    console.log("Login successful:", response.data);
+      console.log("Login successful:", response.data);
 
-    // Store the JWT tokens
-    localStorage.setItem('access_token', tokens.access);
-    localStorage.setItem('refresh_token', tokens.refresh);
+      // Store the JWT tokens
+      localStorage.setItem("access_token", tokens.access);
+      localStorage.setItem("refresh_token", tokens.refresh);
 
-    // Transform the user data for your store
-    const userForStore = {
-      id: user.id,
-      email: user.email,
-      role: user.role || 'user', // Provide default role if missing
-      first_name: user.first_name || 'User',
-      last_name: user.last_name || '',
-      phone_number: user.phone_number || '',
-      region: user.region || '',
-      re_password: user.re_password || '', // You might not need this
+      // Transform the user data for your store
+      const userForStore = {
+        id: user.id,
+        email: user.email,
+        role: user.role || "user", // Provide default role if missing
+        first_name: user.first_name || "User",
+        last_name: user.last_name || "",
+        phone_number: user.phone_number || "",
+        region: user.region || "",
+        re_password: user.re_password || "", // You might not need this
+      };
 
-    };
-
-    // Updated validation - only check for ID since we provide default role
-    if (!userForStore.id) {
-      throw new Error("User data from API is incomplete (missing user ID).");
-    }
-
-    login(userForStore, tokens.access); // Use the real JWT token
-
-    setIsLoading(false);
-    showToastMessage("Login successful!", "success");
-
-    navigate("/dashboard");
-
-    
-
-  } catch (err: any) {
-    setIsLoading(false);
-    console.error("Login error:", err);
-    
-    if (axios.isAxiosError(err) && err.response) {
-      const status = err.response.status;
-      const errorData = err.response.data;
-      
-      if (status === 400) {
-        // Handle validation errors from Django
-        if (errorData.non_field_errors) {
-          setError(errorData.non_field_errors[0]);
-        } else if (errorData.detail) {
-          setError(errorData.detail);
-        } else {
-          setError("Invalid credentials");
-        }
-        showToastMessage("Invalid credentials", "error");
-      } else {
-        setError(`API Error: ${status} - ${errorData.detail || err.message}`);
-        showToastMessage(`Login failed: ${status}`, "error");
+      // Updated validation - only check for ID since we provide default role
+      if (!userForStore.id) {
+        throw new Error("User data from API is incomplete (missing user ID).");
       }
-    } else {
-      setError(err.message || "Network error occurred");
-      showToastMessage("Login failed!", "error");
+
+      login(userForStore, tokens.access); // Use the real JWT token
+
+      setIsLoading(false);
+      showToastMessage("Login successful!", "success");
+
+      navigate("/dashboard");
+    } catch (err: any) {
+      setIsLoading(false);
+      console.error("Login error:", err);
+
+      if (axios.isAxiosError(err) && err.response) {
+        const status = err.response.status;
+        const errorData = err.response.data;
+
+        if (status === 400) {
+          // Handle validation errors from Django
+          if (errorData.non_field_errors) {
+            setError(errorData.non_field_errors[0]);
+          } else if (errorData.detail) {
+            setError(errorData.detail);
+          } else {
+            setError("Invalid credentials");
+          }
+          showToastMessage("Invalid credentials", "error");
+        } else {
+          setError(`API Error: ${status} - ${errorData.detail || err.message}`);
+          showToastMessage(`Login failed: ${status}`, "error");
+        }
+      } else {
+        setError(err.message || "Network error occurred");
+        showToastMessage("Login failed!", "error");
+      }
     }
-  }
-};
+  };
 
   return (
     <div
@@ -137,7 +133,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                 <div className="absolute inset-0 bg-green-500 rounded-xl blur opacity-75 group-hover:opacity-100 transition-opacity"></div>
                 <div className="relative flex items-center justify-center w-16 h-16 bg-green-500 rounded-xl">
                   {/* <Leaf className="h-8 w-8 text-white" /> */}
-                  <img src="/AgroConnect 3.png" alt="Logo"/>
+                  <img src="/AgroConnect 3.png" alt="Logo" />
                 </div>
               </div>
               <div className="flex flex-col">
@@ -422,7 +418,7 @@ const handleSubmit = async (e: React.FormEvent) => {
           </div>
         </div>
       </div>
-      <ToastContainer/>
+      <ToastContainer />
     </div>
   );
 };

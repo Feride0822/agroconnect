@@ -36,27 +36,27 @@ const App = () => (
             <Route
               element={
                 <ProtectedRoute
-                  allowedRoles={["farmer", "exporter", "analyst"]}
+                  allowedRoles={["Farmers", "Exporters", "Analysts"]}
                 />
               }
             >
               <Route path="/profile" element={<Profile />} />
             </Route>
             <Route
-              element={<ProtectedRoute allowedRoles={["farmer", "analyst"]} />}
+              element={
+                <ProtectedRoute allowedRoles={["Farmers", "Analysts"]} />
+              }
             >
               <Route path="/statistics" element={<Statistics />} />
             </Route>
 
-            <Route
-              element={<ProtectedRoute allowedRoles={["farmer"]} />}
-            >
+            <Route element={<ProtectedRoute allowedRoles={["Farmers"]} />}>
               <Route path="/dashboard" element={<Dashboard />} />
             </Route>
-            <Route element={<ProtectedRoute allowedRoles={["exporter"]} />}>
+            <Route element={<ProtectedRoute allowedRoles={["Exporters"]} />}>
               <Route path="/farmers" element={<Farmers />} />
             </Route>
-            <Route element={<ProtectedRoute allowedRoles={["analyst"]} />}>
+            <Route element={<ProtectedRoute allowedRoles={["Analysts"]} />}>
               <Route path="/dashboard" element={<Dashboard />} />
             </Route>
 

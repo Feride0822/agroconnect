@@ -383,7 +383,11 @@ const Dashboard = () => {
                   actualTheme === "dark" ? "text-white" : "text-gray-900",
                 )}
               >
-                <img src="/AgroConnect 2.png" alt="Logo" className="h-8 w-8 mr-3"/>
+                <img
+                  src="/AgroConnect 2.png"
+                  alt="Logo"
+                  className="h-8 w-8 mr-3"
+                />
                 {/* <Leaf className="h-6 w-6 mr-3 text-green-500" /> */}
                 Regional Performance Overview
               </CardTitle>

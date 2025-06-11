@@ -7,7 +7,7 @@ interface UserData {
   email: string;
   phone_number: string;
   last_name: string;
-  role: 'farmer' | 'exporter' | 'analyst' | string;
+  role: "Farmers" | "Exporters" | "Analysts" | string;
   region?: string;
   re_password: string;
   // Add other user fields as needed
@@ -34,8 +34,8 @@ const userStore = create<UserStoreState>((set) => ({
       isAuthenticated: true, // Set to true on successful login
     });
     // You might want to save token to localStorage here as well
-    localStorage.setItem('authToken', userToken);
-    localStorage.setItem('userData', JSON.stringify(userData)); // Stringify for localStorage
+    localStorage.setItem("authToken", userToken);
+    localStorage.setItem("userData", JSON.stringify(userData)); // Stringify for localStorage
   },
 
   logout: () => {
@@ -45,8 +45,8 @@ const userStore = create<UserStoreState>((set) => ({
       isAuthenticated: false, // Set to false on logout
     });
     // Clear from localStorage
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('userData');
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userData");
   },
 }));
 
