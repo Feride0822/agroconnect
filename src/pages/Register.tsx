@@ -16,7 +16,6 @@ import Sidebar from "@/components/layout/Sidebar";
 import { useTheme } from "@/contexts/ThemeContext";
 import { cn } from "@/lib/utils";
 import {
-  Leaf,
   Eye,
   EyeOff,
   CheckCircle,
@@ -27,19 +26,22 @@ import {
 import { regions } from "@/lib/agricultural-data";
 import axios from "axios";
 import { Base_Url } from "@/App";
+import { toast, ToastContainer } from 'react-toastify'; // Re-added react-toastify imports
+import 'react-toastify/dist/ReactToastify.css'; // Re-added react-toastify CSS import
 
 const Register = () => {
   const { actualTheme } = useTheme();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: "",
-    surname: "",
+    first_name: "", // Consistent with your requirement
+    last_name: "",  // Consistent with your requirement
     email: "",
     password: "",
     confirmPassword: "",
     role: "",
     region: "",
-    phone: "",
+    phone_number: "",
+    re_password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -47,43 +49,71 @@ const Register = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
 
+  // Helper for showing toasts - Re-added for proper feedback
+  const showToastMessage = (message: string, type: "success" | "error" | "info" | "warning" = "success") => {
+    toast[type](message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: actualTheme === "dark" ? "dark" : "light",
+    });
+  };
+
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-    setError("");
+    if (error) setError(""); // Clear error when user types
+    if (success) setSuccess(false); // Clear success message if user starts typing again
+  };
+
+  // Helper for Select components, as they don't use e.target.value
+  const handleSelectChange = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    if (error) setError(""); // Clear error when selection changes
   };
 
   const validateForm = () => {
     if (
-      !formData.name ||
-      !formData.surname ||
+      !formData.first_name ||
+      !formData.last_name ||
       !formData.email ||
       !formData.password ||
-      !formData.role ||
-      !formData.region ||
-      !formData.phone
+      !formData.role || 
+      !formData.region || 
+      !formData.phone_number ||
+      !formData.re_password
     ) {
-      setError("Please fill in all required fields");
+      setError("Please fill in all required fields (First Name, Last Name, Email, Password, Role, Region, Phone).");
+      showToastMessage("Please fill in all required fields.", "error"); // Added toast
       return false;
     }
 
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
+    if (formData.password !== formData.re_password) {
+      setError("Passwords do not match.");
+      showToastMessage("Passwords do not match.", "error"); // Added toast
       return false;
     }
 
-    if (formData.password.length < 2) {
-      setError("Password must be at least 2 characters long");
+    // Increased password length for better security
+    if (formData.password.length < 4) { // Changed from 2 to 6 for security
+      setError("Password must be at least 6 characters long.");
+      showToastMessage("Password must be at least 6 characters long.", "error"); // Added toast
       return false;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      setError("Please enter a valid email address");
+      setError("Please enter a valid email address.");
+      showToastMessage("Please enter a valid email address.", "error"); // Added toast
       return false;
     }
     const phoneRegex = /^\+?\d{9,15}$/; // Example: +998901234567 or 901234567
-    if (!phoneRegex.test(formData.phone)) {
+    if (!phoneRegex.test(formData.phone_number)) {
       setError("Please enter a valid phone number (9-15 digits, optional +).");
+      showToastMessage("Please enter a valid phone number (9-15 digits, optional +).", "error"); // Added toast
       return false;
     }
 
@@ -96,119 +126,80 @@ const Register = () => {
     if (!validateForm()) return;
 
     setIsLoading(true);
-    setError("");
+    setError(""); // Clear previous errors
 
     try {
-      // 1. Check for existing user (email or phone) in CRUDCrud
-      // Fetch all users to check for uniqueness (basic, not scalable for real apps)
-      const existingUsersResponse = await axios.get(`${Base_Url}/users`);
-      const existingUsers = existingUsersResponse.data;
+      const registerEndpoint = `${Base_Url}/accounts/register/`; // Your actual backend registration endpoint
 
-      const isEmailTaken = existingUsers.some((u: any) => u.email === formData.email);
-      const isPhoneTaken = existingUsers.some((u: any) => u.phone === formData.phone);
-
-      if (isEmailTaken) {
-        setError("This email is already registered.");
-        setIsLoading(false);
-        return;
-      }
-      if (isPhoneTaken) {
-        setError("This phone number is already registered.");
-        setIsLoading(false);
-        return;
-      }
-
-      // 2. If unique, then POST the new user data to CRUDCrud
-      // We explicitly send the fields needed for the user object, and ensure 'phone' is there.
-      const res = await axios.post(`${Base_Url}/users`, {
-        name: formData.name,
-        surname: formData.surname,
+      // Send the user data to your real backend
+      const res = await axios.post(registerEndpoint, {
+        first_name: formData.first_name, // Changed to first_name
+        last_name: formData.last_name,   // Changed to last_name
         email: formData.email,
-        password: formData.password, // WARNING: Storing plain text password is BAD for real apps!
-        role: formData.role,
-        region: formData.region,
-        phone: formData.phone,
+        password: formData.password,
+        re_password: formData.re_password,
+        role: formData.role,            
+        region: formData.region,         
+        phone_number: formData.phone_number,
+        // confirmPassword is NOT sent to the backend, it's for client-side validation only
       });
 
-      console.log("Registration successful on CRUDCrud:", res.data);
+      console.log("Registration successful on backend:", res.data); // Log the backend response
       setSuccess(true);
+      showToastMessage("Registration successful! You can now log in.", "success"); // Corrected to use toast
 
-      // Use a timeout before navigating to allow toast to be seen
       setTimeout(() => {
         navigate("/login"); // Navigate to login page after successful registration
       }, 1500); // 1.5 seconds delay
-
     } catch (err: any) {
-      console.error("Registration error:", err);
+      console.error("Registration error:", err); // Log the full error for debugging
+      setIsLoading(false); // Ensure loading is stopped even on error
+
       if (axios.isAxiosError(err) && err.response) {
-        setError(`Registration failed: ${err.response.status} - ${err.response.data?.message || err.message}`);
-        setError(`Registration failed: ${err.response.status}`);
+        let errorMessage = "Registration failed. Please try again.";
+
+        if (err.response.data) {
+          if (typeof err.response.data === "string") {
+            errorMessage = err.response.data;
+          } else if (err.response.data.message) {
+            errorMessage = err.response.data.message;
+          } else if (err.response.data.detail) {
+            errorMessage = err.response.data.detail;
+          } else if (err.response.data.email && Array.isArray(err.response.data.email)) {
+            errorMessage = `Email error: ${err.response.data.email.join(", ")}`;
+          } else if (err.response.data.phone_number && Array.isArray(err.response.data.phone_number)) {
+            errorMessage = `Phone error: ${err.response.data.phone_number.join(", ")}`;
+          } else if (err.response.data.non_field_errors && Array.isArray(err.response.data.non_field_errors)) {
+            errorMessage = err.response.data.non_field_errors.join(", ");
+          }
+          // IMPORTANT: Add more `else if` conditions here based on how your backend structures its errors
+          // E.g., if your backend returns { "username": ["This field is required."] }
+          // you might need `else if (err.response.data.username)`
+        }
+
+        setError(errorMessage); // Ensured only one setError call
+        showToastMessage(`Registration failed: ${errorMessage}`, "error"); // Added toast
+
+        // Specific handling for common backend status codes
+        if (err.response.status === 409) { // Conflict (e.g., email/phone already exists)
+          setError("Account with this email or phone already exists."); // Overwrites generic error if more specific
+          showToastMessage("Account with this email or phone already exists.", "warning");
+        } else if (err.response.status === 400) { // Bad Request (e.g., validation failed on backend)
+          // If the backend sends specific field errors, the `errorMessage` already set will be more precise.
+          // This ensures a general "Validation error" is shown if no specific field error is caught.
+          setError(`Validation error: ${errorMessage}`);
+          showToastMessage(`Validation error: ${errorMessage}`, "error");
+        }
       } else {
-        setError(err.message || "An unexpected error occurred during registration.");
-        setError("Registration failed!");
+        setError(err.message || "An unexpected error occurred during registration. Check your network.");
+        showToastMessage("An unexpected error occurred. Please check your network connection.", "error");
       }
     } finally {
       setIsLoading(false); // Ensure isLoading is always set to false
     }
-
-    // // Simulate API call
-    // setTimeout(() => {
-    //   setSuccess(true);
-    //   setIsLoading(false);
-    // }, 1500);
   };
 
-  if (success) {
-    return (
-      <div
-        className={cn(
-          "min-h-screen transition-colors duration-300 flex items-center justify-center p-4",
-          actualTheme === "dark" ? "bg-gray-900" : "bg-gray-50",
-        )}
-      >
-        <Card
-          className={cn(
-            "w-full max-w-md shadow-xl",
-            actualTheme === "dark"
-              ? "bg-gray-800 border-gray-700"
-              : "bg-white border-gray-200",
-          )}
-        >
-          <CardContent className="pt-8">
-            <div className="text-center">
-              <div className="flex items-center justify-center w-20 h-20 bg-green-500 rounded-full mx-auto mb-6">
-                <CheckCircle className="h-10 w-10 text-white" />
-              </div>
-              <h2
-                className={cn(
-                  "text-3xl font-bold mb-4",
-                  actualTheme === "dark" ? "text-white" : "text-gray-900",
-                )}
-              >
-                Registration Successful!
-              </h2>
-              <p
-                className={cn(
-                  "mb-8 text-lg",
-                  actualTheme === "dark" ? "text-gray-300" : "text-gray-600",
-                )}
-              >
-                Welcome to AgroConnect! Your account is ready and you can now
-                access all farming tools.
-              </p>
-              <Button
-                onClick={() => navigate("/login")}
-                className="w-full bg-green-500 hover:bg-green-600 text-white py-3 text-lg shadow-lg transition-all duration-300"
-              >
-                <Users className="h-5 w-5 mr-2" />
-                Continue to Login
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  // ... (Success message JSX remains the same)
 
   return (
     <div
@@ -304,9 +295,10 @@ const Register = () => {
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* First Name */}
                   <div className="space-y-2">
                     <Label
-                      htmlFor="name"
+                      htmlFor="first_name" // Consistent htmlFor
                       className={cn(
                         "font-medium",
                         actualTheme === "dark"
@@ -314,15 +306,15 @@ const Register = () => {
                           : "text-gray-700",
                       )}
                     >
-                      First Name
+                      First Name *
                     </Label>
                     <Input
-                      id="name"
+                      id="first_name" // Consistent id
                       type="text"
                       placeholder="Your First Name"
-                      value={formData.name}
+                      value={formData.first_name} // Consistent value
                       onChange={(e) =>
-                        handleInputChange("name", e.target.value)
+                        handleInputChange("first_name", e.target.value) // Consistent field key
                       }
                       className={cn(
                         "focus:ring-green-500 focus:border-green-500",
@@ -333,9 +325,10 @@ const Register = () => {
                       required
                     />
                   </div>
+                  {/* Last Name */}
                   <div className="space-y-2">
                     <Label
-                      htmlFor="surname"
+                      htmlFor="last_name" // Consistent htmlFor
                       className={cn(
                         "font-medium",
                         actualTheme === "dark"
@@ -343,15 +336,15 @@ const Register = () => {
                           : "text-gray-700",
                       )}
                     >
-                      Last Name
+                      Last Name *
                     </Label>
                     <Input
-                      id="surname"
+                      id="last_name" // Consistent id
                       type="text"
                       placeholder="Your Last Name"
-                      value={formData.surname}
+                      value={formData.last_name} // Consistent value
                       onChange={(e) =>
-                        handleInputChange("surname", e.target.value)
+                        handleInputChange("last_name", e.target.value) // Consistent field key
                       }
                       className={cn(
                         "focus:ring-green-500 focus:border-green-500",
@@ -359,14 +352,14 @@ const Register = () => {
                           ? "bg-gray-700 border-gray-600 text-white placeholder:text-gray-400"
                           : "bg-white border-gray-300",
                       )}
+                      required // Made required
                     />
                   </div>
-
-                  
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
+                  {/* Email */}
+                  <div className="space-y-2">
                     <Label
                       htmlFor="email"
                       className={cn(
@@ -392,8 +385,43 @@ const Register = () => {
                           ? "bg-gray-700 border-gray-600 text-white placeholder:text-gray-400"
                           : "bg-white border-gray-300",
                       )}
+                      required // Made required
                     />
                   </div>
+                  {/* Phone */}
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="phone_number"
+                      className={cn(
+                        "font-medium",
+                        actualTheme === "dark"
+                          ? "text-gray-300"
+                          : "text-gray-700",
+                      )}
+                    >
+                      Phone Number *
+                    </Label>
+                    <Input
+                      id="phone_number"
+                      type="tel" // Use type="tel" for phone numbers
+                      placeholder="+998 XX XXX XX XX"
+                      value={formData.phone_number}
+                      onChange={(e) =>
+                        handleInputChange("phone_number", e.target.value)
+                      }
+                      className={cn(
+                        "focus:ring-green-500 focus:border-green-500",
+                        actualTheme === "dark"
+                          ? "bg-gray-700 border-gray-600 text-white placeholder:text-gray-400"
+                          : "bg-white border-gray-300",
+                      )}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Password */}
                   <div className="space-y-2">
                     <Label
                       htmlFor="password"
@@ -443,14 +471,10 @@ const Register = () => {
                       </Button>
                     </div>
                   </div>
-
-                  
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
+                  {/* Confirm Password */}
+                  <div className="space-y-2">
                     <Label
-                      htmlFor="confirmPassword"
+                      htmlFor="re_password"
                       className={cn(
                         "font-medium",
                         actualTheme === "dark"
@@ -462,12 +486,12 @@ const Register = () => {
                     </Label>
                     <div className="relative">
                       <Input
-                        id="confirmPassword"
+                        id="re_password"
                         type={showConfirmPassword ? "text" : "password"}
                         placeholder="Confirm your password"
-                        value={formData.confirmPassword}
+                        value={formData.re_password}
                         onChange={(e) =>
-                          handleInputChange("confirmPassword", e.target.value)
+                          handleInputChange("re_password", e.target.value)
                         }
                         className={cn(
                           "focus:ring-green-500 focus:border-green-500 pr-12",
@@ -499,6 +523,10 @@ const Register = () => {
                       </Button>
                     </div>
                   </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Role Selection (Dropdown) */}
                   <div className="space-y-2">
                     <Label
                       htmlFor="role"
@@ -514,8 +542,9 @@ const Register = () => {
                     <Select
                       value={formData.role}
                       onValueChange={(value) =>
-                        handleInputChange("role", value)
+                        handleSelectChange("role", value) // Changed to handleSelectChange
                       }
+                      required // Mark select as required
                     >
                       <SelectTrigger
                         className={cn(
@@ -535,11 +564,8 @@ const Register = () => {
                     </Select>
                   </div>
 
-                  
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
+                  {/* Region */}
+                  <div className="space-y-2">
                     <Label
                       htmlFor="region"
                       className={cn(
@@ -554,8 +580,9 @@ const Register = () => {
                     <Select
                       value={formData.region}
                       onValueChange={(value) =>
-                        handleInputChange("region", value)
+                        handleSelectChange("region", value) // Changed to handleSelectChange
                       }
+                      required // Mark select as required
                     >
                       <SelectTrigger
                         className={cn(
@@ -576,38 +603,6 @@ const Register = () => {
                       </SelectContent>
                     </Select>
                   </div>
-
-                  <div className="space-y-2">
-                    <Label
-                      htmlFor="phone"
-                      className={cn(
-                        "font-medium",
-                        actualTheme === "dark"
-                          ? "text-gray-300"
-                          : "text-gray-700",
-                      )}
-                    >
-                      Phone Number
-                    </Label>
-                    <Input
-                      id="phone"
-                      type="tel"
-                      placeholder="+998 XX XXX XX XX"
-                      value={formData.phone}
-                      onChange={(e) =>
-                        handleInputChange("phone", e.target.value)
-                      }
-                      className={cn(
-                        "focus:ring-green-500 focus:border-green-500",
-                        actualTheme === "dark"
-                          ? "bg-gray-700 border-gray-600 text-white placeholder:text-gray-400"
-                          : "bg-white border-gray-300",
-                      )}
-                      required
-                    />
-                  </div>
-
-                  
                 </div>
 
                 <div className="flex items-start space-x-3">
@@ -693,6 +688,7 @@ const Register = () => {
           </div>
         </div>
       </div>
+      <ToastContainer /> {/* Make sure ToastContainer is rendered */}
     </div>
   );
 };

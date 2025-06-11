@@ -16,8 +16,7 @@ import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
-export const Base_Url =
-  "http://localhost:8000";
+export const Base_Url = "http://192.168.16.123:8000";
 // export const Base_Url = "http://example/api";
 const queryClient = new QueryClient();
 
@@ -51,7 +50,9 @@ const App = () => (
 
             <Route
               element={<ProtectedRoute allowedRoles={["farmer"]} />}
-            ></Route>
+            >
+              <Route path="/dashboard" element={<Dashboard />} />
+            </Route>
             <Route element={<ProtectedRoute allowedRoles={["exporter"]} />}>
               <Route path="/farmers" element={<Farmers />} />
             </Route>
