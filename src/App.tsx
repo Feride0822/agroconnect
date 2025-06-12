@@ -16,6 +16,9 @@ import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import RegisterConfirm from "./pages/RegisterConfirm";
+import ForgotPasswordCode from "./pages/ForgotPasswordCode";
+import ForgotPasswordEmail from "./pages/ForgotPasswordEmail";
+import ForgotPasswordNewPassword from "./pages/ForgotPasswordNewPassword";
 
 export const Base_Url = "http://192.168.16.77:8000";
 // export const Base_Url = "http://example/api";
@@ -35,6 +38,9 @@ const App = () => (
             <Route path="/news" element={<News />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="confirm" element={ <RegisterConfirm /> } />
+            <Route path="forgot-password" element={ <ForgotPasswordEmail/> }/>
+            <Route path="/forgot-password/verify-code" element={<ForgotPasswordCode />} />
+            <Route path="/forgot-password/new-password" element={<ForgotPasswordNewPassword />} />
 
             <Route
               element={

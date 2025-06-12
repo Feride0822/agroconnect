@@ -29,6 +29,7 @@ import {
   Activity,
   Leaf,
 } from "lucide-react";
+import RegionalAdds from "@/components/agricultural/RegionalAdds";
 
 const ProductControl = () => {
   const { actualTheme } = useTheme();
@@ -116,8 +117,8 @@ const ProductControl = () => {
       )}
     >
       <Sidebar />
-      <div>
-        <div>
+      <div className="flex-1 md:mr-80">
+        <div className="container mx-auto px-4 py-8 max-w-6xl">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-12">
             <div className="flex items-center space-x-4 mb-6 lg:mb-0">
               <div
@@ -159,7 +160,11 @@ const ProductControl = () => {
             </div>
           </div>
 
-          
+          <Tabs defaultValue="overview" className="space-y-8">
+          <RegionalAdds/>
+          </Tabs>
+
+
         </div>
       </div>
     </div>

@@ -189,8 +189,7 @@ const RegionalStats = () => {
               actualTheme === "dark" ? "text-white" : "text-gray-900",
             )}
           >
-            <img src="/AgroConnect 2.png" alt="Logo" className="w-8 h-8 mr-3"/>
-            {/* <Leaf className="h-5 w-5 mr-2 text-green-500" /> */}
+            <img src="/AgroConnect 2.png" alt="Logo" className="w-8 h-8 mr-3" />       
             Regional Performance Overview
           </CardTitle>
         </CardHeader>

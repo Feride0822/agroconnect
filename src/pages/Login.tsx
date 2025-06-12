@@ -324,7 +324,7 @@ const Login = () => {
                     </Label>
                   </div>
                   <Link
-                    to="#"
+                    to="forgot-password"
                     className="text-green-500 hover:text-green-600 transition-colors"
                   >
                     Forgot password?
