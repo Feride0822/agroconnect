@@ -1,4 +1,3 @@
-// src/pages/ForgotPasswordEmail.tsx
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -39,19 +38,34 @@ const ForgotPasswordEmail = () => {
     setError("");
 
     try {
-      // API call to request password reset code
-      const response = await axios.post(`${Base_Url}/accounts/password-reset/request/`, {
-        email,
-      });
+      const response = await axios.post(
+        `${Base_Url}/accounts/password-reset/request/`,
+        { email },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true, // Only if backend uses cookies
+        },
+      );
+
+      //   // API call to request password reset code
+      //   const response = await axios.post(`${Base_Url}/accounts/password-reset/request/`, {
+      //     email,
+      //   });
 
       console.log("Password reset request successful:", response.data);
-      showToastMessage("A 4-digit code has been sent to your email.", "success");
+      showToastMessage(
+        "A 4-digit code has been sent to your email.",
+        "success",
+      );
 
       // Navigate to the code verification page, passing the email
-      navigate("/forgot-password/verify-code", { state: { email } });
+      navigate("/login/forgot-password/verify-code", { state: { email } });
     } catch (err: any) {
       setIsLoading(false);
       console.error("Forgot password request error:", err);
+      console.error("Backend error data:", err.response?.data);
 
       if (axios.isAxiosError(err) && err.response) {
         const status = err.response.status;
@@ -67,7 +81,10 @@ const ForgotPasswordEmail = () => {
         showToastMessage(error || "Failed to send reset code.", "error");
       } else {
         setError(err.message || "Network error occurred.");
-        showToastMessage("Failed to send reset code due to network error.", "error");
+        showToastMessage(
+          "Failed to send reset code due to network error.",
+          "error",
+        );
       }
     }
   };

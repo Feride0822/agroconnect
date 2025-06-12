@@ -26,14 +26,6 @@ const ForgotPasswordCode = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    // If email is not passed, redirect user back to the email entry page
-    if (!email) {
-      showToastMessage("Please enter your email first.", "error");
-      navigate("/forgot-password");
-    }
-  }, [email, navigate]); // Depend on email and navigate
-
   const showToastMessage = (message: string, type: "success" | "error") => {
     toast[type](message, {
       position: "top-right",
@@ -45,6 +37,14 @@ const ForgotPasswordCode = () => {
       progress: undefined,
     });
   };
+
+  useEffect(() => {
+    // If email is not passed, redirect user back to the email entry page
+    if (!email) {
+      showToastMessage("Please enter your email first.", "error");
+      setTimeout(() => navigate("/login/forgot-password"), 100);
+    }
+  }, [email, navigate]); // Depend on email and navigate
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,10 +60,13 @@ const ForgotPasswordCode = () => {
 
     try {
       // API call to verify the 4-digit code
-      const response = await axios.post(`${Base_Url}/accounts/password-reset/verify/`, {
-        email,
-        code,
-      });
+      const response = await axios.post(
+        `${Base_Url}/accounts/password-reset/verify/`,
+        {
+          email,
+          code,
+        },
+      );
 
       console.log("Code verification successful:", response.data);
       showToastMessage("Code verified successfully!", "success");
@@ -72,7 +75,9 @@ const ForgotPasswordCode = () => {
       const { uid, token } = response.data; // Adapt to your backend's response
 
       // Navigate to the new password page, passing uid and token
-      navigate("/forgot-password/new-password", { state: { uid, token } });
+      navigate("/login/forgot-password/new-password", {
+        state: { uid, token },
+      });
     } catch (err: any) {
       setIsLoading(false);
       console.error("Code verification error:", err);
@@ -91,7 +96,10 @@ const ForgotPasswordCode = () => {
         showToastMessage(error || "Code verification failed.", "error");
       } else {
         setError(err.message || "Network error occurred.");
-        showToastMessage("Code verification failed due to network error.", "error");
+        showToastMessage(
+          "Code verification failed due to network error.",
+          "error",
+        );
       }
     }
   };

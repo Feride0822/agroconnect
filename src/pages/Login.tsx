@@ -349,8 +349,32 @@ const Login = () => {
                   )}
                 </Button>
               </form>
+              <div className="mt-6 text-center">
+                <p
+                  className={cn(
+                    "mb-2",
+                    actualTheme === "dark" ? "text-white" : "text-gray-700",
+                  )}
+                >
+                  or
+                </p>
+                <Button
+                  variant="outline"
+                  className="w-full flex items-center justify-center space-x-2 border border-gray-300 hover:bg-gray-100 hover:text-black transition"
+                  onClick={() => {
+                    window.location.href = `${Base_Url}/accounts/login/google/`;
+                  }}
+                >
+                  <img
+                    src="https://www.svgrepo.com/show/475656/google-color.svg"
+                    alt="Google logo"
+                    className="w-5 h-5"
+                  />
+                  <span>Continue with Google</span>
+                </Button>
+              </div>
 
-              <div className="mt-8">
+              {/* <div className="mt-8">
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center">
                     <div
@@ -406,7 +430,7 @@ const Login = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
 
               <div className="mt-8 text-center">
                 <p

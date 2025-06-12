@@ -26,15 +26,15 @@ import {
 import { regions } from "@/lib/agricultural-data";
 import axios from "axios";
 import { Base_Url } from "@/App";
-import { toast, ToastContainer } from 'react-toastify'; // Re-added react-toastify imports
-import 'react-toastify/dist/ReactToastify.css'; // Re-added react-toastify CSS import
+import { toast, ToastContainer } from "react-toastify"; // Re-added react-toastify imports
+import "react-toastify/dist/ReactToastify.css"; // Re-added react-toastify CSS import
 
 const Register = () => {
   const { actualTheme } = useTheme();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     first_name: "", // Consistent with your requirement
-    last_name: "",  // Consistent with your requirement
+    last_name: "", // Consistent with your requirement
     email: "",
     password: "",
     confirmPassword: "",
@@ -50,7 +50,10 @@ const Register = () => {
   const [success, setSuccess] = useState(false);
 
   // Helper for showing toasts - Re-added for proper feedback
-  const showToastMessage = (message: string, type: "success" | "error" | "info" | "warning" = "success") => {
+  const showToastMessage = (
+    message: string,
+    type: "success" | "error" | "info" | "warning" = "success",
+  ) => {
     toast[type](message, {
       position: "top-right",
       autoClose: 5000,
@@ -81,12 +84,14 @@ const Register = () => {
       !formData.last_name ||
       !formData.email ||
       !formData.password ||
-      !formData.role || 
-      !formData.region || 
+      !formData.role ||
+      !formData.region ||
       !formData.phone_number ||
       !formData.re_password
     ) {
-      setError("Please fill in all required fields (First Name, Last Name, Email, Password, Role, Region, Phone).");
+      setError(
+        "Please fill in all required fields (First Name, Last Name, Email, Password, Role, Region, Phone).",
+      );
       showToastMessage("Please fill in all required fields.", "error"); // Added toast
       return false;
     }
@@ -98,7 +103,8 @@ const Register = () => {
     }
 
     // Increased password length for better security
-    if (formData.password.length < 4) { // Changed from 2 to 6 for security
+    if (formData.password.length < 4) {
+      // Changed from 2 to 6 for security
       setError("Password must be at least 6 characters long.");
       showToastMessage("Password must be at least 6 characters long.", "error"); // Added toast
       return false;
@@ -113,7 +119,10 @@ const Register = () => {
     const phoneRegex = /^\+?\d{9,15}$/; // Example: +998901234567 or 901234567
     if (!phoneRegex.test(formData.phone_number)) {
       setError("Please enter a valid phone number (9-15 digits, optional +).");
-      showToastMessage("Please enter a valid phone number (9-15 digits, optional +).", "error"); // Added toast
+      showToastMessage(
+        "Please enter a valid phone number (9-15 digits, optional +).",
+        "error",
+      ); // Added toast
       return false;
     }
 
@@ -134,19 +143,21 @@ const Register = () => {
       // Send the user data to your real backend
       const res = await axios.post(registerEndpoint, {
         first_name: formData.first_name, // Changed to first_name
-        last_name: formData.last_name,   // Changed to last_name
+        last_name: formData.last_name, // Changed to last_name
         email: formData.email,
         password: formData.password,
         re_password: formData.re_password,
-        role: formData.role,            
-        region: formData.region,         
+        role: formData.role,
+        region: formData.region,
         phone_number: formData.phone_number,
-        // confirmPassword is NOT sent to the backend, it's for client-side validation only
       });
 
       console.log("Registration successful on backend:", res.data); // Log the backend response
       setSuccess(true);
-      showToastMessage("Registration successful! You can now log in.", "success"); // Corrected to use toast
+      showToastMessage(
+        "Registration successful! You can now log in.",
+        "success",
+      ); // Corrected to use toast
 
       setTimeout(() => {
         navigate("/confirm", { state: { email: formData.email } });
@@ -165,41 +176,55 @@ const Register = () => {
             errorMessage = err.response.data.message;
           } else if (err.response.data.detail) {
             errorMessage = err.response.data.detail;
-          } else if (err.response.data.email && Array.isArray(err.response.data.email)) {
+          } else if (
+            err.response.data.email &&
+            Array.isArray(err.response.data.email)
+          ) {
             errorMessage = `Email error: ${err.response.data.email.join(", ")}`;
-          } else if (err.response.data.phone_number && Array.isArray(err.response.data.phone_number)) {
+          } else if (
+            err.response.data.phone_number &&
+            Array.isArray(err.response.data.phone_number)
+          ) {
             errorMessage = `Phone error: ${err.response.data.phone_number.join(", ")}`;
-          } else if (err.response.data.non_field_errors && Array.isArray(err.response.data.non_field_errors)) {
+          } else if (
+            err.response.data.non_field_errors &&
+            Array.isArray(err.response.data.non_field_errors)
+          ) {
             errorMessage = err.response.data.non_field_errors.join(", ");
           }
-          // IMPORTANT: Add more `else if` conditions here based on how your backend structures its errors
-          // E.g., if your backend returns { "username": ["This field is required."] }
-          // you might need `else if (err.response.data.username)`
         }
 
         setError(errorMessage); // Ensured only one setError call
         showToastMessage(`Registration failed: ${errorMessage}`, "error"); // Added toast
 
         // Specific handling for common backend status codes
-        if (err.response.status === 409) { // Conflict (e.g., email/phone already exists)
+        if (err.response.status === 409) {
+          // Conflict (e.g., email/phone already exists)
           setError("Account with this email or phone already exists."); // Overwrites generic error if more specific
-          showToastMessage("Account with this email or phone already exists.", "warning");
-        } else if (err.response.status === 400) { // Bad Request (e.g., validation failed on backend)
-          // If the backend sends specific field errors, the `errorMessage` already set will be more precise.
-          // This ensures a general "Validation error" is shown if no specific field error is caught.
+          showToastMessage(
+            "Account with this email or phone already exists.",
+            "warning",
+          );
+        } else if (err.response.status === 400) {
+          // Bad Request (e.g., validation failed on backend)
+
           setError(`Validation error: ${errorMessage}`);
           showToastMessage(`Validation error: ${errorMessage}`, "error");
         }
       } else {
-        setError(err.message || "An unexpected error occurred during registration. Check your network.");
-        showToastMessage("An unexpected error occurred. Please check your network connection.", "error");
+        setError(
+          err.message ||
+            "An unexpected error occurred during registration. Check your network.",
+        );
+        showToastMessage(
+          "An unexpected error occurred. Please check your network connection.",
+          "error",
+        );
       }
     } finally {
       setIsLoading(false); // Ensure isLoading is always set to false
     }
   };
-
-  // ... (Success message JSX remains the same)
 
   return (
     <div
@@ -209,7 +234,6 @@ const Register = () => {
       )}
     >
       <Sidebar />
-
       <div className="flex-1 md:mr-80 flex items-center justify-center p-4">
         <div className="w-full max-w-2xl">
           {/* Logo and Header */}
@@ -218,7 +242,6 @@ const Register = () => {
               <div className="relative">
                 <div className="absolute inset-0 bg-green-500 rounded-xl blur opacity-75 group-hover:opacity-100 transition-opacity"></div>
                 <div className="relative flex items-center justify-center w-16 h-16 bg-green-500 rounded-xl">
-                  {/* <Leaf className="h-8 w-8 text-white" /> */}
                   <img src="/AgroConnect 3.png" alt="Logo" />
                 </div>
               </div>
@@ -313,8 +336,8 @@ const Register = () => {
                       type="text"
                       placeholder="Your First Name"
                       value={formData.first_name} // Consistent value
-                      onChange={(e) =>
-                        handleInputChange("first_name", e.target.value) // Consistent field key
+                      onChange={
+                        (e) => handleInputChange("first_name", e.target.value) // Consistent field key
                       }
                       className={cn(
                         "focus:ring-green-500 focus:border-green-500",
@@ -343,8 +366,8 @@ const Register = () => {
                       type="text"
                       placeholder="Your Last Name"
                       value={formData.last_name} // Consistent value
-                      onChange={(e) =>
-                        handleInputChange("last_name", e.target.value) // Consistent field key
+                      onChange={
+                        (e) => handleInputChange("last_name", e.target.value) // Consistent field key
                       }
                       className={cn(
                         "focus:ring-green-500 focus:border-green-500",
@@ -541,8 +564,8 @@ const Register = () => {
                     </Label>
                     <Select
                       value={formData.role}
-                      onValueChange={(value) =>
-                        handleSelectChange("role", value) // Changed to handleSelectChange
+                      onValueChange={
+                        (value) => handleSelectChange("role", value) // Changed to handleSelectChange
                       }
                       required // Mark select as required
                     >
@@ -579,8 +602,8 @@ const Register = () => {
                     </Label>
                     <Select
                       value={formData.region}
-                      onValueChange={(value) =>
-                        handleSelectChange("region", value) // Changed to handleSelectChange
+                      onValueChange={
+                        (value) => handleSelectChange("region", value) // Changed to handleSelectChange
                       }
                       required // Mark select as required
                     >
@@ -656,6 +679,31 @@ const Register = () => {
                   )}
                 </Button>
               </form>
+
+              <div className="mt-6 text-center">
+                <p
+                  className={cn(
+                    "mb-2",
+                    actualTheme === "dark" ? "text-white" : "text-gray-700",
+                  )}
+                >
+                  or
+                </p>
+                <Button
+                  variant="outline"
+                  className="w-full flex items-center justify-center space-x-2 border border-gray-300 hover:bg-gray-100 hover:text-black transition"
+                  onClick={() => {
+                    window.location.href = `${Base_Url}/accounts/login/google/`;
+                  }}
+                >
+                  <img
+                    src="https://www.svgrepo.com/show/475656/google-color.svg"
+                    alt="Google logo"
+                    className="w-5 h-5"
+                  />
+                  <span>Continue with Google</span>
+                </Button>
+              </div>
 
               <div className="mt-8 text-center">
                 <p

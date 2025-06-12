@@ -37,10 +37,10 @@ const App = () => (
             <Route path="/register" element={<Register />} />
             <Route path="/news" element={<News />} />
             <Route path="/settings" element={<Settings />} />
-            <Route path="confirm" element={ <RegisterConfirm /> } />
-            <Route path="forgot-password" element={ <ForgotPasswordEmail/> }/>
-            <Route path="/forgot-password/verify-code" element={<ForgotPasswordCode />} />
-            <Route path="/forgot-password/new-password" element={<ForgotPasswordNewPassword />} />
+            <Route path="/confirm" element={ <RegisterConfirm /> } />
+            <Route path="/login/forgot-password" element={ <ForgotPasswordEmail/> }/>
+            <Route path="/login/forgot-password/verify-code" element={<ForgotPasswordCode />} />
+            <Route path="/login/forgot-password/new-password" element={<ForgotPasswordNewPassword />} />
 
             <Route
               element={

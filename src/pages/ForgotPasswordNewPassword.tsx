@@ -33,7 +33,7 @@ const ForgotPasswordNewPassword = () => {
     // If uid or token are missing, redirect back to the start of the flow
     if (!uid || !token) {
       showToastMessage("Session expired or invalid. Please restart the password reset process.", "error");
-      navigate("/forgot-password");
+      navigate("/login/forgot-password");
     }
   }, [uid, token, navigate]);
 
