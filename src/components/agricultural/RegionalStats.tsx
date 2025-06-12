@@ -1,16 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-} from "recharts";
+// import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, } from "recharts";
 import {
   regions,
   getTotalVolumeByRegion,
@@ -19,7 +8,7 @@ import {
 } from "@/lib/agricultural-data";
 import { useTheme } from "@/contexts/ThemeContext";
 import { cn } from "@/lib/utils";
-import { Leaf, Activity } from "lucide-react";
+// import { Leaf, Activity } from "lucide-react";
 
 const RegionalStats = () => {
   const { actualTheme } = useTheme();
@@ -49,7 +38,7 @@ const RegionalStats = () => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       {/* Regional Volume Chart */}
-      <Card
+      {/* <Card
         className={cn(
           actualTheme === "dark"
             ? "bg-gray-800 border-gray-700"
@@ -118,10 +107,10 @@ const RegionalStats = () => {
             </ResponsiveContainer>
           </div>
         </CardContent>
-      </Card>
+      </Card> */}
 
       {/* Product Distribution Pie Chart */}
-      <Card
+      {/* <Card
         className={cn(
           actualTheme === "dark"
             ? "bg-gray-800 border-gray-700"
@@ -136,7 +125,7 @@ const RegionalStats = () => {
             )}
           >
             <img src="/AgroConnect 2.png" alt="Logo" className="w-8 h-8 mr-3"/>
-            {/* <Leaf className="h-5 w-5 mr-2 text-green-500" /> */}
+            
             Product Distribution
           </CardTitle>
         </CardHeader>
@@ -182,7 +171,7 @@ const RegionalStats = () => {
             </ResponsiveContainer>
           </div>
         </CardContent>
-      </Card>
+      </Card> */}
 
       {/* Regional Statistics Table */}
       <Card
@@ -227,7 +216,7 @@ const RegionalStats = () => {
                   >
                     Region
                   </th>
-                  <th
+                  {/* <th
                     className={cn(
                       "text-right py-4 px-4 font-semibold",
                       actualTheme === "dark"
@@ -236,7 +225,7 @@ const RegionalStats = () => {
                     )}
                   >
                     Population
-                  </th>
+                  </th> */}
                   <th
                     className={cn(
                       "text-right py-4 px-4 font-semibold",

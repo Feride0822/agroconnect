@@ -15,8 +15,9 @@ import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import RegisterConfirm from "./pages/RegisterConfirm";
 
-export const Base_Url = "http://192.168.16.123:8000";
+export const Base_Url = "http://192.168.16.77:8000";
 // export const Base_Url = "http://example/api";
 const queryClient = new QueryClient();
 
@@ -33,6 +34,8 @@ const App = () => (
             <Route path="/register" element={<Register />} />
             <Route path="/news" element={<News />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="confirm" element={ <RegisterConfirm /> } />
+
             <Route
               element={
                 <ProtectedRoute
@@ -41,6 +44,7 @@ const App = () => (
               }
             >
               <Route path="/profile" element={<Profile />} />
+              <Route path="/dashboard" element={<Dashboard />} />
             </Route>
             <Route
               element={
@@ -50,14 +54,8 @@ const App = () => (
               <Route path="/statistics" element={<Statistics />} />
             </Route>
 
-            <Route element={<ProtectedRoute allowedRoles={["Farmers"]} />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-            </Route>
             <Route element={<ProtectedRoute allowedRoles={["Exporters"]} />}>
               <Route path="/farmers" element={<Farmers />} />
-            </Route>
-            <Route element={<ProtectedRoute allowedRoles={["Analysts"]} />}>
-              <Route path="/dashboard" element={<Dashboard />} />
             </Route>
 
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

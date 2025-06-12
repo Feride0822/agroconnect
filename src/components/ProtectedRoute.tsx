@@ -6,12 +6,19 @@ interface ProtectedRouteProps {
   redirectTo?: string;
 }
 
-const ProtectedRoute = ({ allowedRoles, redirectTo = "/login" }: ProtectedRouteProps) => {
+const ProtectedRoute = ({
+  allowedRoles,
+  redirectTo = "/login",
+}: ProtectedRouteProps) => {
   const user = userStore((state) => state.user);
 
   if (!user) return <Navigate to={redirectTo} />;
 
-  return allowedRoles.includes(user.role) ? <Outlet /> : <Navigate to="/not-found" />;
+  return allowedRoles.includes(user.role) ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/not-found" />
+  );
 };
 
 export default ProtectedRoute;

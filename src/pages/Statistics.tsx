@@ -196,7 +196,7 @@ const Statistics = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1">
                 <div>
                   <label
                     className={cn(
@@ -232,7 +232,7 @@ const Statistics = () => {
                   </Select>
                 </div>
 
-                <div>
+                {/* <div>
                   <label
                     className={cn(
                       "text-sm font-medium mb-3 block",
@@ -265,9 +265,9 @@ const Statistics = () => {
                       ))}
                     </SelectContent>
                   </Select>
-                </div>
+                </div> */}
 
-                <div>
+                {/* <div>
                   <label
                     className={cn(
                       "text-sm font-medium mb-3 block",
@@ -297,7 +297,8 @@ const Statistics = () => {
                       <SelectItem value="yearly">Annual Report</SelectItem>
                     </SelectContent>
                   </Select>
-                </div>
+                </div> */}
+
               </div>
             </CardContent>
           </Card>

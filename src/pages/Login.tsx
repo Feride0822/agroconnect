@@ -30,17 +30,17 @@ const Login = () => {
       position: "top-right",
     });
   };
-  interface CrudCrudUser {
-    _id: string; // CRUDCrud adds this automatically
-    email?: string;
-    phone_number?: string; // If you store phone as a separate field
-    password: string; // WARNING: Storing plain text password is BAD for real apps!
-    role: "Farmers" | "Exporters" | "Analysts" | string;
-    first_name?: string;
-    last_name?: string;
-    region?: string;
-    re_password: string;
-  }
+  // interface CrudCrudUser {
+  //   _id: string; // CRUDCrud adds this automatically
+  //   email?: string;
+  //   phone_number?: string; // If you store phone as a separate field
+  //   password: string; // WARNING: Storing plain text password is BAD for real apps!
+  //   role: "Farmers" | "Exporters" | "Analysts" | string;
+  //   first_name?: string;
+  //   last_name?: string;
+  //   region?: string;
+  //   re_password: string;
+  // }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,7 +72,7 @@ const Login = () => {
         last_name: user.last_name || "",
         phone_number: user.phone_number || "",
         region: user.region || "",
-        re_password: user.re_password || "", // You might not need this
+        // re_password: user.re_password || "", // You might not need this
       };
 
       // Updated validation - only check for ID since we provide default role
@@ -85,7 +85,28 @@ const Login = () => {
       setIsLoading(false);
       showToastMessage("Login successful!", "success");
 
-      navigate("/dashboard");
+      console.log("User role after login:", userForStore.role);
+      console.log("User data in userStore:", userStore.getState().user);
+      console.log(
+        "Access Token in localStorage:",
+        localStorage.getItem("access_token"),
+      );
+
+      switch (userForStore.role) {
+        case "Farmers":
+          navigate("/statistics");
+          break;
+        case "Exporters":
+          navigate("/farmers");
+          break;
+        case "Analysts":
+          navigate("/dashboard");
+          break;
+        default:
+          navigate("/");
+          console.log("returned home because can't find");
+          break;
+      }
     } catch (err: any) {
       setIsLoading(false);
       console.error("Login error:", err);

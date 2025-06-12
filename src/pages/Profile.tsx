@@ -62,7 +62,7 @@ const Profile = () => {
         if (!user?.email) {
           throw new Error("No user email available from store");
         }
-        const response = await fetch(`${Base_Url}/users`, {
+        const response = await fetch(`${Base_Url}/accounts/profile/`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

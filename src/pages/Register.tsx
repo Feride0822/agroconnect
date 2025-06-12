@@ -149,7 +149,7 @@ const Register = () => {
       showToastMessage("Registration successful! You can now log in.", "success"); // Corrected to use toast
 
       setTimeout(() => {
-        navigate("/login"); // Navigate to login page after successful registration
+        navigate("/confirm", { state: { email: formData.email } });
       }, 1500); // 1.5 seconds delay
     } catch (err: any) {
       console.error("Registration error:", err); // Log the full error for debugging

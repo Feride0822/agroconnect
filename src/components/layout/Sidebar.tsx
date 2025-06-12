@@ -17,35 +17,74 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import userStore from "@/store/UserStore";
+import { useNavigate } from "react-router-dom";
+import { Base_Url } from "@/App";
+import axios from "axios";
 
 const Sidebar = () => {
   const location = useLocation();
   const { actualTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
-  const { user } = userStore();
+  const user = userStore((state) => state.user);
   const role = user?.role;
+  const logout = userStore((state) => state.logout);
+  const navigate = useNavigate();
+  const hideOnRoutes = ["/login", "/register", "/confirm"];
+  if (hideOnRoutes.includes(location.pathname)) return null;
 
-  const navItems =
-  role === "farmer"
-    ? [
-        { path: "/statistics", label: "Analytics", icon: TrendingUp },
-        { path: "/profile", label: "Profile", icon: User },
-        { path: "/settings", label: "Settings", icon: Settings },
-      ]
-    : role === "exporter"
-    ? [
-        { path: "/farmers", label: "Farmers", icon: Users },
-        { path: "/profile", label: "Profile", icon: User },
-        { path: "/settings", label: "Settings", icon: Settings },
-      ]
-    : role === "analyst"
-    ? [
-        { path: "/statistics", label: "Analytics", icon: BarChart3 },
-        { path: "/profile", label: "Profile", icon: User },
-        { path: "/settings", label: "Settings", icon: Settings },
-      ]
+  const handleLogout = async () => {
+    const refreshToken = localStorage.getItem("refresh_token");
+    const accessToken = localStorage.getItem("access_token");
+  
+    try {
+      if (refreshToken && accessToken) {
+        await axios.post(
+          `${Base_Url}/accounts/logout/`,
+          { refresh_token: refreshToken },
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+      }
+    } catch (err) {
+      console.warn("Failed to logout from backend:", err);
+    }
+  
+    logout(); // Clear Zustand store
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    navigate("/login", { replace: true });
+    setIsOpen(false);
+  };
+  
+  
+
+  const navItems = user
+    ? role === "Farmers"
+      ? [
+          { path: "/statistics", label: "Analytics", icon: TrendingUp },
+          { path: "/profile", label: "Profile", icon: User },
+          { path: "/settings", label: "Settings", icon: Settings },
+          { path: "/dashboard", label: "Dashboard", icon: BarChart3 },
+        ]
+      : role === "Exporters"
+        ? [
+            { path: "/farmers", label: "Farmers", icon: Users },
+            { path: "/profile", label: "Profile", icon: User },
+            { path: "/settings", label: "Settings", icon: Settings },
+            { path: "/dashboard", label: "Dashboard", icon: BarChart3 },
+          ]
+        : role === "Analysts"
+          ? [
+              { path: "/statistics", label: "Analytics", icon: TrendingUp },
+              { path: "/profile", label: "Profile", icon: User },
+              { path: "/settings", label: "Settings", icon: Settings },
+              { path: "/dashboard", label: "Dashboard", icon: BarChart3 },
+            ]
+          : []
     : [
-        // Default items for unauthenticated or unknown role
         { path: "/", label: "Home", icon: Home },
         { path: "/login", label: "Login", icon: LogIn },
         { path: "/register", label: "Register", icon: User },
@@ -61,13 +100,13 @@ const Sidebar = () => {
     isOpen ? "translate-x-0" : "translate-x-full",
   );
   useEffect(() => {
-    if(isOpen) {
+    if (isOpen) {
       document.body.classList.add("overflow-hidden");
     } else {
       document.body.classList.remove("overflow-hidden");
     }
 
-    return() => {
+    return () => {
       document.body.classList.remove("overflow-hidden");
     };
   }, [isOpen]);
@@ -120,7 +159,7 @@ const Sidebar = () => {
                     : "bg-green-500 group-hover:bg-green-600",
                 )}
               >
-                <img src="/AgroConnect 3.png" alt="Logo"/>
+                <img src="/AgroConnect 3.png" alt="Logo" />
                 {/* <Leaf className="h-6 w-6 text-white" /> */}
               </div>
               <div className="flex flex-col">
@@ -166,6 +205,21 @@ const Sidebar = () => {
                 <span className="font-medium">{label}</span>
               </Link>
             ))}
+            {/* Logout button if user is logged in */}
+            {user && (
+              <button
+                onClick={handleLogout}
+                className={cn(
+                  "flex items-center w-full space-x-3 px-4 py-3 rounded-lg transition-all duration-200",
+                  actualTheme === "dark"
+                    ? "text-gray-300 hover:bg-gray-800 hover:text-white"
+                    : "text-gray-700 hover:bg-gray-100 hover:text-gray-900",
+                )}
+              >
+                <LogIn className="h-5 w-5 transform rotate-180" />
+                <span className="font-medium">Logout</span>
+              </button>
+            )}
           </nav>
         </div>
       </aside>
