@@ -143,24 +143,24 @@ const Profile = () => {
 
   // Local form state for editing
   const [formData, setFormData] = useState({
-    name: "",
+    first_name: "",
     email: "",
-    phone: "",
+    phone_number: "",
     role: "",
     region: "",
-    surname: "",
+    last_name: "",
   });
 
   // Initialize form data when profile loads
   useEffect(() => {
     if (profile) {
       setFormData({
-        name: profile.name || "",
+        first_name: profile.first_name || "",
         email: profile.email || "",
-        phone: profile.phone || "",
+        phone_number: profile.phone_number || "",
         role: profile.role || "",
         region: profile.region || "",
-        surname: profile.surname || "",
+        last_name: profile.last_name || "",
       });
     }
   }, [profile]);
@@ -169,12 +169,12 @@ const Profile = () => {
   useEffect(() => {
     if (profile && isEditing) {
       setFormData({
-        name: profile.name || "",
+        first_name: profile.first_name || "",
         email: profile.email || "",
-        phone: profile.phone || "",
+        phone_number: profile.phone_number || "",
         role: profile.role || "",
         region: profile.region || "",
-        surname: profile.surname || "",
+        last_name: profile.last_name || "",
       });
     }
   }, [profile, isEditing]);
@@ -182,12 +182,12 @@ const Profile = () => {
   const handleEdit = () => {
     if (profile) {
       setFormData({
-        name: profile.name || "",
+        first_name: profile.first_name || "",
         email: profile.email || "",
-        phone: profile.phone || "",
+        phone_number: profile.phone_number || "",
         role: profile.role || "",
         region: profile.region || "",
-        surname: profile.surname || "",
+        last_name: profile.last_name || "",
       });
       startEditing();
     }
@@ -646,7 +646,7 @@ const Profile = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-2">
                       <Label
-                        htmlFor="name"
+                        htmlFor="first_name"
                         className={cn(
                           "font-medium",
                           actualTheme === "dark"
@@ -657,11 +657,11 @@ const Profile = () => {
                         First Name
                       </Label>
                       <Input
-                        id="name"
-                        value={isEditing ? formData.name : profile.name}
+                        id="first_name"
+                        value={isEditing ? formData.first_name : profile.first_name}
                         disabled={!isEditing}
                         onChange={(e) =>
-                          handleInputChange("name", e.target.value)
+                          handleInputChange("first_name", e.target.value)
                         }
                         className={cn(
                           "focus:ring-green-500 focus:border-green-500",
@@ -674,7 +674,7 @@ const Profile = () => {
 
                     <div className="space-y-2">
                       <Label
-                        htmlFor="surname"
+                        htmlFor="last_name"
                         className={cn(
                           "font-medium",
                           actualTheme === "dark"
@@ -685,11 +685,11 @@ const Profile = () => {
                         Last Name
                       </Label>
                       <Input
-                        id="surname"
-                        value={isEditing ? formData.surname : profile.surname}
+                        id="last_name"
+                        value={isEditing ? formData.last_name : profile.last_name}
                         disabled={!isEditing}
                         onChange={(e) =>
-                          handleInputChange("surname", e.target.value)
+                          handleInputChange("last_name", e.target.value)
                         }
                         className={cn(
                           "focus:ring-green-500 focus:border-green-500",
@@ -731,7 +731,7 @@ const Profile = () => {
 
                     <div className="space-y-2">
                       <Label
-                        htmlFor="phone"
+                        htmlFor="phone_number"
                         className={cn(
                           "font-medium",
                           actualTheme === "dark"
@@ -739,14 +739,14 @@ const Profile = () => {
                             : "text-gray-700",
                         )}
                       >
-                        Phone
+                        Phone Number
                       </Label>
                       <Input
-                        id="phone"
-                        value={isEditing ? formData.phone : profile.phone}
+                        id="phone_number"
+                        value={isEditing ? formData.phone_number : profile.phone_number}
                         disabled={!isEditing}
                         onChange={(e) =>
-                          handleInputChange("phone", e.target.value)
+                          handleInputChange("phone_number", e.target.value)
                         }
                         className={cn(
                           "focus:ring-green-500 focus:border-green-500",

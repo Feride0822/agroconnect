@@ -19,7 +19,6 @@ const ForgotPasswordCode = () => {
   const navigate = useNavigate();
   const location = useLocation(); // To get state passed from previous page
 
-  // Get email from location state. If not present, redirect back to email entry.
   const email = location.state?.email || "";
 
   const [code, setCode] = useState("");
@@ -42,7 +41,7 @@ const ForgotPasswordCode = () => {
     // If email is not passed, redirect user back to the email entry page
     if (!email) {
       showToastMessage("Please enter your email first.", "error");
-      setTimeout(() => navigate("/login/forgot-password"), 100);
+      setTimeout(() => navigate("/login/forgot-password"), 1000);
     }
   }, [email, navigate]); // Depend on email and navigate
 
@@ -71,7 +70,6 @@ const ForgotPasswordCode = () => {
       console.log("Code verification successful:", response.data);
       showToastMessage("Code verified successfully!", "success");
 
-      // Assuming your backend returns uid and token needed for the final password reset
       const { uid, token } = response.data; // Adapt to your backend's response
 
       // Navigate to the new password page, passing uid and token
