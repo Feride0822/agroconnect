@@ -1,4 +1,3 @@
-// src/pages/ForgotPasswordCode.tsx
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -8,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useTheme } from "@/contexts/ThemeContext";
 import { cn } from "@/lib/utils";
-import { Key, Loader2, AlertCircle } from "lucide-react"; // Added Key icon
+import { Key, Loader2, AlertCircle } from "lucide-react";
 import axios from "axios";
 import { Base_Url } from "@/App";
 import { ToastContainer, toast } from "react-toastify";
@@ -17,15 +16,17 @@ import "react-toastify/dist/ReactToastify.css";
 const ForgotPasswordCode = () => {
   const { actualTheme } = useTheme();
   const navigate = useNavigate();
-  const location = useLocation(); // To get state passed from previous page
-
+  const location = useLocation();
   const email = location.state?.email || "";
-
   const [code, setCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-
-  const showToastMessage = (message: string, type: "success" | "error") => {
+  const [resendCooldown, setResendCooldown] = useState(0);
+  const [isResending, setIsResending] = useState(false);
+  const showToastMessage = (
+    message: string,
+    type: "success" | "error" | "info",
+  ) => {
     toast[type](message, {
       position: "top-right",
       autoClose: 5000,
@@ -34,16 +35,31 @@ const ForgotPasswordCode = () => {
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
+      theme: actualTheme === "dark" ? "dark" : "light",
     });
   };
 
   useEffect(() => {
-    // If email is not passed, redirect user back to the email entry page
     if (!email) {
       showToastMessage("Please enter your email first.", "error");
-      setTimeout(() => navigate("/login/forgot-password"), 1000);
+      // Use replace to prevent going back to this page with empty email
+      const timer = setTimeout(
+        () => navigate("/login/forgot-password", { replace: true }),
+        1000,
+      );
+      return () => clearTimeout(timer); // Cleanup timeout
     }
-  }, [email, navigate]); // Depend on email and navigate
+  }, [email, navigate]);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (resendCooldown > 0) {
+      timer = setTimeout(() => {
+        setResendCooldown((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearTimeout(timer);
+  }, [resendCooldown]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,8 +67,9 @@ const ForgotPasswordCode = () => {
     setError("");
 
     if (code.length !== 4) {
-      setError("Please enter a 4-digit code.");
-      showToastMessage("Please enter a 4-digit code.", "error");
+      const errorMessage = "Please enter a 4-digit code.";
+      setError(errorMessage);
+      showToastMessage(errorMessage, "error"); // Pass directly
       setIsLoading(false);
       return;
     }
@@ -99,6 +116,44 @@ const ForgotPasswordCode = () => {
           "error",
         );
       }
+    }
+  };
+
+  const handleResendCode = async () => {
+    if (!email) {
+      showToastMessage("No email to resend code to.", "error");
+      return;
+    }
+    if (resendCooldown > 0) {
+      showToastMessage(
+        `Please wait ${resendCooldown} seconds before resending.`,
+        "info",
+      );
+      return;
+    }
+
+    setIsResending(true);
+    setError(""); // Clear previous errors
+    try {
+      // API call to request a new code for the email
+      await axios.post(`${Base_Url}/accounts/password-reset/`, { email }); // Assuming this is your resend endpoint
+      showToastMessage("A new code has been sent to your email!", "success");
+      setResendCooldown(60); // Set a 60-second cooldown
+    } catch (err: any) {
+      console.error("Resend code error:", err);
+      let errorMessage = "Failed to resend code. Please try again.";
+      if (
+        axios.isAxiosError(err) &&
+        err.response &&
+        err.response.data &&
+        err.response.data.detail
+      ) {
+        errorMessage = err.response.data.detail;
+      }
+      setError(errorMessage);
+      showToastMessage(errorMessage, "error");
+    } finally {
+      setIsResending(false);
     }
   };
 
@@ -197,13 +252,19 @@ const ForgotPasswordCode = () => {
                 </Label>
                 <Input
                   id="code"
-                  type="text" // Use type="text" for numeric input, or type="number" with pattern
-                  pattern="\d{4}" // HTML5 pattern for 4 digits
+                  type="text"
+                  pattern="\d{4}"
                   maxLength={4} // Limit to 4 characters
                   inputMode="numeric" // Optimize for numeric input on mobile
                   placeholder="Enter 4-digit code"
                   value={code}
-                  onChange={(e) => setCode(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    // Allow only digits and limit to 4 characters
+                    if (/^\d*$/.test(value) && value.length <= 4) {
+                      setCode(value);
+                    }
+                  }}
                   className={cn(
                     "focus:ring-green-500 focus:border-green-500 text-center text-xl tracking-widest",
                     actualTheme === "dark"
@@ -234,13 +295,27 @@ const ForgotPasswordCode = () => {
             </form>
 
             <div className="mt-6 text-center">
-              <Link
-                to="/forgot-password"
-                className="text-green-500 hover:text-green-600 font-medium transition-colors"
+              <Button
+                variant="link"
+                onClick={handleResendCode}
+                disabled={isResending || resendCooldown > 0}
+                className="text-green-500 hover:text-green-600 font-medium transition-colors p-0 h-auto"
               >
-                Resend Code
-              </Link>{" "}
-              or{" "}
+                {isResending ? (
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                ) : resendCooldown > 0 ? (
+                  `Resend Code (${resendCooldown}s)`
+                ) : (
+                  "Resend Code"
+                )}
+              </Button>{" "}
+              <span
+                className={cn(
+                  actualTheme === "dark" ? "text-gray-400" : "text-gray-600",
+                )}
+              >
+                or
+              </span>{" "}
               <Link
                 to="/login"
                 className="text-green-500 hover:text-green-600 font-medium transition-colors"

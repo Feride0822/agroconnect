@@ -62,8 +62,8 @@ const ForgotPasswordNewPassword = () => {
     }
 
     if (newPassword.length < 4) { // Example: enforce minimum password length
-        setError("Password must be at least 8 characters long.");
-        showToastMessage("Password must be at least 8 characters long.", "error");
+        setError("Password must be at least 4 characters long.");
+        showToastMessage("Password must be at least 4 characters long.", "error");
         setIsLoading(false);
         return;
     }
