@@ -104,9 +104,8 @@ const Register = () => {
 
     // Increased password length for better security
     if (formData.password.length < 4) {
-      // Changed from 2 to 6 for security
-      setError("Password must be at least 6 characters long.");
-      showToastMessage("Password must be at least 6 characters long.", "error"); // Added toast
+      setError("Password must be at least 4 characters long.");
+      showToastMessage("Password must be at least 4 characters long.", "error"); // Added toast
       return false;
     }
 
@@ -693,7 +692,7 @@ const Register = () => {
                   variant="outline"
                   className="w-full flex items-center justify-center space-x-2 border border-gray-300 hover:bg-gray-100 hover:text-black transition"
                   onClick={() => {
-                    window.location.href = `${Base_Url}/accounts/login/google/`;
+                    window.location.href = `${Base_Url}/accounts/register/google/?redirect_uri=${window.location.origin}/register/complete-profile`;
                   }}
                 >
                   <img

@@ -19,6 +19,7 @@ import RegisterConfirm from "./pages/RegisterConfirm";
 import ForgotPasswordCode from "./pages/ForgotPasswordCode";
 import ForgotPasswordEmail from "./pages/ForgotPasswordEmail";
 import ForgotPasswordNewPassword from "./pages/ForgotPasswordNewPassword";
+import RegiterGoogle from "./pages/RegisterGoogle";
 
 export const Base_Url = "http://192.168.16.77:8000";
 // export const Base_Url = "http://example/api";
@@ -41,6 +42,7 @@ const App = () => (
             <Route path="/login/forgot-password" element={ <ForgotPasswordEmail/> }/>
             <Route path="/login/forgot-password/verify-code" element={<ForgotPasswordCode />} />
             <Route path="/login/forgot-password/new-password" element={<ForgotPasswordNewPassword />} />
+            <Route path="/register/complete-profile" element={ <RegiterGoogle/>} />
 
             <Route
               element={
