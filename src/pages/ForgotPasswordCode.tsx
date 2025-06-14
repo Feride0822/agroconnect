@@ -42,6 +42,18 @@ const ForgotPasswordCode = () => {
   };
 
   useEffect(() => {
+  console.log("emailFromState:", emailFromState);
+  console.log("emailFromSession:", emailFromSession);
+  
+  if (!email) {
+    showToastMessage("Session expired, please re-enter your email.", "error");
+    sessionStorage.removeItem("reset_email"); // cleanup
+    navigate("/login/forgot-password", { replace: true });
+  }
+}, [email, navigate]);
+
+
+  useEffect(() => {
     if (!email) {
       showToastMessage("Please enter your email first.", "error");
       // Use replace to prevent going back to this page with empty email

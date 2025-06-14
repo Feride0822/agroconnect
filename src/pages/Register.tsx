@@ -692,7 +692,7 @@ const Register = () => {
                   variant="outline"
                   className="w-full flex items-center justify-center space-x-2 border border-gray-300 hover:bg-gray-100 hover:text-black transition"
                   onClick={() => {
-                    window.location.href = `${Base_Url}/accounts/register/google/?redirect_uri=${window.location.origin}/register/complete-profile`;
+                    window.location.href = `${Base_Url}/accounts/login/google/?redirect_uri=${window.location.origin}/register/complete-profile`;
                   }}
                 >
                   <img
