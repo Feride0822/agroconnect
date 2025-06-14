@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
@@ -48,6 +49,7 @@ const Profile = () => {
   const { actualTheme } = useTheme();
  const user = userStore((state) => state.user);
 const token = userStore((state) => state.token);
+const navigate = useNavigate();
   // Simple state management for profile editing
   const [profile, setProfile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -103,44 +105,44 @@ const token = userStore((state) => state.token);
     setError(null);
   };
 
-  const updateProfile = async (updates) => {
-    setIsSaving(true);
-    setSaveStatus("saving");
-    setError(null);
+  const updateProfile = async (updates: any) => {
+  setIsSaving(true);
+  setSaveStatus("saving");
+  setError(null);
 
-    try {
-      // Simulate API call delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+  try {
+    const response = await fetch(`${Base_Url}/accounts/profile/`, {
+      method: "PUT",  // ✅ Correct method explicitly set
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`  // ✅ Auth token explicitly included
+      },
+      body: JSON.stringify(updates), // ✅ send updated profile data explicitly
+    });
 
-      // Update profile data
-      const updatedProfile = { ...profile, ...updates };
-      setProfile(updatedProfile);
-
-      // Save to localStorage
-      localStorage.setItem(
-        "agroconnect-user-profile",
-        JSON.stringify(updatedProfile),
-      );
-
-      setSaveStatus("success");
-      setIsEditing(false);
-
-      // Clear success message after 3 seconds
-      setTimeout(() => setSaveStatus("idle"), 3000);
-    } catch (error) {
-      console.error("Error saving profile:", error);
-      setError("Failed to save profile");
-      setSaveStatus("error");
-
-      // Clear error message after 5 seconds
-      setTimeout(() => {
-        setSaveStatus("idle");
-        setError(null);
-      }, 5000);
-    } finally {
-      setIsSaving(false);
+    if (!response.ok) {
+      throw new Error("Failed to save profile data");
     }
-  };
+
+    const updatedProfile = await response.json();
+    setProfile(updatedProfile);
+    setSaveStatus("success");
+    setIsEditing(false);
+
+    // Optional: clear success message after a short delay
+    setTimeout(() => setSaveStatus("idle"), 3000);
+  } catch (error) {
+    console.error("Error saving profile:", error);
+    setError("Failed to save profile");
+    setSaveStatus("error");
+    setTimeout(() => {
+      setSaveStatus("idle");
+      setError(null);
+    }, 5000);
+  } finally {
+    setIsSaving(false);
+  }
+};
 
   // Local form state for editing
   const [formData, setFormData] = useState({
@@ -195,8 +197,35 @@ const token = userStore((state) => state.token);
   };
 
   const handleSave = async () => {
+  if (formData.email !== profile.email) {
+    try {
+      const response = await fetch(`${Base_Url}/accounts/profile/request-email-change/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ 
+          user_id: profile.id,  // ✅ explicitly included user ID here
+          new_email: formData.email 
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to initiate email change");
+      }
+
+      navigate("/profile/change-email", { state: { newEmail: formData.email, userId: profile.id } }); // explicitly pass userId as well
+
+    } catch (error) {
+      console.error("Error initiating email change:", error);
+      setError("Failed to send verification code to new email.");
+    }
+  } else {
     await updateProfile(formData);
-  };
+  }
+};
+
 
   const handleCancel = () => {
     cancelEditing();
@@ -758,7 +787,7 @@ const token = userStore((state) => state.token);
                       />
                     </div>
 
-                    <div className="space-y-2">
+                    {/* <div className="space-y-2">
                       <Label
                         htmlFor="role"
                         className={cn(
@@ -795,7 +824,7 @@ const token = userStore((state) => state.token);
                           </SelectItem>
                         </SelectContent>
                       </Select>
-                    </div>
+                    </div> */}
 
                     <div className="space-y-2">
                       <Label
