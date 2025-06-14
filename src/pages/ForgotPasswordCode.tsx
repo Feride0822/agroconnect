@@ -17,7 +17,9 @@ const ForgotPasswordCode = () => {
   const { actualTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
-  const email = location.state?.email || "";
+  const emailFromState = location.state?.email;
+  const emailFromSession = sessionStorage.getItem("reset_email");
+  const email = emailFromState || emailFromSession || "";
   const [code, setCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -90,7 +92,7 @@ const ForgotPasswordCode = () => {
       const { uid, token } = response.data; // Adapt to your backend's response
 
       // Navigate to the new password page, passing uid and token
-      navigate("/login/forgot-password/new-password", {
+      navigate("/login/forgot-password/verify-code/new-password", {
         state: { uid, token },
       });
     } catch (err: any) {

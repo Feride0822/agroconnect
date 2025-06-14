@@ -2,13 +2,6 @@ import React, { useState } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Sidebar from "@/components/layout/Sidebar";
 import RegionalStats from "@/components/agricultural/RegionalStats";
@@ -163,8 +156,6 @@ const ProductControl = () => {
           <Tabs defaultValue="overview" className="space-y-8">
           <RegionalAdds/>
           </Tabs>
-
-
         </div>
       </div>
     </div>

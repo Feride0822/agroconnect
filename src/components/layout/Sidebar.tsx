@@ -64,24 +64,28 @@ const Sidebar = () => {
   const navItems = user
     ? role === "Farmers"
       ? [
+        { path: "/dashboard", label: "Dashboard", icon: BarChart3 },
           { path: "/statistics", label: "Analytics", icon: TrendingUp },
           { path: "/profile", label: "Profile", icon: User },
+          { path: "/product-control", label: "Product Control", icon: Leaf },
           { path: "/settings", label: "Settings", icon: Settings },
-          { path: "/dashboard", label: "Dashboard", icon: BarChart3 },
+          
         ]
       : role === "Exporters"
         ? [
+          { path: "/dashboard", label: "Dashboard", icon: BarChart3 },
             { path: "/farmers", label: "Farmers", icon: Users },
             { path: "/profile", label: "Profile", icon: User },
             { path: "/settings", label: "Settings", icon: Settings },
-            { path: "/dashboard", label: "Dashboard", icon: BarChart3 },
+            
           ]
         : role === "Analysts"
           ? [
+            { path: "/dashboard", label: "Dashboard", icon: BarChart3 },
               { path: "/statistics", label: "Analytics", icon: TrendingUp },
               { path: "/profile", label: "Profile", icon: User },
               { path: "/settings", label: "Settings", icon: Settings },
-              { path: "/dashboard", label: "Dashboard", icon: BarChart3 },
+              
             ]
           : []
     : [

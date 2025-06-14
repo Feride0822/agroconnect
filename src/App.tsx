@@ -20,8 +20,9 @@ import ForgotPasswordCode from "./pages/ForgotPasswordCode";
 import ForgotPasswordEmail from "./pages/ForgotPasswordEmail";
 import ForgotPasswordNewPassword from "./pages/ForgotPasswordNewPassword";
 import RegiterGoogle from "./pages/RegisterGoogle";
+import ProductControl from "./pages/ProductControl";
 
-export const Base_Url = "http://192.168.16.77:8000";
+export const Base_Url = "http://34.34.87.78:9000";
 // export const Base_Url = "http://example/api";
 const queryClient = new QueryClient();
 
@@ -38,11 +39,23 @@ const App = () => (
             <Route path="/register" element={<Register />} />
             <Route path="/news" element={<News />} />
             <Route path="/settings" element={<Settings />} />
-            <Route path="/confirm" element={ <RegisterConfirm /> } />
-            <Route path="/login/forgot-password" element={ <ForgotPasswordEmail/> }/>
-            <Route path="/login/forgot-password/verify-code" element={<ForgotPasswordCode />} />
-            <Route path="/login/forgot-password/new-password" element={<ForgotPasswordNewPassword />} />
-            <Route path="/register/complete-profile" element={ <RegiterGoogle/>} />
+            <Route path="/confirm" element={<RegisterConfirm />} />
+            <Route
+              path="/login/forgot-password"
+              element={<ForgotPasswordEmail />}
+            />
+            <Route
+              path="/login/forgot-password/verify-code"
+              element={<ForgotPasswordCode />}
+            />
+            <Route
+              path="/login/forgot-password/verify-code/new-password"
+              element={<ForgotPasswordNewPassword />}
+            />
+            <Route
+              path="/register/complete-profile"
+              element={<RegiterGoogle />}
+            />
 
             <Route
               element={
@@ -60,6 +73,10 @@ const App = () => (
               }
             >
               <Route path="/statistics" element={<Statistics />} />
+            </Route>
+
+            <Route element={<ProtectedRoute allowedRoles={["Farmers"]} />}>
+              <Route path="/product-control" element={<ProductControl />} />
             </Route>
 
             <Route element={<ProtectedRoute allowedRoles={["Exporters"]} />}>

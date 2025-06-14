@@ -60,7 +60,7 @@ const ForgotPasswordEmail = () => {
         "success",
       );
 
-      // Navigate to the code verification page, passing the email
+      sessionStorage.setItem("reset_email", email);
       navigate("/login/forgot-password/verify-code", { state: { email } });
     } catch (err: any) {
       setIsLoading(false);
