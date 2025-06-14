@@ -50,14 +50,14 @@ const RegiterGoogle = () => {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
+            {/* <div>
               <Label>First Name</Label>
               <Input value={formData.first_name} onChange={(e) => handleChange("first_name", e.target.value)} required />
             </div>
             <div>
               <Label>Last Name</Label>
               <Input value={formData.last_name} onChange={(e) => handleChange("last_name", e.target.value)} required />
-            </div>
+            </div> */}
             <div>
               <Label>Password</Label>
               <Input type="password" value={formData.password} onChange={(e) => handleChange("password", e.target.value)} required />
