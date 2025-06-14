@@ -42,9 +42,12 @@ import {
 } from "lucide-react";
 import { Base_Url } from "@/App";
 import userStore from "@/store/UserStore";
+import { shallow } from 'zustand/shallow';
 
 const Profile = () => {
   const { actualTheme } = useTheme();
+ const user = userStore((state) => state.user);
+const token = userStore((state) => state.token);
   // Simple state management for profile editing
   const [profile, setProfile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -53,42 +56,40 @@ const Profile = () => {
   const [saveStatus, setSaveStatus] = useState("idle");
   const [error, setError] = useState(null);
 
-  const { user } = userStore();
+
   // Load profile data on mount
-  useEffect(() => {
-    const fetchProfile = async () => {
-      setIsLoading(true);
-      try {
-        if (!user?.email) {
-          throw new Error("No user email available from store");
-        }
-        const response = await fetch(`${Base_Url}/accounts/profile/`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        if (!response.ok) {
-          throw new Error("Failed to fetch profile data");
-        }
-        const data = await response.json();
-        const matchedProfile = data.find((u) => u.email === user.email);
-        if (!matchedProfile) {
-          throw new Error("Profile not found for the current user");
-        }
-        if (!data || data.length === 0) {
-          throw new Error("No user profiles found");
-        }
-        setProfile(matchedProfile);
-      } catch (error) {
-        setError("Failed to fetch profile data");
-        console.log("Error fetching profile data:", error);
-      } finally {
-        setIsLoading(false);
+ useEffect(() => {
+  const fetchProfile = async () => {
+    setIsLoading(true);
+    try {
+      console.log("Current token:", token);
+      if (!user?.email || !token) {
+        throw new Error("No user or token available from store");
       }
-    };
-    fetchProfile();
-  }, []);
+      const response = await fetch(`${Base_Url}/accounts/profile/`, { // corrected URL explicitly
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}` // correct JWT token explicitly
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch profile data");
+      }
+      const profileData = await response.json();  // directly assign profile data
+      setProfile(profileData);  // clearly fixed this step
+    } catch (error) {
+      setError("Failed to fetch profile data");
+      console.log("Error fetching profile data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  fetchProfile();
+}, [user, token]);
+
+
+
 
   const startEditing = () => {
     setIsEditing(true);
@@ -338,7 +339,7 @@ const Profile = () => {
                       src={profile.avatar || "/placeholder-user.jpg"}
                     />
                     <AvatarFallback className="text-2xl bg-green-500 text-white font-bold">
-                      {profile.name
+                      {profile.first_name
                         .split(" ")
                         .map((n) => n[0])
                         .join("")}
@@ -357,7 +358,7 @@ const Profile = () => {
                             : "text-gray-900",
                         )}
                       >
-                        {profile.name}
+                        {profile.first_name}
                       </h1>
                       <div className="flex flex-wrap items-center gap-3 mb-4">
                         <Badge className={getRoleBadge(profile.role).color}>
@@ -441,7 +442,7 @@ const Profile = () => {
                           ? "bg-green-600/20 hover:bg-green-600/30"
                           : "bg-green-500/20 hover:bg-green-500/30",
                       )}
-                      title={profile.phone}
+                      title={profile.phone_number}
                     >
                       <Phone className="h-5 w-5 text-green-500" />
                       <div
@@ -452,7 +453,7 @@ const Profile = () => {
                             : "bg-gray-900 text-white",
                         )}
                       >
-                        {profile.phone}
+                        {profile.phone_number}
                         <div
                           className={cn(
                             "absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent",

@@ -22,7 +22,8 @@ import ForgotPasswordNewPassword from "./pages/ForgotPasswordNewPassword";
 import RegiterGoogle from "./pages/RegisterGoogle";
 import ProductControl from "./pages/ProductControl";
 
-export const Base_Url = "http://34.34.87.78:9000";
+// export const Base_Url = "http://34.34.87.78:9000";
+export const Base_Url = "http://192.168.16.63:8000";
 // export const Base_Url = "http://example/api";
 const queryClient = new QueryClient();
 
