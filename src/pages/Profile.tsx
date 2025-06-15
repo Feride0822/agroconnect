@@ -90,9 +90,6 @@ const navigate = useNavigate();
   fetchProfile();
 }, [user, token]);
 
-
-
-
   const startEditing = () => {
     setIsEditing(true);
     setSaveStatus("idle");

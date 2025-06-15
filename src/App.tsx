@@ -19,12 +19,12 @@ import RegisterConfirm from "./pages/RegisterConfirm";
 import ForgotPasswordCode from "./pages/ForgotPasswordCode";
 import ForgotPasswordEmail from "./pages/ForgotPasswordEmail";
 import ForgotPasswordNewPassword from "./pages/ForgotPasswordNewPassword";
-import RegiterGoogle from "./pages/RegisterGoogle";
 import ProductControl from "./pages/ProductControl";
 import ChangeEmail from "./pages/ChangeEmail";
-
-// export const Base_Url = "http://34.34.87.78:9000";
-export const Base_Url = "http://192.168.16.63:8000";
+import GoogleOAuthHandler from "./components/auth/GoogleOAuthHandler";
+import CompleteProfile from "./components/auth/CompleteProfile";
+export const Base_Url = "http://34.34.87.78:9000/";
+// export const Base_Url = "http://192.168.16.63:8000";
 // export const Base_Url = "http://example/api";
 const queryClient = new QueryClient();
 
@@ -54,12 +54,13 @@ const App = () => (
               path="/login/forgot-password/verify-code/new-password"
               element={<ForgotPasswordNewPassword />}
             />
+            
+            <Route path="/profile/change-email" element={ <ChangeEmail/> } />
+            <Route path="/oauth/google/callback" element={ <GoogleOAuthHandler /> } />
             <Route
               path="/register/complete-profile"
-              element={<RegiterGoogle />}
+              element={<CompleteProfile />}
             />
-            <Route path="/profile/change-email" element={ <ChangeEmail/> } />
-
             <Route
               element={
                 <ProtectedRoute
