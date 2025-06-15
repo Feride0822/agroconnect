@@ -22,6 +22,7 @@ import { Base_Url } from "@/App";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSearchParams } from "react-router-dom";
+import userStore from "@/store/UserStore";
 
 
 const CompleteProfile = () => {
@@ -122,14 +123,35 @@ useEffect(() => {
       console.log("Profile completion successful:", res.data);
       showToastMessage("Profile completed successfully! You can now log in.", "success");
 
-      setTimeout(() => {
-        navigate("/login", { 
-          state: { 
-            message: "Profile completed! Please log in with Google to continue.",
-            email: email 
-          } 
-        });
-      }, 2000);
+      setTimeout(async () => {
+  try {
+    // Fetch user details explicitly after completing the profile
+    const access_token = localStorage.getItem("access_token");
+    const response = await axios.get(`${Base_Url}/profile/`, {
+      headers: { Authorization: `Bearer ${access_token}` },
+    });
+
+    const user = response.data;
+
+    // Store user details explicitly in Zustand store or context
+    userStore.getState().login(user, access_token!);
+
+    // Navigate explicitly based on user role
+    if (user.role === "Farmers") {
+      navigate("/statistics");
+    } else if (user.role === "Exporters") {
+      navigate("/farmers");
+    } else if (user.role === "Analysts") {
+      navigate("/dashboard");
+    } else {
+      navigate("/dashboard"); // default fallback
+    }
+  } catch (error) {
+    console.error("Failed to fetch user details after profile completion:", error);
+    navigate("/login", { state: { message: "Authentication failed, please login again." } });
+  }
+}, 1000);
+
 
     } catch (err: any) {
       console.error("Profile completion error:", err);
