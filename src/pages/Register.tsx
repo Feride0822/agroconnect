@@ -228,12 +228,11 @@ const Register = () => {
   return (
     <div
       className={cn(
-        "min-h-screen transition-colors duration-300",
+        "min-h-screen flex items-center justify-center transition-colors duration-300",
         actualTheme === "dark" ? "bg-gray-900" : "bg-gray-50",
       )}
     >
-      <Sidebar />
-      <div className="flex-1 md:mr-80 flex items-center justify-center p-4">
+      {/* <Sidebar /> */}
         <div className="w-full max-w-2xl">
           {/* Logo and Header */}
           <div className="text-center mb-8">
@@ -735,7 +734,6 @@ const Register = () => {
             </p>
           </div>
         </div>
-      </div>
       <ToastContainer /> {/* Make sure ToastContainer is rendered */}
     </div>
   );

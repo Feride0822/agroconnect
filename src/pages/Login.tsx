@@ -139,13 +139,11 @@ const Login = () => {
   return (
     <div
       className={cn(
-        "min-h-screen transition-colors duration-300",
+        "min-h-screen flex items-center justify-center transition-colors duration-300",
         actualTheme === "dark" ? "bg-gray-900" : "bg-gray-50",
       )}
     >
-      <Sidebar />
-
-      <div className="flex-1 md:mr-80 flex items-center justify-center p-4">
+      {/* <Sidebar /> */}
         <div className="w-full max-w-md">
           {/* Logo and Header */}
           <div className="text-center mb-8">
@@ -462,7 +460,6 @@ const Login = () => {
             </p>
           </div>
         </div>
-      </div>
       <ToastContainer />
     </div>
   );
