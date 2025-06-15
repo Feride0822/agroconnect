@@ -76,35 +76,35 @@ const Dashboard = () => {
     const stability = Math.max(0, 100 - (Math.sqrt(variance) / avg) * 100);
     return stability < 70;
   });
-  useEffect(() => {
-  const access_token = searchParams.get("access_token");
-  const refresh_token = searchParams.get("refresh_token");
+//   useEffect(() => {
+//   const access_token = searchParams.get("access_token");
+//   const refresh_token = searchParams.get("refresh_token");
 
-  if (access_token && refresh_token) {
-    localStorage.setItem("access_token", access_token);
-    localStorage.setItem("refresh_token", refresh_token);
+//   if (access_token && refresh_token) {
+//     localStorage.setItem("access_token", access_token);
+//     localStorage.setItem("refresh_token", refresh_token);
 
-    const fetchUserDetails = async () => {
-      try {
-        const response = await fetch(`${Base_Url}/accounts/profile/`, {
-          headers: { Authorization: `Bearer ${access_token}` },
-        });
+//     const fetchUserDetails = async () => {
+//       try {
+//         const response = await fetch(`${Base_Url}/accounts/profile/`, {
+//           headers: { Authorization: `Bearer ${access_token}` },
+//         });
 
-        if (!response.ok) throw new Error("Token verification failed");
+//         if (!response.ok) throw new Error("Token verification failed");
 
-        const userData = await response.json();
-        login(userData, access_token);
-      } catch (error) {
-        console.error("Error:", error);
-        navigate("/login", { state: { message: "Login failed, please retry." } });
-      }
-    };
+//         const userData = await response.json();
+//         login(userData, access_token);
+//       } catch (error) {
+//         console.error("Error:", error);
+//         navigate("/login", { state: { message: "Login failed, please retry." } });
+//       }
+//     };
 
-    fetchUserDetails();
-  } else {
-    navigate("/login");
-  }
-}, [searchParams, login, navigate]);
+//     fetchUserDetails();
+//   } else {
+//     navigate("/login");
+//   }
+// }, [searchParams, login, navigate]);
 
 
   return (

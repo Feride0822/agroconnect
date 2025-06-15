@@ -36,7 +36,7 @@ export interface UserProfile {
   name: string;
   email: string;
   phone: string;
-  role: "farmer" | "exporter" | "analyst";
+  role: "Farmers" | "Exporters" | "Analysts";
   region: string;
   organization: string;
   joinDate: string;

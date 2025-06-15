@@ -23,8 +23,8 @@ import ProductControl from "./pages/ProductControl";
 import ChangeEmail from "./pages/ChangeEmail";
 import CompleteProfile from "./components/auth/CompleteProfile";
 import GoogleOAuthHandler from "./components/auth/GoogleOAuthHandler";
-// export const Base_Url = "http://34.34.87.78:9000/";
-export const Base_Url = "http://192.168.16.39:8000";
+export const Base_Url = "http://34.34.87.78:9000";
+// export const Base_Url = "http://192.168.16.39:8000";
 // export const Base_Url = "http://example/api";
 const queryClient = new QueryClient();
 
@@ -54,13 +54,16 @@ const App = () => (
               path="/login/forgot-password/verify-code/new-password"
               element={<ForgotPasswordNewPassword />}
             />
-            
-            <Route path="/profile/change-email" element={ <ChangeEmail/> } />
+            <Route path="/profile/change-email" element={<ChangeEmail />} />
             <Route
               path="/register/complete-profile"
               element={<CompleteProfile />}
             />
-            <Route path="/oauth/google/callback" element={<GoogleOAuthHandler />} /> // ✅ This line MUST be added
+            <Route
+              path="/oauth/google/callback"
+              element={<GoogleOAuthHandler />}
+            />{" "}
+            // ✅ This line MUST be added
             <Route
               element={
                 <ProtectedRoute
@@ -78,15 +81,12 @@ const App = () => (
             >
               <Route path="/statistics" element={<Statistics />} />
             </Route>
-
             <Route element={<ProtectedRoute allowedRoles={["Farmers"]} />}>
               <Route path="/product-control" element={<ProductControl />} />
             </Route>
-
             <Route element={<ProtectedRoute allowedRoles={["Exporters"]} />}>
               <Route path="/farmers" element={<Farmers />} />
             </Route>
-
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

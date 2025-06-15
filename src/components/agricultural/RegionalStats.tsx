@@ -213,7 +213,7 @@ const RegionalStats = () => {
                         : "text-gray-700",
                     )}
                   >
-                    Region
+                    Products
                   </th>
                   {/* <th
                     className={cn(

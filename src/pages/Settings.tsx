@@ -57,7 +57,7 @@ const Settings = () => {
     { value: "dark", label: "Dark", icon: Moon },
     { value: "system", label: "System", icon: Monitor },
   ];
-
+// /accounts/delete
   const handleExportData = () => {
     // Simulate data export
     const data = {
