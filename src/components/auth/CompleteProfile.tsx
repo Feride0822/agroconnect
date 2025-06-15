@@ -41,43 +41,20 @@ const CompleteProfile = () => {
   const [searchParams] = useSearchParams();
 
 useEffect(() => {
-  const urlEmail = searchParams.get('email');
+  const emailParam = searchParams.get('email');
   const access_token = searchParams.get('access_token');
   const refresh_token = searchParams.get('refresh_token');
 
-  if (!urlEmail || !access_token || !refresh_token) {
-    console.error("Missing email or tokens in URL parameters.");
-    navigate("/register", { state: { message: "Incomplete registration details." } });
+  if (!emailParam || !access_token || !refresh_token) {
+    navigate("/register");
     return;
   }
 
-  setEmail(urlEmail);
+  setEmail(emailParam);
   localStorage.setItem("access_token", access_token);
   localStorage.setItem("refresh_token", refresh_token);
-
-  const verifyUser = async () => {
-    try {
-      const response = await axios.get(`${Base_Url}/accounts/profile/`, {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      });
-
-      if (response.status !== 200) {
-        throw new Error(`Verification failed with status: ${response.status}`);
-      }
-
-      console.log("User verified successfully on CompleteProfile:", response.data);
-    } catch (error) {
-      console.error("Verification error on CompleteProfile:", error);
-      navigate("/login", {
-        state: { message: "Authentication failed after profile completion, please log in again." },
-      });
-    }
-  };
-
-  verifyUser();
 }, [searchParams, navigate]);
+
 
 
   const showToastMessage = (
@@ -136,7 +113,7 @@ useEffect(() => {
 
     try {
       // Update the user profile with additional information
-      const updateEndpoint = `${Base_Url}/accounts/complete-google-profile/`;
+      const updateEndpoint = `${Base_Url}/accounts/login/google/complete-profile/`;
 
       const res = await axios.post(updateEndpoint, {
         email: email,
@@ -172,7 +149,7 @@ useEffect(() => {
       navigate("/dashboard"); // default fallback
     }
   } catch (error) {
-    console.error("Failed to fetch user details after profile completion:", error);
+    console.log("Failed to fetch user details after profile completion:");
     navigate("/login", { state: { message: "Authentication failed, please login again." } });
   }
 }, 1000);

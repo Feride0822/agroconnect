@@ -69,7 +69,7 @@ const GoogleOAuthHandler = () => {
                 navigate("/dashboard");
                 break;
               default:
-                navigate("/");
+                navigate("/profile");
                 break;
             }
           }, 2000);

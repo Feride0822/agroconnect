@@ -90,20 +90,19 @@ const Dashboard = () => {
           headers: { Authorization: `Bearer ${access_token}` },
         });
 
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(`Fetch user failed: ${response.status} - ${JSON.stringify(errorData)}`);
-        }
+        if (!response.ok) throw new Error("Token verification failed");
 
         const userData = await response.json();
         login(userData, access_token);
       } catch (error) {
-        console.error("Critical error fetching user details in Dashboard:", error);
-        navigate("/login", { state: { message: "Session expired or invalid token. Please log in again." } });
+        console.error("Error:", error);
+        navigate("/login", { state: { message: "Login failed, please retry." } });
       }
     };
 
     fetchUserDetails();
+  } else {
+    navigate("/login");
   }
 }, [searchParams, login, navigate]);
 
