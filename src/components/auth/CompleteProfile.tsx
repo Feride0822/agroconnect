@@ -41,19 +41,44 @@ const CompleteProfile = () => {
   const [searchParams] = useSearchParams();
 
 useEffect(() => {
-  const email = searchParams.get('email');
+  const urlEmail = searchParams.get('email');
   const access_token = searchParams.get('access_token');
   const refresh_token = searchParams.get('refresh_token');
 
-  if (!email || !access_token || !refresh_token) {
-    navigate("/register");
+  if (!urlEmail || !access_token || !refresh_token) {
+    console.error("Missing email or tokens in URL parameters.");
+    navigate("/register", { state: { message: "Incomplete registration details." } });
     return;
   }
 
-  setEmail(email);
+  setEmail(urlEmail);
   localStorage.setItem("access_token", access_token);
   localStorage.setItem("refresh_token", refresh_token);
+
+  const verifyUser = async () => {
+    try {
+      const response = await axios.get(`${Base_Url}/accounts/profile/`, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      });
+
+      if (response.status !== 200) {
+        throw new Error(`Verification failed with status: ${response.status}`);
+      }
+
+      console.log("User verified successfully on CompleteProfile:", response.data);
+    } catch (error) {
+      console.error("Verification error on CompleteProfile:", error);
+      navigate("/login", {
+        state: { message: "Authentication failed after profile completion, please log in again." },
+      });
+    }
+  };
+
+  verifyUser();
 }, [searchParams, navigate]);
+
 
   const showToastMessage = (
     message: string,
@@ -127,7 +152,7 @@ useEffect(() => {
   try {
     // Fetch user details explicitly after completing the profile
     const access_token = localStorage.getItem("access_token");
-    const response = await axios.get(`${Base_Url}/profile/`, {
+    const response = await axios.get(`${Base_Url}/accounts/profile/`, {
       headers: { Authorization: `Bearer ${access_token}` },
     });
 

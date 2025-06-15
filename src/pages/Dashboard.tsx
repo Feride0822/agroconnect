@@ -77,28 +77,36 @@ const Dashboard = () => {
     return stability < 70;
   });
   useEffect(() => {
-    const access_token = searchParams.get('access_token');
-    const refresh_token = searchParams.get('refresh_token');
+  const access_token = searchParams.get("access_token");
+  const refresh_token = searchParams.get("refresh_token");
 
-    if (access_token && refresh_token) {
-      localStorage.setItem("access_token", access_token);
-      localStorage.setItem("refresh_token", refresh_token);
-      
-      // Explicitly fetch user details from backend API to get full profile (recommended approach)
-      const fetchUserDetails = async () => {
-        const response = await fetch(`${Base_Url}/profile/`, {
-          headers: { Authorization: `Bearer ${access_token}` }
+  if (access_token && refresh_token) {
+    localStorage.setItem("access_token", access_token);
+    localStorage.setItem("refresh_token", refresh_token);
+
+    const fetchUserDetails = async () => {
+      try {
+        const response = await fetch(`${Base_Url}/accounts/profile/`, {
+          headers: { Authorization: `Bearer ${access_token}` },
         });
-        if (response.ok) {
-          const userData = await response.json();
-          login(userData, access_token);
-        } else {
-          navigate("/login");
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(`Fetch user failed: ${response.status} - ${JSON.stringify(errorData)}`);
         }
-      };
-      fetchUserDetails();
-    }
-  }, [searchParams, login, navigate]);
+
+        const userData = await response.json();
+        login(userData, access_token);
+      } catch (error) {
+        console.error("Critical error fetching user details in Dashboard:", error);
+        navigate("/login", { state: { message: "Session expired or invalid token. Please log in again." } });
+      }
+    };
+
+    fetchUserDetails();
+  }
+}, [searchParams, login, navigate]);
+
 
   return (
     <div
