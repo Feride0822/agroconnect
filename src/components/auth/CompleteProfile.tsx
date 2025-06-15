@@ -21,6 +21,8 @@ import axios from "axios";
 import { Base_Url } from "@/App";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useSearchParams } from "react-router-dom";
+
 
 const CompleteProfile = () => {
   const { actualTheme } = useTheme();
@@ -34,20 +36,23 @@ const CompleteProfile = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
+  
+  const [searchParams] = useSearchParams();
 
-  useEffect(() => {
-    // Get email from navigation state
-    const stateEmail = location.state?.email;
-    const isGoogleReg = location.state?.isGoogleRegistration;
-    
-    if (!stateEmail || !isGoogleReg) {
-      // If no email or not from Google registration, redirect to register
-      navigate("/register");
-      return;
-    }
-    
-    setEmail(stateEmail);
-  }, [location.state, navigate]);
+useEffect(() => {
+  const email = searchParams.get('email');
+  const access_token = searchParams.get('access_token');
+  const refresh_token = searchParams.get('refresh_token');
+
+  if (!email || !access_token || !refresh_token) {
+    navigate("/register");
+    return;
+  }
+
+  setEmail(email);
+  localStorage.setItem("access_token", access_token);
+  localStorage.setItem("refresh_token", refresh_token);
+}, [searchParams, navigate]);
 
   const showToastMessage = (
     message: string,

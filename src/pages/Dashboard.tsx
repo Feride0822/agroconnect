@@ -34,10 +34,17 @@ import {
   TreePine,
   Wheat,
 } from "lucide-react";
+import { useEffect } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import userStore from "@/store/UserStore";
+import { Base_Url } from "@/App";
 
 const Dashboard = () => {
   const { actualTheme } = useTheme();
   const [selectedRegion, setSelectedRegion] = useState<any>(null);
+   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const login = userStore((state) => state.login);
 
   // Calculate key metrics
   const totalProduction = regions.reduce(
@@ -69,6 +76,29 @@ const Dashboard = () => {
     const stability = Math.max(0, 100 - (Math.sqrt(variance) / avg) * 100);
     return stability < 70;
   });
+  useEffect(() => {
+    const access_token = searchParams.get('access_token');
+    const refresh_token = searchParams.get('refresh_token');
+
+    if (access_token && refresh_token) {
+      localStorage.setItem("access_token", access_token);
+      localStorage.setItem("refresh_token", refresh_token);
+      
+      // Explicitly fetch user details from backend API to get full profile (recommended approach)
+      const fetchUserDetails = async () => {
+        const response = await fetch(`${Base_Url}/profile/`, {
+          headers: { Authorization: `Bearer ${access_token}` }
+        });
+        if (response.ok) {
+          const userData = await response.json();
+          login(userData, access_token);
+        } else {
+          navigate("/login");
+        }
+      };
+      fetchUserDetails();
+    }
+  }, [searchParams, login, navigate]);
 
   return (
     <div

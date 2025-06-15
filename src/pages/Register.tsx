@@ -689,19 +689,20 @@ const Register = () => {
                   or
                 </p>
                 <Button
-                  variant="outline"
-                  className="w-full flex items-center justify-center space-x-2 border border-gray-300 hover:bg-gray-100 hover:text-black transition"
-                  onClick={() => {
-                    window.location.href = `${Base_Url}/accounts/login/google/?redirect_uri=${window.location.origin}/oauth/google/callback`;
-                  }}
-                >
-                  <img
-                    src="https://www.svgrepo.com/show/475656/google-color.svg"
-                    alt="Google logo"
-                    className="w-5 h-5"
-                  />
-                  <span>Continue with Google</span>
-                </Button>
+  variant="outline"
+  className="w-full flex items-center justify-center space-x-2 border border-gray-300 hover:bg-gray-100 hover:text-black transition"
+  onClick={() => {
+    window.location.href = `${Base_Url}/login/google/`;
+  }}
+>
+  <img
+    src="https://www.svgrepo.com/show/475656/google-color.svg"
+    alt="Google logo"
+    className="w-5 h-5"
+  />
+  <span>Continue with Google</span>
+</Button>
+
               </div>
 
               <div className="mt-8 text-center">
