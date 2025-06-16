@@ -43,14 +43,14 @@ import {
 } from "lucide-react";
 import { Base_Url } from "@/App";
 import userStore from "@/store/UserStore";
-import { shallow } from 'zustand/shallow';
+import { shallow } from "zustand/shallow";
 import axios from "axios";
 
 const Profile = () => {
   const { actualTheme } = useTheme();
- const user = userStore((state) => state.user);
-const token = userStore((state) => state.token);
-const navigate = useNavigate();
+  const user = userStore((state) => state.user);
+  const token = userStore((state) => state.token);
+  const navigate = useNavigate();
   // Simple state management for profile editing
   const [profile, setProfile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -59,50 +59,70 @@ const navigate = useNavigate();
   const [saveStatus, setSaveStatus] = useState("idle");
   const [error, setError] = useState(null);
 
+  type Activity = {
+    id: number;
+    action: "CREATE" | "UPDATE" | "DELETE";
+    action_display: string;
+    model_name: string;
+    object_name: string;
+    timestamp: string;
+    time_ago: string;
+  };
 
-  const [activities, setActivities] = useState([]);
+  const [activities, setActivities] = useState<Activity[]>([]);
 
-useEffect(() => {
-  fetch(`${Base_Url}/accounts/recent-activities/`, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  })
-  .then(res => res.json())
-  .then(data => setActivities(data))
-  .catch(err => console.error("Failed to fetch activities:", err));
-}, [token]);
+  useEffect(() => {
+    fetch(`${Base_Url}/accounts/recent-activities/`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data.activities)) {
+          setActivities(data.activities);
+        } else {
+          console.error("Invalid activity format", data);
+          setActivities([]);
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to fetch activities:", err);
+        setActivities([]);
+      });
+  }, [token]);
 
   // Load profile data on mount
- useEffect(() => {
-  const fetchProfile = async () => {
-    setIsLoading(true);
-    try {
-      console.log("Current token:", token);
-      if (!user?.email || !token) {
-        throw new Error("No user or token available from store");
+  useEffect(() => {
+    const fetchProfile = async () => {
+      setIsLoading(true);
+      try {
+        console.log("Current token:", token);
+        if (!user?.email || !token) {
+          throw new Error("No user or token available from store");
+        }
+        const response = await fetch(`${Base_Url}/accounts/profile/`, {
+          // corrected URL explicitly
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // correct JWT token explicitly
+          },
+        });
+        if (!response.ok) {
+          throw new Error("Failed to fetch profile data");
+        }
+        const profileData = await response.json(); // directly assign profile data
+        setProfile(profileData); // clearly fixed this step
+      } catch (error) {
+        setError("Failed to fetch profile data");
+        console.log("Error fetching profile data:", error);
+      } finally {
+        setIsLoading(false);
       }
-      const response = await fetch(`${Base_Url}/accounts/profile/`, { // corrected URL explicitly
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}` // correct JWT token explicitly
-        },
-      });
-      if (!response.ok) {
-        throw new Error("Failed to fetch profile data");
-      }
-      const profileData = await response.json();  // directly assign profile data
-      setProfile(profileData);  // clearly fixed this step
-    } catch (error) {
-      setError("Failed to fetch profile data");
-      console.log("Error fetching profile data:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  fetchProfile();
-}, [user, token]);
+    };
+    fetchProfile();
+  }, [user, token]);
 
   const startEditing = () => {
     setIsEditing(true);
@@ -117,43 +137,43 @@ useEffect(() => {
   };
 
   const updateProfile = async (updates: any) => {
-  setIsSaving(true);
-  setSaveStatus("saving");
-  setError(null);
+    setIsSaving(true);
+    setSaveStatus("saving");
+    setError(null);
 
-  try {
-    const response = await fetch(`${Base_Url}/accounts/profile/`, {
-      method: "PUT",  // ✅ Correct method explicitly set
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`  // ✅ Auth token explicitly included
-      },
-      body: JSON.stringify(updates), // ✅ send updated profile data explicitly
-    });
+    try {
+      const response = await fetch(`${Base_Url}/accounts/profile/`, {
+        method: "PUT", // ✅ Correct method explicitly set
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // ✅ Auth token explicitly included
+        },
+        body: JSON.stringify(updates), // ✅ send updated profile data explicitly
+      });
 
-    if (!response.ok) {
-      throw new Error("Failed to save profile data");
+      if (!response.ok) {
+        throw new Error("Failed to save profile data");
+      }
+
+      const updatedProfile = await response.json();
+      setProfile(updatedProfile);
+      setSaveStatus("success");
+      setIsEditing(false);
+
+      // Optional: clear success message after a short delay
+      setTimeout(() => setSaveStatus("idle"), 3000);
+    } catch (error) {
+      console.error("Error saving profile:", error);
+      setError("Failed to save profile");
+      setSaveStatus("error");
+      setTimeout(() => {
+        setSaveStatus("idle");
+        setError(null);
+      }, 5000);
+    } finally {
+      setIsSaving(false);
     }
-
-    const updatedProfile = await response.json();
-    setProfile(updatedProfile);
-    setSaveStatus("success");
-    setIsEditing(false);
-
-    // Optional: clear success message after a short delay
-    setTimeout(() => setSaveStatus("idle"), 3000);
-  } catch (error) {
-    console.error("Error saving profile:", error);
-    setError("Failed to save profile");
-    setSaveStatus("error");
-    setTimeout(() => {
-      setSaveStatus("idle");
-      setError(null);
-    }, 5000);
-  } finally {
-    setIsSaving(false);
-  }
-};
+  };
 
   // Local form state for editing
   const [formData, setFormData] = useState({
@@ -208,35 +228,38 @@ useEffect(() => {
   };
 
   const handleSave = async () => {
-  if (formData.email !== profile.email) {
-    try {
-      const response = await fetch(`${Base_Url}/accounts/profile/request-email-change/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({ 
-          user_id: profile.id,  // ✅ explicitly included user ID here
-          new_email: formData.email 
-        }),
-      });
+    if (formData.email !== profile.email) {
+      try {
+        const response = await fetch(
+          `${Base_Url}/accounts/profile/request-email-change/`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              user_id: profile.id, // ✅ explicitly included user ID here
+              new_email: formData.email,
+            }),
+          },
+        );
 
-      if (!response.ok) {
-        throw new Error("Failed to initiate email change");
+        if (!response.ok) {
+          throw new Error("Failed to initiate email change");
+        }
+
+        navigate("/profile/change-email", {
+          state: { newEmail: formData.email, userId: profile.id },
+        }); // explicitly pass userId as well
+      } catch (error) {
+        console.error("Error initiating email change:", error);
+        setError("Failed to send verification code to new email.");
       }
-
-      navigate("/profile/change-email", { state: { newEmail: formData.email, userId: profile.id } }); // explicitly pass userId as well
-
-    } catch (error) {
-      console.error("Error initiating email change:", error);
-      setError("Failed to send verification code to new email.");
+    } else {
+      await updateProfile(formData);
     }
-  } else {
-    await updateProfile(formData);
-  }
-};
-
+  };
 
   const handleCancel = () => {
     cancelEditing();
@@ -252,7 +275,10 @@ useEffect(() => {
   const getRoleBadge = (role: string) => {
     const roleConfig = {
       Farmers: { label: "Farmer", color: "bg-green-500 text-white border-0" },
-      Exporters: { label: "Exporter", color: "bg-blue-500 text-white border-0" },
+      Exporters: {
+        label: "Exporter",
+        color: "bg-blue-500 text-white border-0",
+      },
       Analysts: {
         label: "Market Analyst",
         color: "bg-purple-500 text-white border-0",
@@ -261,7 +287,6 @@ useEffect(() => {
     return roleConfig[role as keyof typeof roleConfig] || roleConfig.Farmers;
   };
 
-  
   // Show loading state
   if (isLoading) {
     return (
@@ -416,7 +441,6 @@ useEffect(() => {
                     </div>
 
                     <div className="flex items-center space-x-8">
-                      
                       <div className="text-center">
                         <p
                           className={cn(
@@ -700,7 +724,9 @@ useEffect(() => {
                       </Label>
                       <Input
                         id="first_name"
-                        value={isEditing ? formData.first_name : profile.first_name}
+                        value={
+                          isEditing ? formData.first_name : profile.first_name
+                        }
                         disabled={!isEditing}
                         onChange={(e) =>
                           handleInputChange("first_name", e.target.value)
@@ -728,7 +754,9 @@ useEffect(() => {
                       </Label>
                       <Input
                         id="last_name"
-                        value={isEditing ? formData.last_name : profile.last_name}
+                        value={
+                          isEditing ? formData.last_name : profile.last_name
+                        }
                         disabled={!isEditing}
                         onChange={(e) =>
                           handleInputChange("last_name", e.target.value)
@@ -785,7 +813,11 @@ useEffect(() => {
                       </Label>
                       <Input
                         id="phone_number"
-                        value={isEditing ? formData.phone_number : profile.phone_number}
+                        value={
+                          isEditing
+                            ? formData.phone_number
+                            : profile.phone_number
+                        }
                         disabled={!isEditing}
                         onChange={(e) =>
                           handleInputChange("phone_number", e.target.value)
@@ -994,40 +1026,91 @@ useEffect(() => {
               </Card>
             </TabsContent> */}
             <TabsContent value="activity" className="space-y-8">
-  <Card className={cn(actualTheme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200")}>
-    <CardHeader>
-      <CardTitle className={cn("text-2xl flex items-center", actualTheme === "dark" ? "text-white" : "text-gray-900")}>
-        <Activity className="h-6 w-6 mr-2 text-green-500" />
-        Recent Activity
-      </CardTitle>
-    </CardHeader>
-    <CardContent>
-      <div className="space-y-6">
-        {activities.map((activity, index) => (
-          <div key={index} className={cn("flex items-center justify-between py-4 border-b last:border-b-0", actualTheme === "dark" ? "border-gray-700" : "border-gray-200")}>
-            <div className="flex items-center space-x-4">
-              <div className={`w-3 h-3 rounded-full ${activity.status === "success" ? "bg-green-500" : "bg-blue-500"}`}/>
-              <div>
-                <p className={cn("font-medium", actualTheme === "dark" ? "text-white" : "text-gray-900")}>
-                  {activity.action}
-                </p>
-                {activity.product && (
-                  <p className={cn(actualTheme === "dark" ? "text-gray-300" : "text-gray-600")}>
-                    {activity.product} {activity.amount && `- ${activity.amount}`}
-                  </p>
+              <Card
+                className={cn(
+                  actualTheme === "dark"
+                    ? "bg-gray-800 border-gray-700"
+                    : "bg-white border-gray-200",
                 )}
-              </div>
-            </div>
-            <span className="text-green-500">
-              {new Date(activity.date).toLocaleDateString()}
-            </span>
-          </div>
-        ))}
-      </div>
-    </CardContent>
-  </Card>
-</TabsContent>
-
+              >
+                <CardHeader>
+                  <CardTitle
+                    className={cn(
+                      "text-2xl flex items-center",
+                      actualTheme === "dark" ? "text-white" : "text-gray-900",
+                    )}
+                  >
+                    <Activity className="h-6 w-6 mr-2 text-green-500" />
+                    Recent Activity
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-6">
+                    {activities.length > 0 ? (
+                      activities.map((activity) => (
+                        <div
+                          key={activity.id}
+                          className={cn(
+                            "flex items-center justify-between py-4 border-b last:border-b-0",
+                            actualTheme === "dark"
+                              ? "border-gray-700"
+                              : "border-gray-200",
+                          )}
+                        >
+                          <div className="flex items-center space-x-4">
+                            <div
+                              className={`w-3 h-3 rounded-full ${
+                                activity.action === "CREATE"
+                                  ? "bg-green-500"
+                                  : activity.action === "UPDATE"
+                                    ? "bg-blue-500"
+                                    : "bg-red-500"
+                              }`}
+                            />
+                            <div>
+                              <p
+                                className={cn(
+                                  "font-medium",
+                                  actualTheme === "dark"
+                                    ? "text-white"
+                                    : "text-gray-900",
+                                )}
+                              >
+                                {activity.action_display}
+                              </p>
+                              <p
+                                className={cn(
+                                  "text-sm",
+                                  actualTheme === "dark"
+                                    ? "text-gray-300"
+                                    : "text-gray-600",
+                                )}
+                              >
+                                {activity.object_name}
+                              </p>
+                            </div>
+                          </div>
+                          <span
+                            className={cn(
+                              "text-sm",
+                              actualTheme === "dark"
+                                ? "text-gray-400"
+                                : "text-gray-500",
+                            )}
+                          >
+                            {activity.time_ago}
+                          </span>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-sm text-center text-gray-500">
+                        No recent activity.
+                      </p>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
 
             <TabsContent value="analytics" className="space-y-8">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
