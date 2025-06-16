@@ -23,7 +23,7 @@ const ProductControl = () => {
 
   useEffect(() => {
     axios
-      .get(`${Base_Url}/products/`)
+      .get(`${Base_Url}/products/products/`)
       .then((res) => {
         setProducts(res.data);
         setLoading(false);
@@ -103,7 +103,7 @@ const ProductControl = () => {
                   </CardTitle>
                   <Button
   variant="outline"
-  onClick={() => navigate(`/product/add/${product.id}`)}
+  onClick={() => navigate(`/product-control/add/${product.id}`)}
 >
   Add
 </Button>

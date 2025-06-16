@@ -26,8 +26,8 @@ import GoogleOAuthHandler from "./components/auth/GoogleOAuthHandler";
 import ProductAdd from "./pages/ProductAdd";
 
 
-// export const Base_Url = "http://192.168.67.230:8000";
-export const Base_Url = "http://agroconnect.com.uz";
+export const Base_Url = "http://192.168.67.230:8000";
+// export const Base_Url = "http://agroconnect.com.uz";
 // export const Base_Url = "http://example/api";
 const queryClient = new QueryClient();
 
@@ -67,7 +67,7 @@ const App = () => (
               element={<GoogleOAuthHandler />}
             />{" "}
 
-            <Route path="/product/add" element={ <ProductAdd/> } />
+           <Route path="/product-control/add/:productId" element={<ProductAdd />} />
             
             <Route
               element={

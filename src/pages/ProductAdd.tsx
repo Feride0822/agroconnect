@@ -24,15 +24,15 @@ const ProductAdd = () => {
 
   const { user } = userStore();
 
-  const [area, setArea] = useState("");
-  const [expectedVolume, setExpectedVolume] = useState("");
+  const [planting_area, setArea] = useState("");
+  const [expecting_weight, setExpectedVolume] = useState("");
   const [selectedRegion, setSelectedRegion] = useState<number | null>(null);
   const [efficiency, setEfficiency] = useState<number | null>(null);
   const [regions, setRegions] = useState<Region[]>([]);
   const [loadingRegions, setLoadingRegions] = useState(true);
 
   useEffect(() => {
-    axios.get(`${Base_Url}/api/regions/`)
+    axios.get(`${Base_Url}/regions/`)
       .then(res => {
         setRegions(res.data);
         setLoadingRegions(false);
@@ -44,8 +44,8 @@ const ProductAdd = () => {
   }, []);
 
   const calculateEfficiency = () => {
-    const areaNum = parseFloat(area);
-    const volumeNum = parseFloat(expectedVolume);
+    const areaNum = parseFloat(planting_area);
+    const volumeNum = parseFloat(expecting_weight);
     if (areaNum > 0 && volumeNum > 0) {
       setEfficiency(volumeNum / areaNum);
     } else {
@@ -53,37 +53,49 @@ const ProductAdd = () => {
     }
   };
 
-  const handleSubmit = async () => {
-    if (!selectedRegion || !efficiency) {
-      alert("Please select a region and calculate efficiency before submitting.");
-      return;
-    }
+const handleSubmit = async () => {
+  if (!selectedRegion || !efficiency) {
+    alert("Please select a region and calculate efficiency before submitting.");
+    return;
+  }
 
-    const dataToSend = {
-      user_id: user.id,
-      region_id: selectedRegion,
-      product_id: productId,
-      planting_area: parseFloat(area),
-      expecting_weight: parseFloat(expectedVolume),
-      efficiency: efficiency
-    };
+  const dataToSend = {
+    owner: user.id,
+    region: selectedRegion,
+    product: productId,
+    planting_area: parseFloat(planting_area),
+    expecting_weight: parseFloat(expecting_weight),
+    efficiency: efficiency
+  };
 
-    try {
-      const response = await axios.post(`${Base_Url}/products/add/`, dataToSend, {
+  try {
+    const response = await axios.post(`${Base_Url}/products/planted-products/`, dataToSend, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`
+      }
+    });
+
+    if (response.status === 201) {
+      await axios.post(`${Base_Url}/accounts/recent-activities/`, {
+        action: "Added product statistics",
+        product: `Product ID: ${productId}`,
+        amount: `${expecting_weight} tons`,
+        status: "success",
+      }, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`
         }
       });
 
-      if (response.status === 201) {
-        alert("Product added successfully!");
-        navigate("/product/control");
-      }
-    } catch (error) {
-      console.error("Failed to add product:", error);
-      alert("Failed to add product. Please try again.");
+      alert("Product added successfully!");
+      navigate("/product-control");
     }
-  };
+  } catch (error) {
+    console.error("Failed to add product:", error);
+    alert("Failed to add product. Please try again.");
+  }
+};
+
 
   return (
     <div className={cn("min-h-screen", actualTheme === "dark" ? "bg-gray-900" : "bg-gray-50")}>
@@ -98,7 +110,7 @@ const ProductAdd = () => {
               <div>
                 <Label>Area (hectares)</Label>
                 <Input
-                  value={area}
+                  value={planting_area}
                   onChange={(e) => setArea(e.target.value)}
                   placeholder="Enter area in hectares"
                 />
@@ -106,7 +118,7 @@ const ProductAdd = () => {
               <div>
                 <Label>Expected Volume (tons)</Label>
                 <Input
-                  value={expectedVolume}
+                  value={expecting_weight}
                   onChange={(e) => setExpectedVolume(e.target.value)}
                   placeholder="Enter expected volume"
                 />
@@ -126,13 +138,13 @@ const ProductAdd = () => {
                   </SelectContent>
                 </Select>
               </div>
-              <Button onClick={calculateEfficiency}>Calculate Efficiency</Button>
+              <Button onClick={calculateEfficiency} className="mr-3">Calculate Efficiency</Button>
               {efficiency !== null && (
                 <div className="mt-4 p-3 bg-green-100 border border-green-200 rounded">
                   <strong>Efficiency:</strong> {efficiency.toFixed(2)} tons/hectare
                 </div>
               )}
-              <Button onClick={handleSubmit} className="mt-4">Submit Product</Button>
+              <Button onClick={handleSubmit} className="mt-4 bg-green-800">Submit Product</Button>
             </div>
           </CardContent>
         </Card>

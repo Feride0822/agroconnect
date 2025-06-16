@@ -44,6 +44,7 @@ import {
 import { Base_Url } from "@/App";
 import userStore from "@/store/UserStore";
 import { shallow } from 'zustand/shallow';
+import axios from "axios";
 
 const Profile = () => {
   const { actualTheme } = useTheme();
@@ -58,6 +59,19 @@ const navigate = useNavigate();
   const [saveStatus, setSaveStatus] = useState("idle");
   const [error, setError] = useState(null);
 
+
+  const [activities, setActivities] = useState([]);
+
+useEffect(() => {
+  fetch(`${Base_Url}/accounts/recent-activities/`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  .then(res => res.json())
+  .then(data => setActivities(data))
+  .catch(err => console.error("Failed to fetch activities:", err));
+}, [token]);
 
   // Load profile data on mount
  useEffect(() => {
@@ -247,6 +261,7 @@ const navigate = useNavigate();
     return roleConfig[role as keyof typeof roleConfig] || roleConfig.Farmers;
   };
 
+  
   // Show loading state
   if (isLoading) {
     return (
@@ -867,7 +882,7 @@ const navigate = useNavigate();
             </TabsContent>
 
             {/* Other tabs content remains the same... */}
-            <TabsContent value="activity" className="space-y-8">
+            {/* <TabsContent value="activity" className="space-y-8">
               <Card
                 className={cn(
                   actualTheme === "dark"
@@ -977,7 +992,42 @@ const navigate = useNavigate();
                   </div>
                 </CardContent>
               </Card>
-            </TabsContent>
+            </TabsContent> */}
+            <TabsContent value="activity" className="space-y-8">
+  <Card className={cn(actualTheme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200")}>
+    <CardHeader>
+      <CardTitle className={cn("text-2xl flex items-center", actualTheme === "dark" ? "text-white" : "text-gray-900")}>
+        <Activity className="h-6 w-6 mr-2 text-green-500" />
+        Recent Activity
+      </CardTitle>
+    </CardHeader>
+    <CardContent>
+      <div className="space-y-6">
+        {activities.map((activity, index) => (
+          <div key={index} className={cn("flex items-center justify-between py-4 border-b last:border-b-0", actualTheme === "dark" ? "border-gray-700" : "border-gray-200")}>
+            <div className="flex items-center space-x-4">
+              <div className={`w-3 h-3 rounded-full ${activity.status === "success" ? "bg-green-500" : "bg-blue-500"}`}/>
+              <div>
+                <p className={cn("font-medium", actualTheme === "dark" ? "text-white" : "text-gray-900")}>
+                  {activity.action}
+                </p>
+                {activity.product && (
+                  <p className={cn(actualTheme === "dark" ? "text-gray-300" : "text-gray-600")}>
+                    {activity.product} {activity.amount && `- ${activity.amount}`}
+                  </p>
+                )}
+              </div>
+            </div>
+            <span className="text-green-500">
+              {new Date(activity.date).toLocaleDateString()}
+            </span>
+          </div>
+        ))}
+      </div>
+    </CardContent>
+  </Card>
+</TabsContent>
+
 
             <TabsContent value="analytics" className="space-y-8">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
