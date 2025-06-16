@@ -30,7 +30,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  role: "farmer" | "exporter" | "analyst";
+  role: "Farmers" | "Exporters" | "Analysts";
   region: string;
   verified: boolean;
 }

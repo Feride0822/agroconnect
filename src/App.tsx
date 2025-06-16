@@ -23,8 +23,11 @@ import ProductControl from "./pages/ProductControl";
 import ChangeEmail from "./pages/ChangeEmail";
 import CompleteProfile from "./components/auth/CompleteProfile";
 import GoogleOAuthHandler from "./components/auth/GoogleOAuthHandler";
-export const Base_Url = "http://192.168.67.230:8000";
-// export const Base_Url = "http://agroconnect.com.uz:90";
+import ProductAdd from "./pages/ProductAdd";
+
+
+// export const Base_Url = "http://192.168.67.230:8000";
+export const Base_Url = "http://agroconnect.com.uz";
 // export const Base_Url = "http://example/api";
 const queryClient = new QueryClient();
 
@@ -63,7 +66,9 @@ const App = () => (
               path="/oauth/google/callback"
               element={<GoogleOAuthHandler />}
             />{" "}
-            // ✅ This line MUST be added
+
+            <Route path="/product/add" element={ <ProductAdd/> } />
+            
             <Route
               element={
                 <ProtectedRoute

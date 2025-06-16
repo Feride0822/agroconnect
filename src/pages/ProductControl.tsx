@@ -1,161 +1,128 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Sidebar from "@/components/layout/Sidebar";
-import RegionalStats from "@/components/agricultural/RegionalStats";
-import {
-  products,
-  regions,
-  getVolumeByProduct,
-  getVolumeByRegion,
-  getTotalVolumeByRegion,
-} from "@/lib/agricultural-data";
 import { cn } from "@/lib/utils";
-import {
-  Download,
-  Filter,
-  TrendingUp,
-  BarChart3,
-  PieChart,
-  Activity,
-  Leaf,
-} from "lucide-react";
-import RegionalAdds from "@/components/agricultural/RegionalAdds";
+import { BarChart3, Plus } from "lucide-react";
+import axios from "axios";
+import { Base_Url } from "@/App";
+import { useNavigate } from "react-router-dom";
+
+type Product = {
+  id: number;
+  name: string;
+};
 
 const ProductControl = () => {
   const { actualTheme } = useTheme();
-  const [selectedRegion, setSelectedRegion] = useState<string>("all");
-  const [selectedProduct, setSelectedProduct] = useState<string>("all");
-  const [timeFrame, setTimeFrame] = useState<string>("monthly");
+  const navigate = useNavigate();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const comparativeData = regions.map((region) => {
-    const regionProducts = products.map((product) => {
-      const productVolumes = getVolumeByRegion(region.id).filter(
-        (v) => v.productId === product.id,
-      );
-      const totalVolume = productVolumes.reduce((sum, v) => sum + v.volume, 0);
-      return {
-        product: product.name,
-        volume: totalVolume,
-      };
-    });
-
-    return {
-      region: region.name,
-      totalVolume: getTotalVolumeByRegion(region.id),
-      products: regionProducts,
-      efficiency: getTotalVolumeByRegion(region.id) / region.agriculturalArea,
-    };
-  });
-
-  // Prepare trend data (monthly)
-  const trendData = ["January", "February", "March", "April"].map((month) => {
-    const monthData: any = { month };
-
-    products.forEach((product) => {
-      const volumes = regions.map((region) => {
-        const regionVolumes = getVolumeByRegion(region.id).filter(
-          (v) => v.productId === product.id && v.month === month,
-        );
-        return regionVolumes.reduce((sum, v) => sum + v.volume, 0);
+  useEffect(() => {
+    axios
+      .get(`${Base_Url}/products/`)
+      .then((res) => {
+        setProducts(res.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Failed to load products", err);
+        setError("Failed to load products from server.");
+        setLoading(false);
       });
-      monthData[product.name] = volumes.reduce((sum, v) => sum + v, 0);
-    });
+  }, []);
 
-    return monthData;
-  });
+  if (loading) {
+    return <p className="text-center mt-12 text-sm">Loading products...</p>;
+  }
 
-  const getFilteredData = () => {
-    if (selectedRegion === "all" && selectedProduct === "all") {
-      return comparativeData;
-    }
-
-    let filtered = [...comparativeData];
-
-    if (selectedRegion !== "all") {
-      filtered = filtered.filter((data) => {
-        const region = regions.find((r) => r.name === data.region);
-        return region?.id === selectedRegion;
-      });
-    }
-
-    return filtered;
-  };
-
-  const exportData = () => {
-    const data = getFilteredData();
-    const csvContent =
-      "data:text/csv;charset=utf-8," +
-      "Region,Total Volume,Efficiency\n" +
-      data
-        .map((d) => `${d.region},${d.totalVolume},${d.efficiency.toFixed(2)}`)
-        .join("\n");
-
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "agricultural_statistics.csv");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+  if (error) {
+    return <p className="text-center text-red-500 mt-12 text-sm">{error}</p>;
+  }
 
   return (
     <div
       className={cn(
         "min-h-screen transition-colors duration-300",
-        actualTheme === "dark" ? "bg-gray-900" : "bg-gray-50",
+        actualTheme === "dark" ? "bg-gray-900" : "bg-gray-50"
       )}
     >
       <Sidebar />
       <div className="flex-1 md:mr-80">
-        <div className="container mx-auto px-4 py-8 max-w-6xl">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-12">
-            <div className="flex items-center space-x-4 mb-6 lg:mb-0">
-              <div
+        <div className="container mx-auto px-4 py-8 max-w-4xl">
+          <div className="flex items-center space-x-4 mb-10">
+            <div
+              className={cn(
+                "flex items-center justify-center w-14 h-14 rounded-xl",
+                actualTheme === "dark" ? "bg-green-600" : "bg-green-500"
+              )}
+            >
+              <BarChart3 className="h-7 w-7 text-white" />
+            </div>
+            <div>
+              <h1
                 className={cn(
-                  "flex items-center justify-center w-14 h-14 rounded-xl",
-                  actualTheme === "dark" ? "bg-green-600" : "bg-green-500",
+                  "text-4xl font-bold",
+                  actualTheme === "dark" ? "text-white" : "text-gray-900"
                 )}
               >
-                <BarChart3 className="h-7 w-7 text-white" />
-              </div>
-              <div>
-                <h1
-                  className={cn(
-                    "text-5xl font-bold",
-                    actualTheme === "dark" ? "text-white" : "text-gray-900",
-                  )}
-                >
-                  Product Center
-                </h1>
-                <p
-                  className={cn(
-                    "text-xl",
-                    actualTheme === "dark" ? "text-gray-300" : "text-gray-600",
-                  )}
-                >
-                  Comprehensive agricultural data insights across Uzbekistan
-                </p>
-              </div>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button
-                onClick={exportData}
-                className="bg-green-500 hover:bg-green-600 text-white shadow-lg"
+                Product Control
+              </h1>
+              <p
+                className={cn(
+                  "text-lg",
+                  actualTheme === "dark" ? "text-gray-300" : "text-gray-600"
+                )}
               >
-                <Download className="h-4 w-4 mr-2" />
-                Export Data
-              </Button>
+                Manage and view production data by product.
+              </p>
             </div>
           </div>
 
-          <Tabs defaultValue="overview" className="space-y-8">
-          <RegionalAdds/>
-          </Tabs>
+          <div className="grid gap-6">
+            {products.map((product) => (
+              <Card
+                key={product.id}
+                className={cn(
+                  actualTheme === "dark"
+                    ? "bg-gray-800 border-gray-700"
+                    : "bg-white border-gray-200"
+                )}
+              >
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <CardTitle
+                    className={cn(
+                      "text-xl font-semibold",
+                      actualTheme === "dark" ? "text-white" : "text-gray-900"
+                    )}
+                  >
+                    {product.name}
+                  </CardTitle>
+                  <Button
+                    variant="outline"
+                    onClick={() => navigate(`/product/add/${product.id}`)}
+                    className="flex items-center space-x-1"
+                  >
+                    <Plus className="h-4 w-4" />
+                    <span>Add</span>
+                  </Button>
+                </CardHeader>
+                <CardContent>
+                  <p
+                    className={cn(
+                      "text-sm",
+                      actualTheme === "dark" ? "text-gray-400" : "text-gray-600"
+                    )}
+                  >
+                    View or add detailed statistics for this product.
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </div>
     </div>
