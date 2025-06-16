@@ -42,12 +42,19 @@ import {
   Activity,
   Leaf,
 } from "lucide-react";
+import { useEffect } from "react";
+import axios from "axios";
+import { Base_Url } from "@/App";
+
 
 const Statistics = () => {
   const { actualTheme } = useTheme();
   const [selectedRegion, setSelectedRegion] = useState<string>("all");
   const [selectedProduct, setSelectedProduct] = useState<string>("all");
   const [timeFrame, setTimeFrame] = useState<string>("monthly");
+  const [regions, setRegions] = useState<any[]>([]);
+const [loadingRegions, setLoadingRegions] = useState<boolean>(true);
+
 
   // Prepare comparative data
   const comparativeData = regions.map((region) => {
@@ -122,6 +129,24 @@ const Statistics = () => {
     link.click();
     document.body.removeChild(link);
   };
+
+  useEffect(() => {
+  const fetchRegions = async () => {
+    setLoadingRegions(true);
+    try {
+      const response = await axios.get(`${Base_Url}/regions/`);
+      setRegions(response.data);
+    } catch (error) {
+      console.error("Error fetching regions:", error);
+      setRegions([]);
+    } finally {
+      setLoadingRegions(false);
+    }
+  };
+
+  fetchRegions();
+}, []);
+
 
   return (
     <div
@@ -209,27 +234,29 @@ const Statistics = () => {
                     Region Analysis
                   </label>
                   <Select
-                    value={selectedRegion}
-                    onValueChange={setSelectedRegion}
-                  >
-                    <SelectTrigger
-                      className={cn(
-                        actualTheme === "dark"
-                          ? "bg-gray-700 border-gray-600 text-white"
-                          : "bg-white border-gray-300",
-                      )}
-                    >
-                      <SelectValue placeholder="Select region" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Regions</SelectItem>
-                      {regions.map((region) => (
-                        <SelectItem key={region.id} value={region.id}>
-                          {region.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+  value={selectedRegion}
+  onValueChange={setSelectedRegion}
+  disabled={loadingRegions}
+>
+  <SelectTrigger
+    className={cn(
+      actualTheme === "dark"
+        ? "bg-gray-700 border-gray-600 text-white"
+        : "bg-white border-gray-300",
+    )}
+  >
+    <SelectValue placeholder="Select region" />
+  </SelectTrigger>
+  <SelectContent>
+    <SelectItem value="all">All Regions</SelectItem>
+    {regions.map((region) => (
+      <SelectItem key={region.id} value={region.id}>
+        {region.name}
+      </SelectItem>
+    ))}
+  </SelectContent>
+</Select>
+
                 </div>
 
                 {/* <div>
