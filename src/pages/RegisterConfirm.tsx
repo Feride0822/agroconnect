@@ -115,10 +115,11 @@ const RegisterConfirm = () => {
               )}
             >
               We've sent a 4-digit verification code to{" "}
+              <span className="text-red-700">Important! Don't forget to check spam messages!</span>
               <strong className={cn(actualTheme === "dark" ? "text-green-400" : "text-green-600")}>
                 {email || "your email"}
               </strong>
-              .
+              
             </p>
 
             <Input

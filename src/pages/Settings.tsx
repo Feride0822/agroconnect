@@ -33,6 +33,9 @@ import {
   Save,
   RefreshCw,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { Base_Url } from "@/App";
 
 const Settings = () => {
   const { theme, setTheme, actualTheme } = useTheme();
@@ -51,6 +54,8 @@ const Settings = () => {
   const [language, setLanguage] = useState("en");
   const [currency, setCurrency] = useState("USD");
   const [timezone, setTimezone] = useState("UTC");
+   const navigate = useNavigate();
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const themeOptions = [
     { value: "light", label: "Light", icon: Sun },
@@ -75,6 +80,34 @@ const Settings = () => {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  };
+  const handleDeleteAccount = async () => {
+    if (!confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+      return;
+    }
+
+    setIsDeleting(true);
+    const accessToken = localStorage.getItem("access_token");
+
+    try {
+      const response = await axios.delete(`${Base_Url}/accounts/delete/`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (response.status === 200) {
+        alert("Your account has been deleted successfully.");
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+        navigate("/register"); // Redirect explicitly to register/login page
+      }
+    } catch (error: any) {
+      console.error("Failed to delete account:", error);
+      alert("Failed to delete account. Please try again later.");
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   return (
@@ -825,12 +858,15 @@ const Settings = () => {
                       Please be certain.
                     </p>
                     <Button
-                      variant="destructive"
-                      className="bg-red-600 hover:bg-red-700 text-white"
-                    >
-                      <Trash2 className="h-4 w-4 mr-2" />
-                      Delete Account
-                    </Button>
+  variant="destructive"
+  className="bg-red-600 hover:bg-red-700 text-white"
+  onClick={handleDeleteAccount}
+  disabled={isDeleting}
+>
+  <Trash2 className="h-4 w-4 mr-2" />
+  {isDeleting ? "Deleting..." : "Delete Account"}
+</Button>
+
                   </CardContent>
                 </Card>
               </div>

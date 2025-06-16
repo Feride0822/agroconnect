@@ -236,6 +236,7 @@ const ForgotPasswordCode = () => {
               A 4-digit code has been sent to{" "}
               <span className="font-semibold text-green-400">{email}</span>.
               Please enter it below.
+              <span className="text-red-700 font-semibold">Important! Don't forget to check spam!</span>
             </p>
           </CardHeader>
           <CardContent>

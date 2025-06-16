@@ -23,8 +23,8 @@ import ProductControl from "./pages/ProductControl";
 import ChangeEmail from "./pages/ChangeEmail";
 import CompleteProfile from "./components/auth/CompleteProfile";
 import GoogleOAuthHandler from "./components/auth/GoogleOAuthHandler";
-export const Base_Url = "http://34.34.87.78:9000";
-// export const Base_Url = "http://192.168.16.39:8000";
+export const Base_Url = "http://192.168.67.230:8000";
+// export const Base_Url = "http://agroconnect.com.uz:90";
 // export const Base_Url = "http://example/api";
 const queryClient = new QueryClient();
 
