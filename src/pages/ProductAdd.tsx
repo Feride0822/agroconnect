@@ -57,31 +57,32 @@ const ProductAdd = () => {
   };
 
   const handleSubmit = async () => {
-    if (!planting_area || !expecting_weight || selectedRegion === null || !productId) {
-      toast.error("Please fill all required fields and ensure a product type is selected.");
-      return;
-    }
+  if (!planting_area || !expecting_weight || selectedRegion === null || !productId) {
+    toast.error("Please fill all required fields and ensure a product type is selected.");
+    return;
+  }
 
-    try {
-      const payload = {
-        product: parseInt(productId), // Assuming productId from params is the 'Product' foreign key
-        planting_area: parseFloat(planting_area),
-        expecting_weight: parseFloat(expecting_weight),
-        region: selectedRegion,
-      };
+  try {
+    const payload = {
+      owner: user.id,  // Explicitly include owner here
+      product: parseInt(productId),
+      planting_area: parseFloat(planting_area),
+      expecting_weight: parseFloat(expecting_weight),
+      region: selectedRegion,
+    };
 
-      await axios.post(`${Base_Url}/products/planted-products/`, payload, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      });
-      toast.success("Product added successfully!");
-      navigate("/profile"); // Navigate to profile or ProductControl page
-    } catch (error) {
-      console.error("Failed to add product:", error);
-      toast.error("Failed to add product. Please try again.");
-    }
-  };
+    await axios.post(`${Base_Url}/products/planted-products/`, payload, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    });
+    toast.success("Product added successfully!");
+    navigate("/profile");
+  } catch (error: any) {
+    console.error("Failed to add product:", error.response.data);
+    toast.error(`Failed to add product: ${JSON.stringify(error.response.data)}`);
+  }
+};
 
   return (
     <div className={cn("flex min-h-screen", actualTheme === "dark" ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900")}>

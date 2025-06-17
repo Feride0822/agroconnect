@@ -396,53 +396,52 @@ const [loadingRegions, setLoadingRegions] = useState<boolean>(true);
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <div
-                      className={cn(
-                        "p-6 rounded-xl border border-green-500/20",
-                        actualTheme === "dark"
-                          ? "bg-green-900/20"
-                          : "bg-green-50",
-                      )}
-                    >
-                      <h3 className="font-bold text-green-600 text-lg mb-3">
-                        Top Performing Region
-                      </h3>
-                      <p
-                        className={cn(
-                          "text-xl font-bold mb-2",
-                          actualTheme === "dark"
-                            ? "text-white"
-                            : "text-gray-900",
-                        )}
-                      >
-                        {
-                          comparativeData.reduce((max, current) =>
-                            current.totalVolume > max.totalVolume
-                              ? current
-                              : max,
-                          ).region
-                        }
-                      </p>
-                      <p className="text-green-600 text-sm mb-3">
-                        {comparativeData
-                          .reduce((max, current) =>
-                            current.totalVolume > max.totalVolume
-                              ? current
-                              : max,
-                          )
-                          .totalVolume.toLocaleString()}{" "}
-                        tons produced
-                      </p>
-                      <div
-                        className={cn(
-                          "w-full rounded-full h-2",
-                          actualTheme === "dark"
-                            ? "bg-green-900/30"
-                            : "bg-green-200",
-                        )}
-                      >
-                        <div className="bg-green-500 h-2 rounded-full w-4/5"></div>
-                      </div>
-                    </div>
+  className={cn(
+    "p-6 rounded-xl border border-green-500/20",
+    actualTheme === "dark"
+      ? "bg-green-900/20"
+      : "bg-green-50",
+  )}
+>
+  <h3 className="font-bold text-green-600 text-lg mb-3">
+    Top Performing Region
+  </h3>
+  <p
+    className={cn(
+      "text-xl font-bold mb-2",
+      actualTheme === "dark"
+        ? "text-white"
+        : "text-gray-900",
+    )}
+  >
+    {comparativeData.length > 0
+      ? comparativeData.reduce((max, current) =>
+          current.totalVolume > max.totalVolume ? current : max
+        ).region
+      : "No data"}
+  </p>
+  <p className="text-green-600 text-sm mb-3">
+    {comparativeData.length > 0
+      ? comparativeData
+          .reduce((max, current) =>
+            current.totalVolume > max.totalVolume ? current : max
+          )
+          .totalVolume.toLocaleString()
+      : "0"}{" "}
+    tons produced
+  </p>
+  <div
+    className={cn(
+      "w-full rounded-full h-2",
+      actualTheme === "dark"
+        ? "bg-green-900/30"
+        : "bg-green-200",
+    )}
+  >
+    <div className="bg-green-500 h-2 rounded-full w-4/5"></div>
+  </div>
+</div>
+
 
                     <div
                       className={cn(
@@ -464,19 +463,23 @@ const [loadingRegions, setLoadingRegions] = useState<boolean>(true);
                         )}
                       >
                         {
-                          comparativeData.reduce((max, current) =>
-                            current.efficiency > max.efficiency ? current : max,
-                          ).region
+                         comparativeData.length > 0
+  ? comparativeData.reduce((max, current) =>
+      current.efficiency > max.efficiency ? current : max
+    ).region
+  : "No data"
+
                         }
                       </p>
                       <p className="text-blue-600 text-sm mb-3">
-                        {comparativeData
-                          .reduce((max, current) =>
-                            current.efficiency > max.efficiency ? current : max,
-                          )
-                          .efficiency.toFixed(2)}{" "}
-                        tons/hectare
-                      </p>
+  {comparativeData.length > 0
+    ? comparativeData.reduce((max, current) =>
+        current.efficiency > max.efficiency ? current : max
+      ).efficiency.toFixed(2)
+    : "0"}{" "}
+  tons/hectare
+</p>
+
                       <div
                         className={cn(
                           "w-full rounded-full h-2",
