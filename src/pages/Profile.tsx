@@ -524,6 +524,7 @@ const Profile = () => {
                             "absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent",
                             actualTheme === "dark"
                               ? "border-t-gray-800"
+                              
                               : "border-t-gray-900",
                           )}
                         />
@@ -576,7 +577,7 @@ const Profile = () => {
                             : "bg-gray-900 text-white",
                         )}
                       >
-                        Joined {new Date(profile.joinDate).toLocaleDateString()}
+                        Joined {new Date(profile.joined_date).toLocaleDateString()}
                         <div
                           className={cn(
                             "absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent",

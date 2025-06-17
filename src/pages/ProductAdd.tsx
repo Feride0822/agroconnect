@@ -76,16 +76,16 @@ const handleSubmit = async () => {
     });
 
     if (response.status === 201) {
-      await axios.post(`${Base_Url}/accounts/recent-activities/`, {
-        action: "Added product statistics",
-        product: `Product ID: ${productId}`,
-        amount: `${expecting_weight} tons`,
-        status: "success",
-      }, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`
-        }
-      });
+    //   await axios.post(`${Base_Url}/accounts/recent-activities/`, {
+    //     action: "Added product statistics",
+    //     product: `Product ID: ${productId}`,
+    //     amount: `${expecting_weight} tons`,
+    //     status: "success",
+    //   }, {
+    //     headers: {
+    //       Authorization: `Bearer ${localStorage.getItem("access_token")}`
+    //     }
+    //   });
 
       alert("Product added successfully!");
       navigate("/product-control");
