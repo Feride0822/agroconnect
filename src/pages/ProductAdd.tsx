@@ -11,6 +11,7 @@ import axios from "axios";
 import { Base_Url } from "@/App";
 import userStore from "@/store/UserStore";
 import { useParams, useNavigate } from "react-router-dom";
+import { toast } from "sonner"; // Assuming sonner is used for toasts
 
 type Region = {
   id: number;
@@ -19,7 +20,7 @@ type Region = {
 
 const ProductAdd = () => {
   const { actualTheme } = useTheme();
-  const { productId } = useParams();
+  const { productId } = useParams(); // This productId is for the 'general product' type to add, not a planted product ID
   const navigate = useNavigate();
 
   const { user } = userStore();
@@ -38,95 +39,84 @@ const ProductAdd = () => {
         setLoadingRegions(false);
       })
       .catch(err => {
-        console.error("Failed to load regions:", err);
+        console.error("Failed to load regions", err);
+        toast.error("Failed to load regions.");
         setLoadingRegions(false);
       });
   }, []);
 
   const calculateEfficiency = () => {
-    const areaNum = parseFloat(planting_area);
-    const volumeNum = parseFloat(expecting_weight);
-    if (areaNum > 0 && volumeNum > 0) {
-      setEfficiency(volumeNum / areaNum);
+    const area = parseFloat(planting_area);
+    const volume = parseFloat(expecting_weight);
+    if (!isNaN(area) && !isNaN(volume) && area > 0) {
+      setEfficiency(volume / area);
     } else {
-      alert("Please enter valid numbers for area and expected volume.");
+      setEfficiency(null);
+      toast.error("Please enter valid numbers for planting area and expected volume.");
     }
   };
 
-const handleSubmit = async () => {
-  if (!selectedRegion || !efficiency) {
-    alert("Please select a region and calculate efficiency before submitting.");
-    return;
-  }
-
-  const dataToSend = {
-    owner: user.id,
-    region: selectedRegion,
-    product: productId,
-    planting_area: parseFloat(planting_area),
-    expecting_weight: parseFloat(expecting_weight),
-    efficiency: efficiency
-  };
-
-  try {
-    const response = await axios.post(`${Base_Url}/products/planted-products/`, dataToSend, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("access_token")}`
-      }
-    });
-
-    if (response.status === 201) {
-    //   await axios.post(`${Base_Url}/accounts/recent-activities/`, {
-    //     action: "Added product statistics",
-    //     product: `Product ID: ${productId}`,
-    //     amount: `${expecting_weight} tons`,
-    //     status: "success",
-    //   }, {
-    //     headers: {
-    //       Authorization: `Bearer ${localStorage.getItem("access_token")}`
-    //     }
-    //   });
-
-      alert("Product added successfully!");
-      navigate("/product-control");
+  const handleSubmit = async () => {
+    if (!planting_area || !expecting_weight || selectedRegion === null || !productId) {
+      toast.error("Please fill all required fields and ensure a product type is selected.");
+      return;
     }
-  } catch (error) {
-    console.error("Failed to add product:", error);
-    alert("Failed to add product. Please try again.");
-  }
-};
 
+    try {
+      const payload = {
+        product: parseInt(productId), // Assuming productId from params is the 'Product' foreign key
+        planting_area: parseFloat(planting_area),
+        expecting_weight: parseFloat(expecting_weight),
+        region: selectedRegion,
+      };
+
+      await axios.post(`${Base_Url}/products/planted-products/`, payload, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+      toast.success("Product added successfully!");
+      navigate("/profile"); // Navigate to profile or ProductControl page
+    } catch (error) {
+      console.error("Failed to add product:", error);
+      toast.error("Failed to add product. Please try again.");
+    }
+  };
 
   return (
-    <div className={cn("min-h-screen", actualTheme === "dark" ? "bg-gray-900" : "bg-gray-50")}>
+    <div className={cn("flex min-h-screen", actualTheme === "dark" ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900")}>
       <Sidebar />
-      <div className="container mx-auto py-10 max-w-3xl">
-        <Card>
+      <div className="flex-1 p-8">
+        <Card className={cn("w-full max-w-2xl mx-auto", actualTheme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200")}>
           <CardHeader>
-            <CardTitle>Add Product Statistics</CardTitle>
+            <CardTitle className={cn("text-2xl font-bold", actualTheme === "dark" ? "text-white" : "text-gray-900")}>Add New Planted Product</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className="space-y-6">
               <div>
-                <Label>Area (hectares)</Label>
+                <Label htmlFor="planting_area">Planting Area (hectares)</Label>
                 <Input
+                  id="planting_area"
+                  type="number"
                   value={planting_area}
                   onChange={(e) => setArea(e.target.value)}
-                  placeholder="Enter area in hectares"
+                  placeholder="Enter planting area"
                 />
               </div>
               <div>
-                <Label>Expected Volume (tons)</Label>
+                <Label htmlFor="expecting_weight">Expected Volume (tons)</Label>
                 <Input
+                  id="expecting_weight"
+                  type="number"
                   value={expecting_weight}
                   onChange={(e) => setExpectedVolume(e.target.value)}
                   placeholder="Enter expected volume"
                 />
               </div>
               <div>
-                <Label>Region</Label>
-                <Select value={selectedRegion?.toString()} onValueChange={(value) => setSelectedRegion(Number(value))} disabled={loadingRegions}>
-                  <SelectTrigger>
+                <Label htmlFor="region">Region</Label>
+                <Select value={selectedRegion?.toString() || ""} onValueChange={(value) => setSelectedRegion(Number(value))} disabled={loadingRegions}>
+                  <SelectTrigger id="region">
                     <SelectValue placeholder="Select region" />
                   </SelectTrigger>
                   <SelectContent>

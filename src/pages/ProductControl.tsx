@@ -24,8 +24,12 @@ const ProductControl = () => {
     const fetchData = async () => {
       try {
         const [productRes, plantedRes] = await Promise.all([
+          // This call fetches all general products, accessible by any user
           axios.get(`${Base_Url}/products/products/`),
-          axios.get(`${Base_Url}/products/planted-products/?owner=${user.id}`, {
+          // This call fetches only planted products owned by the authenticated user.
+          // The backend's get_queryset handles filtering by self.request.user.
+          axios.get(`${Base_Url}/products/planted-products/`, {
+            // MODIFIED: Removed ?owner=${user.id}
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -43,7 +47,7 @@ const ProductControl = () => {
     };
 
     fetchData();
-  }, [user.id, token]);
+  }, [user.id, token]); // user.id and token are still dependencies to re-fetch if they change
 
   const handleDelete = async (productId: number) => {
     try {
