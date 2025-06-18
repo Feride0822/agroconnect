@@ -6,10 +6,11 @@ import { cn } from "@/lib/utils";
 import { Base_Url } from "@/App";
 
 type Product = {
-  id: number;
-  name: string;
-  agricultural_area: number;
-  total_production: number;
+  product_name: string;
+  planting_area: number;
+  expecting_weight: number;
+  wph: number;
+  planted_records: number;
 };
 
 const RegionalStats = () => {
@@ -19,10 +20,14 @@ const RegionalStats = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+
     axios
-      .get(`${Base_Url}/products/`)
+      .get(`${Base_Url}/products/wph/region-product/`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      })
       .then((res) => {
-        setProducts(res.data);
+        setProducts(res.data.products);
         setLoading(false);
       })
       .catch((err) => {
@@ -115,18 +120,15 @@ const RegionalStats = () => {
                         : "text-gray-700"
                     )}
                   >
-                    Efficiency Score
+                    Efficiency Score (WPH)
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {products.map((product, index) => {
-                  const efficiency =
-                    product.total_production / product.agricultural_area;
-
                   return (
                     <tr
-                      key={product.id}
+                      key={index}
                       className={cn(
                         "border-b transition-colors",
                         actualTheme === "dark"
@@ -142,7 +144,7 @@ const RegionalStats = () => {
                             : "text-gray-900"
                         )}
                       >
-                        {product.name}
+                        {product.product_name}
                       </td>
                       <td
                         className={cn(
@@ -152,7 +154,7 @@ const RegionalStats = () => {
                             : "text-gray-600"
                         )}
                       >
-                        {product.agricultural_area.toLocaleString()}
+                        {product.planting_area.toLocaleString()}
                       </td>
                       <td
                         className={cn(
@@ -162,20 +164,20 @@ const RegionalStats = () => {
                             : "text-gray-600"
                         )}
                       >
-                        {product.total_production.toLocaleString()}
+                        {product.expecting_weight.toLocaleString()}
                       </td>
                       <td className="text-right py-4 px-4">
                         <span
                           className={cn(
                             "inline-flex px-3 py-1 rounded-full text-xs font-medium border",
-                            efficiency > 2.5
+                            product.wph > 2.5
                               ? "bg-green-500/20 text-green-500 border-green-500/30"
-                              : efficiency > 2.0
+                              : product.wph > 2.0
                               ? "bg-yellow-500/20 text-yellow-500 border-yellow-500/30"
                               : "bg-red-500/20 text-red-500 border-red-500/30"
                           )}
                         >
-                          {efficiency.toFixed(2)}
+                          {product.wph.toFixed(2)}
                         </span>
                       </td>
                     </tr>
