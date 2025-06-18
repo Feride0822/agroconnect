@@ -35,7 +35,7 @@ const Sidebar = () => {
   const handleLogout = async () => {
     const refreshToken = localStorage.getItem("refresh_token");
     const accessToken = localStorage.getItem("access_token");
-  
+
     try {
       if (refreshToken && accessToken) {
         await axios.post(
@@ -45,47 +45,42 @@ const Sidebar = () => {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },
-          }
+          },
         );
       }
     } catch (err) {
       console.warn("Failed to logout from backend:", err);
     }
-  
+
     logout(); // Clear Zustand store
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
     navigate("/login", { replace: true });
     setIsOpen(false);
   };
-  
-  
 
   const navItems = user
     ? role === "Farmers"
       ? [
-        { path: "/dashboard", label: "Dashboard", icon: BarChart3 },
+          { path: "/dashboard", label: "Dashboard", icon: BarChart3 },
           { path: "/statistics", label: "Analytics", icon: TrendingUp },
           { path: "/profile", label: "Profile", icon: User },
           { path: "/product-control", label: "Product Control", icon: Leaf },
           { path: "/settings", label: "Settings", icon: Settings },
-          
         ]
       : role === "Exporters"
         ? [
-          { path: "/dashboard", label: "Dashboard", icon: BarChart3 },
+            { path: "/dashboard", label: "Dashboard", icon: BarChart3 },
             { path: "/farmers", label: "Farmers", icon: Users },
             { path: "/profile", label: "Profile", icon: User },
             { path: "/settings", label: "Settings", icon: Settings },
-            
           ]
         : role === "Analysts"
           ? [
-            { path: "/dashboard", label: "Dashboard", icon: BarChart3 },
+              { path: "/dashboard", label: "Dashboard", icon: BarChart3 },
               { path: "/statistics", label: "Analytics", icon: TrendingUp },
               { path: "/profile", label: "Profile", icon: User },
               { path: "/settings", label: "Settings", icon: Settings },
-              
             ]
           : []
     : [
@@ -97,7 +92,7 @@ const Sidebar = () => {
       ];
 
   const sidebarClasses = cn(
-    "fixed right-0 top-0 h-full w-80 z-50 transition-transform duration-300 ease-in-out",
+    "fixed right-0 top-0 h-full w-1/4 lg:w-1/5 z-50 transition-transform duration-300 ease-in-out",
     actualTheme === "dark"
       ? "bg-gray-900 border-l border-gray-700"
       : "bg-white border-l border-gray-200",

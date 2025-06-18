@@ -86,7 +86,6 @@ const ProductAdd = () => {
 
   return (
     <div className={cn("flex min-h-screen", actualTheme === "dark" ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900")}>
-      <Sidebar />
       <div className="flex-1 p-8">
         <Card className={cn("w-full max-w-2xl mx-auto", actualTheme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200")}>
           <CardHeader>
@@ -140,6 +139,7 @@ const ProductAdd = () => {
           </CardContent>
         </Card>
       </div>
+      <Sidebar />
     </div>
   );
 };
