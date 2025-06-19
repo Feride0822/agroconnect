@@ -371,7 +371,7 @@ const [loadingRegions, setLoadingRegions] = useState<boolean>(true);
             </TabsList>
 
             <TabsContent value="overview" className="space-y-8">
-              <RegionalStats />
+              <RegionalStats selectedRegion={selectedRegion} />
 
               {/* Key Insights */}
               <Card

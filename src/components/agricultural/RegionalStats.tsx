@@ -13,7 +13,7 @@ type Product = {
   planted_records: number;
 };
 
-const RegionalStats = () => {
+const RegionalStats = ({ selectedRegion }: { selectedRegion: string }) => {
   const { actualTheme } = useTheme();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -22,8 +22,14 @@ const RegionalStats = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
+    let url = `${Base_Url}/products/wph/region-product/`;
+    if (selectedRegion !== "all") {
+      url += `?region_id=${selectedRegion}`;
+    }
+
+    setLoading(true);
     axios
-      .get(`${Base_Url}/products/wph/region-product/`, {
+      .get(url, {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       })
       .then((res) => {
@@ -35,7 +41,7 @@ const RegionalStats = () => {
         setError("Failed to load product data.");
         setLoading(false);
       });
-  }, []);
+  }, [selectedRegion]);
 
   if (loading) {
     return <p className="text-center text-sm">Loading product statistics...</p>;
