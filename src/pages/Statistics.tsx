@@ -53,11 +53,36 @@ const Statistics = () => {
   const [selectedProduct, setSelectedProduct] = useState<string>("all");
   const [timeFrame, setTimeFrame] = useState<string>("monthly");
   const [regions, setRegions] = useState<any[]>([]);
-const [loadingRegions, setLoadingRegions] = useState<boolean>(true);
-const [regionalProducts, setRegionalProducts] = useState<any[]>([]);
-const [trendData, setTrendData] = useState<any[]>([]);
+  const [loadingRegions, setLoadingRegions] = useState<boolean>(true);
+  const [regionalProducts, setRegionalProducts] = useState<any[]>([]);
+  const [trendData, setTrendData] = useState<any[]>([]);
+  
+  // New state for backend statistics
+  const [totalProduction, setTotalProduction] = useState<number>(0);
+  const [highestWPH, setHighestWPH] = useState<number>(0);
+  const [loadingStats, setLoadingStats] = useState<boolean>(true);
+const [topPerformingRegion, setTopPerformingRegion] = useState<any>(null);
 
+// ADD THIS NEW useEffect TO FETCH TOP PERFORMING REGION
+useEffect(() => {
+  const fetchTopPerformingRegion = async () => {
+    const token = localStorage.getItem("token");
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
+    try {
+      const response = await axios.get(
+        `${Base_Url}/products/top-performing-region/`,
+        { headers }
+      );
+      setTopPerformingRegion(response.data);
+    } catch (error) {
+      console.error("Error fetching top performing region:", error);
+      setTopPerformingRegion(null);
+    }
+  };
+
+  fetchTopPerformingRegion();
+}, []);
   // Prepare comparative data
   const comparativeData = regions.map((region) => {
     const regionProducts = products.map((product) => {
@@ -81,31 +106,64 @@ const [trendData, setTrendData] = useState<any[]>([]);
 
   const [regionSummary, setRegionSummary] = useState<any[]>([]);
 
-useEffect(() => {
-  const token = localStorage.getItem("token");
+  useEffect(() => {
+    const token = localStorage.getItem("token");
 
-  let url = `${Base_Url}/products/wph/comparison/`;
-  if (selectedRegion !== "all") {
-    url += `?region_id=${selectedRegion}`;
-  }
+    let url = `${Base_Url}/products/wph/comparison/`;
+    if (selectedRegion !== "all") {
+      url += `?region_id=${selectedRegion}`;
+    }
 
-  axios
-    .get(url, {
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
-    })
-    .then((res) => {
-      const data = Array.isArray(res.data) ? res.data : [];
-      setRegionSummary(data);
-    })
-    .catch((err) => {
-      console.error("Error fetching region summary data:", err);
-      setRegionSummary([]);
-    });
-}, [selectedRegion]);
+    axios
+      .get(url, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      })
+      .then((res) => {
+        const data = Array.isArray(res.data) ? res.data : [];
+        setRegionSummary(data);
+      })
+      .catch((err) => {
+        console.error("Error fetching region summary data:", err);
+        setRegionSummary([]);
+      });
+  }, [selectedRegion]);
 
-useEffect(() => {
-  setTrendData(regionalProducts);
-}, [regionalProducts]);
+  // New useEffect to fetch backend statistics
+  useEffect(() => {
+    const fetchStatistics = async () => {
+      setLoadingStats(true);
+      const token = localStorage.getItem("token");
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+      try {
+        // Fetch total production
+        const totalProductionResponse = await axios.get(
+          `${Base_Url}/products/total-production/`,
+          { headers }
+        );
+        setTotalProduction(totalProductionResponse.data.total_weight || 0);
+
+        // Fetch highest WPH
+        const highestWPHResponse = await axios.get(
+          `${Base_Url}/products/highest-wph/`,
+          { headers }
+        );
+        setHighestWPH(highestWPHResponse.data.whp || 0);
+      } catch (error) {
+        console.error("Error fetching statistics:", error);
+        setTotalProduction(0);
+        setHighestWPH(0);
+      } finally {
+        setLoadingStats(false);
+      }
+    };
+
+    fetchStatistics();
+  }, []);
+
+  useEffect(() => {
+    setTrendData(regionalProducts);
+  }, [regionalProducts]);
 
   // Filter data based on selections
   const getFilteredData = () => {
@@ -144,42 +202,42 @@ useEffect(() => {
   };
 
   useEffect(() => {
-  const fetchRegions = async () => {
-    setLoadingRegions(true);
-    try {
-      const response = await axios.get(`${Base_Url}/regions/`);
-      setRegions(response.data);
-    } catch (error) {
-      console.error("Error fetching regions:", error);
-      setRegions([]);
-    } finally {
-      setLoadingRegions(false);
+    const fetchRegions = async () => {
+      setLoadingRegions(true);
+      try {
+        const response = await axios.get(`${Base_Url}/regions/`);
+        setRegions(response.data);
+      } catch (error) {
+        console.error("Error fetching regions:", error);
+        setRegions([]);
+      } finally {
+        setLoadingRegions(false);
+      }
+    };
+
+    fetchRegions();
+  }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    let url = `${Base_Url}/products/wph/region-product/`;
+    if (selectedRegion !== "all") {
+      url += `?region_id=${selectedRegion}`;
     }
-  };
 
-  fetchRegions();
-}, []);
-
-useEffect(() => {
-  const token = localStorage.getItem("token");
-
-  let url = `${Base_Url}/products/wph/region-product/`;
-  if (selectedRegion !== "all") {
-    url += `?region_id=${selectedRegion}`;
-  }
-
-  axios
-    .get(url, {
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
-    })
-    .then((res) => {
-      setRegionalProducts(res.data.products || []);
-    })
-    .catch((err) => {
-      console.error("Error fetching regional product data:", err);
-      setRegionalProducts([]);
-    });
-}, [selectedRegion]);
+    axios
+      .get(url, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      })
+      .then((res) => {
+        setRegionalProducts(res.data.products || []);
+      })
+      .catch((err) => {
+        console.error("Error fetching regional product data:", err);
+        setRegionalProducts([]);
+      });
+  }, [selectedRegion]);
 
 
   return (
@@ -268,45 +326,9 @@ useEffect(() => {
                     Region Analysis
                   </label>
                   <Select
-  value={selectedRegion}
-  onValueChange={setSelectedRegion}
-  disabled={loadingRegions}
->
-  <SelectTrigger
-    className={cn(
-      actualTheme === "dark"
-        ? "bg-gray-700 border-gray-600 text-white"
-        : "bg-white border-gray-300",
-    )}
-  >
-    <SelectValue placeholder="Select region" />
-  </SelectTrigger>
-  <SelectContent>
-    <SelectItem value="all">All Regions</SelectItem>
-    {regions.map((region) => (
-      <SelectItem key={region.id} value={region.id}>
-        {region.name}
-      </SelectItem>
-    ))}
-  </SelectContent>
-</Select>
-
-                </div>
-
-                {/* <div>
-                  <label
-                    className={cn(
-                      "text-sm font-medium mb-3 block",
-                      actualTheme === "dark"
-                        ? "text-gray-300"
-                        : "text-gray-700",
-                    )}
-                  >
-                    Product Focus
-                  </label>
-                  <Select
-                    value={selectedProduct}
-                    onValueChange={setSelectedProduct}
+                    value={selectedRegion}
+                    onValueChange={setSelectedRegion}
+                    disabled={loadingRegions}
                   >
                     <SelectTrigger
                       className={cn(
@@ -315,51 +337,18 @@ useEffect(() => {
                           : "bg-white border-gray-300",
                       )}
                     >
-                      <SelectValue placeholder="Select product" />
+                      <SelectValue placeholder="Select region" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">All Products</SelectItem>
-                      {products.map((product) => (
-                        <SelectItem key={product.id} value={product.id}>
-                          {product.name}
+                      <SelectItem value="all">All Regions</SelectItem>
+                      {regions.map((region) => (
+                        <SelectItem key={region.id} value={region.id}>
+                          {region.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
-                </div> */}
-
-                {/* <div>
-                  <label
-                    className={cn(
-                      "text-sm font-medium mb-3 block",
-                      actualTheme === "dark"
-                        ? "text-gray-300"
-                        : "text-gray-700",
-                    )}
-                  >
-                    Time Horizon
-                  </label>
-                  <Select value={timeFrame} onValueChange={setTimeFrame}>
-                    <SelectTrigger
-                      className={cn(
-                        actualTheme === "dark"
-                          ? "bg-gray-700 border-gray-600 text-white"
-                          : "bg-white border-gray-300",
-                      )}
-                    >
-                      <SelectValue placeholder="Select timeframe" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="weekly">Weekly Analysis</SelectItem>
-                      <SelectItem value="monthly">Monthly Trends</SelectItem>
-                      <SelectItem value="quarterly">
-                        Quarterly Review
-                      </SelectItem>
-                      <SelectItem value="yearly">Annual Report</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div> */}
-
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -423,7 +412,6 @@ useEffect(() => {
                     )}
                   >
                     <img src="/AgroConnect 2.png" alt="Logo" className="w-8 h-8 mr-3"/>
-                    {/* <Leaf className="h-6 w-6 mr-3 text-green-500" /> */}
                     Key Performance Insights
                   </CardTitle>
                 </CardHeader>
@@ -441,27 +429,22 @@ useEffect(() => {
     Top Performing Region
   </h3>
   <p
-  className={cn(
-    "text-xl font-bold mb-2",
-    actualTheme === "dark"
-      ? "text-white"
-      : "text-gray-900",
-  )}
->
-  {regionSummary.length > 0
-  ? regionSummary.reduce((max, current) =>
-      current.total_production > max.total_production ? current : max
-    ).region
-  : "No data"}
-</p>
-
+    className={cn(
+      "text-xl font-bold mb-2",
+      actualTheme === "dark"
+        ? "text-white"
+        : "text-gray-900",
+    )}
+  >
+    {loadingStats ? "Loading..." : (
+      topPerformingRegion?.region || "No data"
+    )}
+  </p>
   <p className="text-green-600 text-sm mb-3">
-    {regionSummary.length > 0
-  ? regionSummary.reduce((max, current) =>
-      current.total_production > max.total_production ? current : max
-    ).total_production.toLocaleString()
-  : "0"} 
-    tons produced
+    {loadingStats ? "Loading..." : (
+      topPerformingRegion?.total_production?.toLocaleString() || "0"
+    )} 
+      tons produced
   </p>
   <div
     className={cn(
@@ -475,7 +458,6 @@ useEffect(() => {
   </div>
 </div>
 
-
                     <div
                       className={cn(
                         "p-6 rounded-xl border border-blue-500/20",
@@ -485,7 +467,7 @@ useEffect(() => {
                       )}
                     >
                       <h3 className="font-bold text-blue-600 text-lg mb-3">
-                        Highest Efficiency
+                        Highest Efficiency (WPH)
                       </h3>
                       <p
                         className={cn(
@@ -495,22 +477,11 @@ useEffect(() => {
                             : "text-gray-900",
                         )}
                       >
-                        {regionSummary.length > 0
-  ? regionSummary.reduce((max, current) =>
-      current.efficiency > max.efficiency ? current : max
-    ).region_name
-  : "No data"}
-
+                        {loadingStats ? "Loading..." : highestWPH.toFixed(2)}
                       </p>
                       <p className="text-blue-600 text-sm mb-3">
-  {regionSummary.length > 0
-  ? regionSummary.reduce((max, current) =>
-      current.efficiency > max.efficiency ? current : max
-    ).efficiency.toFixed(2)
-  : "0"}
-  tons/hectare
-</p>
-
+                        tons/hectare (Weight Per Hectare)
+                      </p>
                       <div
                         className={cn(
                           "w-full rounded-full h-2",
@@ -532,7 +503,7 @@ useEffect(() => {
                       )}
                     >
                       <h3 className="font-bold text-purple-600 text-lg mb-3">
-                        Total Production
+                        Total Production This Month
                       </h3>
                       <p
                         className={cn(
@@ -542,14 +513,10 @@ useEffect(() => {
                             : "text-gray-900",
                         )}
                       >
-                        {regionSummary
-  .reduce((sum, region) => sum + region.total_production, 0)
-  .toLocaleString()} tons
-
-
+                        {loadingStats ? "Loading..." : totalProduction.toLocaleString()} hectares
                       </p>
                       <p className="text-purple-600 text-sm mb-3">
-                        Across all regions this month
+                        Total planting area this month
                       </p>
                       <div
                         className={cn(
@@ -590,46 +557,45 @@ useEffect(() => {
                   <div className="h-96">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={regionalProducts}>
-  <CartesianGrid
-    strokeDasharray="3 3"
-    stroke={actualTheme === "dark" ? "#374151" : "#e5e7eb"}
-  />
-  <XAxis
-    dataKey="product_name"
-    tick={{
-      fontSize: 12,
-      fill: actualTheme === "dark" ? "#d1d5db" : "#6b7280",
-    }}
-    angle={-45}
-    textAnchor="end"
-    height={80}
-  />
-  <YAxis
-    tick={{
-      fontSize: 12,
-      fill: actualTheme === "dark" ? "#d1d5db" : "#6b7280",
-    }}
-  />
-  <Tooltip
-    formatter={(value: number) => [
-      `${value.toLocaleString()} tons`,
-      "Production",
-    ]}
-    contentStyle={{
-      backgroundColor:
-        actualTheme === "dark" ? "#1f2937" : "#ffffff",
-      border: `1px solid ${actualTheme === "dark" ? "#374151" : "#e5e7eb"}`,
-      borderRadius: "8px",
-      color: actualTheme === "dark" ? "#ffffff" : "#000000",
-    }}
-  />
-  <Bar
-    dataKey="expecting_weight"
-    fill="#10b981"
-    radius={[6, 6, 0, 0]}
-  />
-</BarChart>
-
+                        <CartesianGrid
+                          strokeDasharray="3 3"
+                          stroke={actualTheme === "dark" ? "#374151" : "#e5e7eb"}
+                        />
+                        <XAxis
+                          dataKey="product_name"
+                          tick={{
+                            fontSize: 12,
+                            fill: actualTheme === "dark" ? "#d1d5db" : "#6b7280",
+                          }}
+                          angle={-45}
+                          textAnchor="end"
+                          height={80}
+                        />
+                        <YAxis
+                          tick={{
+                            fontSize: 12,
+                            fill: actualTheme === "dark" ? "#d1d5db" : "#6b7280",
+                          }}
+                        />
+                        <Tooltip
+                          formatter={(value: number) => [
+                            `${value.toLocaleString()} tons`,
+                            "Production",
+                          ]}
+                          contentStyle={{
+                            backgroundColor:
+                              actualTheme === "dark" ? "#1f2937" : "#ffffff",
+                            border: `1px solid ${actualTheme === "dark" ? "#374151" : "#e5e7eb"}`,
+                            borderRadius: "8px",
+                            color: actualTheme === "dark" ? "#ffffff" : "#000000",
+                          }}
+                        />
+                        <Bar
+                          dataKey="expecting_weight"
+                          fill="#10b981"
+                          radius={[6, 6, 0, 0]}
+                        />
+                      </BarChart>
                     </ResponsiveContainer>
                   </div>
                 </CardContent>
@@ -657,49 +623,48 @@ useEffect(() => {
                   <div className="h-96">
                     <ResponsiveContainer width="100%" height="100%">
                       <AreaChart data={regionalProducts}>
-  <CartesianGrid
-    strokeDasharray="3 3"
-    stroke={actualTheme === "dark" ? "#374151" : "#e5e7eb"}
-  />
-  <XAxis
-    dataKey="product_name"
-    tick={{
-      fontSize: 12,
-      fill: actualTheme === "dark" ? "#d1d5db" : "#6b7280",
-    }}
-    angle={-45}
-    textAnchor="end"
-    height={80}
-  />
-  <YAxis
-    tick={{
-      fontSize: 12,
-      fill: actualTheme === "dark" ? "#d1d5db" : "#6b7280",
-    }}
-  />
-  <Tooltip
-    formatter={(value: number) => [
-      `${value.toFixed(2)} tons/ha`,
-      "Efficiency",
-    ]}
-    contentStyle={{
-      backgroundColor:
-        actualTheme === "dark" ? "#1f2937" : "#ffffff",
-      border: `1px solid ${actualTheme === "dark" ? "#374151" : "#e5e7eb"}`,
-      borderRadius: "8px",
-      color: actualTheme === "dark" ? "#ffffff" : "#000000",
-    }}
-  />
-  <Area
-    type="monotone"
-    dataKey="wph"
-    stroke="#10b981"
-    fill="#10b981"
-    fillOpacity={0.3}
-    strokeWidth={2}
-  />
-</AreaChart>
-
+                        <CartesianGrid
+                          strokeDasharray="3 3"
+                          stroke={actualTheme === "dark" ? "#374151" : "#e5e7eb"}
+                        />
+                        <XAxis
+                          dataKey="product_name"
+                          tick={{
+                            fontSize: 12,
+                            fill: actualTheme === "dark" ? "#d1d5db" : "#6b7280",
+                          }}
+                          angle={-45}
+                          textAnchor="end"
+                          height={80}
+                        />
+                        <YAxis
+                          tick={{
+                            fontSize: 12,
+                            fill: actualTheme === "dark" ? "#d1d5db" : "#6b7280",
+                          }}
+                        />
+                        <Tooltip
+                          formatter={(value: number) => [
+                            `${value.toFixed(2)} tons/ha`,
+                            "Efficiency",
+                          ]}
+                          contentStyle={{
+                            backgroundColor:
+                              actualTheme === "dark" ? "#1f2937" : "#ffffff",
+                            border: `1px solid ${actualTheme === "dark" ? "#374151" : "#e5e7eb"}`,
+                            borderRadius: "8px",
+                            color: actualTheme === "dark" ? "#ffffff" : "#000000",
+                          }}
+                        />
+                        <Area
+                          type="monotone"
+                          dataKey="wph"
+                          stroke="#10b981"
+                          fill="#10b981"
+                          fillOpacity={0.3}
+                          strokeWidth={2}
+                        />
+                      </AreaChart>
                     </ResponsiveContainer>
                   </div>
                 </CardContent>
@@ -729,22 +694,19 @@ useEffect(() => {
                   <div className="h-96">
                     <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={trendData}>
-  <CartesianGrid strokeDasharray="3 3" />
-  <XAxis dataKey="month" />
-  <YAxis />
-  <Tooltip formatter={(value: number) => [`${value} tons`, "Production"]} />
-  <Line
-  type="monotone"
-  dataKey="expecting_weight"
-  stroke="#10b981"
-  strokeWidth={3}
-  dot={{ r: 6, strokeWidth: 2 }}
-  activeDot={{ r: 8, strokeWidth: 2 }}
-/>
-
-</LineChart>
-
-
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="month" />
+                        <YAxis />
+                        <Tooltip formatter={(value: number) => [`${value} tons`, "Production"]} />
+                        <Line
+                          type="monotone"
+                          dataKey="expecting_weight"
+                          stroke="#10b981"
+                          strokeWidth={3}
+                          dot={{ r: 6, strokeWidth: 2 }}
+                          activeDot={{ r: 8, strokeWidth: 2 }}
+                        />
+                      </LineChart>
                     </ResponsiveContainer>
                   </div>
                 </CardContent>
@@ -767,7 +729,6 @@ useEffect(() => {
                     )}
                   >
                     <img src="/AgroConnect 2.png" alt="Logo" className="w-8 h-8 mr-3"/>
-                    {/* <Leaf className="h-5 w-5 mr-2 text-green-500" /> */}
                     Agricultural Market Analysis
                   </CardTitle>
                 </CardHeader>

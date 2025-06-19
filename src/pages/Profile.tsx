@@ -566,7 +566,7 @@ const Profile = () => {
                           ? "bg-green-600/20 hover:bg-green-600/30"
                           : "bg-green-500/20 hover:bg-green-500/30",
                       )}
-                      title={`Joined ${new Date(profile.joinDate).toLocaleDateString()}`}
+                      title={`Joined ${new Date(profile.date_joined).toLocaleDateString()}`}
                     >
                       <Calendar className="h-5 w-5 text-green-500" />
                       <div
@@ -577,7 +577,7 @@ const Profile = () => {
                             : "bg-gray-900 text-white",
                         )}
                       >
-                        Joined {new Date(profile.joined_date).toLocaleDateString()}
+                        Joined {new Date(profile.date_joined).toLocaleDateString()}
                         <div
                           className={cn(
                             "absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent",
