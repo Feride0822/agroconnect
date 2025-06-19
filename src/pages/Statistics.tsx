@@ -54,6 +54,8 @@ const Statistics = () => {
   const [timeFrame, setTimeFrame] = useState<string>("monthly");
   const [regions, setRegions] = useState<any[]>([]);
 const [loadingRegions, setLoadingRegions] = useState<boolean>(true);
+const [regionalProducts, setRegionalProducts] = useState<any[]>([]);
+const [trendData, setTrendData] = useState<any[]>([]);
 
 
   // Prepare comparative data
@@ -77,22 +79,33 @@ const [loadingRegions, setLoadingRegions] = useState<boolean>(true);
     };
   });
 
-  // Prepare trend data (monthly)
-  const trendData = ["January", "February", "March", "April"].map((month) => {
-    const monthData: any = { month };
+  const [regionSummary, setRegionSummary] = useState<any[]>([]);
 
-    products.forEach((product) => {
-      const volumes = regions.map((region) => {
-        const regionVolumes = getVolumeByRegion(region.id).filter(
-          (v) => v.productId === product.id && v.month === month,
-        );
-        return regionVolumes.reduce((sum, v) => sum + v.volume, 0);
-      });
-      monthData[product.name] = volumes.reduce((sum, v) => sum + v, 0);
+useEffect(() => {
+  const token = localStorage.getItem("token");
+
+  let url = `${Base_Url}/products/wph/comparison/`;
+  if (selectedRegion !== "all") {
+    url += `?region_id=${selectedRegion}`;
+  }
+
+  axios
+    .get(url, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    })
+    .then((res) => {
+      const data = Array.isArray(res.data) ? res.data : [];
+      setRegionSummary(data);
+    })
+    .catch((err) => {
+      console.error("Error fetching region summary data:", err);
+      setRegionSummary([]);
     });
+}, [selectedRegion]);
 
-    return monthData;
-  });
+useEffect(() => {
+  setTrendData(regionalProducts);
+}, [regionalProducts]);
 
   // Filter data based on selections
   const getFilteredData = () => {
@@ -146,6 +159,27 @@ const [loadingRegions, setLoadingRegions] = useState<boolean>(true);
 
   fetchRegions();
 }, []);
+
+useEffect(() => {
+  const token = localStorage.getItem("token");
+
+  let url = `${Base_Url}/products/wph/region-product/`;
+  if (selectedRegion !== "all") {
+    url += `?region_id=${selectedRegion}`;
+  }
+
+  axios
+    .get(url, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    })
+    .then((res) => {
+      setRegionalProducts(res.data.products || []);
+    })
+    .catch((err) => {
+      console.error("Error fetching regional product data:", err);
+      setRegionalProducts([]);
+    });
+}, [selectedRegion]);
 
 
   return (
@@ -407,27 +441,26 @@ const [loadingRegions, setLoadingRegions] = useState<boolean>(true);
     Top Performing Region
   </h3>
   <p
-    className={cn(
-      "text-xl font-bold mb-2",
-      actualTheme === "dark"
-        ? "text-white"
-        : "text-gray-900",
-    )}
-  >
-    {comparativeData.length > 0
-      ? comparativeData.reduce((max, current) =>
-          current.totalVolume > max.totalVolume ? current : max
-        ).region
-      : "No data"}
-  </p>
+  className={cn(
+    "text-xl font-bold mb-2",
+    actualTheme === "dark"
+      ? "text-white"
+      : "text-gray-900",
+  )}
+>
+  {regionSummary.length > 0
+  ? regionSummary.reduce((max, current) =>
+      current.total_production > max.total_production ? current : max
+    ).region
+  : "No data"}
+</p>
+
   <p className="text-green-600 text-sm mb-3">
-    {comparativeData.length > 0
-      ? comparativeData
-          .reduce((max, current) =>
-            current.totalVolume > max.totalVolume ? current : max
-          )
-          .totalVolume.toLocaleString()
-      : "0"}{" "}
+    {regionSummary.length > 0
+  ? regionSummary.reduce((max, current) =>
+      current.total_production > max.total_production ? current : max
+    ).total_production.toLocaleString()
+  : "0"} 
     tons produced
   </p>
   <div
@@ -462,21 +495,19 @@ const [loadingRegions, setLoadingRegions] = useState<boolean>(true);
                             : "text-gray-900",
                         )}
                       >
-                        {
-                         comparativeData.length > 0
-  ? comparativeData.reduce((max, current) =>
+                        {regionSummary.length > 0
+  ? regionSummary.reduce((max, current) =>
       current.efficiency > max.efficiency ? current : max
-    ).region
-  : "No data"
+    ).region_name
+  : "No data"}
 
-                        }
                       </p>
                       <p className="text-blue-600 text-sm mb-3">
-  {comparativeData.length > 0
-    ? comparativeData.reduce((max, current) =>
-        current.efficiency > max.efficiency ? current : max
-      ).efficiency.toFixed(2)
-    : "0"}{" "}
+  {regionSummary.length > 0
+  ? regionSummary.reduce((max, current) =>
+      current.efficiency > max.efficiency ? current : max
+    ).efficiency.toFixed(2)
+  : "0"}
   tons/hectare
 </p>
 
@@ -511,10 +542,11 @@ const [loadingRegions, setLoadingRegions] = useState<boolean>(true);
                             : "text-gray-900",
                         )}
                       >
-                        {comparativeData
-                          .reduce((sum, region) => sum + region.totalVolume, 0)
-                          .toLocaleString()}{" "}
-                        tons
+                        {regionSummary
+  .reduce((sum, region) => sum + region.total_production, 0)
+  .toLocaleString()} tons
+
+
                       </p>
                       <p className="text-purple-600 text-sm mb-3">
                         Across all regions this month
@@ -557,51 +589,47 @@ const [loadingRegions, setLoadingRegions] = useState<boolean>(true);
                 <CardContent>
                   <div className="h-96">
                     <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={getFilteredData()}>
-                        <CartesianGrid
-                          strokeDasharray="3 3"
-                          stroke={
-                            actualTheme === "dark" ? "#374151" : "#e5e7eb"
-                          }
-                        />
-                        <XAxis
-                          dataKey="region"
-                          tick={{
-                            fontSize: 12,
-                            fill:
-                              actualTheme === "dark" ? "#d1d5db" : "#6b7280",
-                          }}
-                          angle={-45}
-                          textAnchor="end"
-                          height={80}
-                        />
-                        <YAxis
-                          tick={{
-                            fontSize: 12,
-                            fill:
-                              actualTheme === "dark" ? "#d1d5db" : "#6b7280",
-                          }}
-                        />
-                        <Tooltip
-                          formatter={(value: number) => [
-                            `${value.toLocaleString()} tons`,
-                            "Production",
-                          ]}
-                          contentStyle={{
-                            backgroundColor:
-                              actualTheme === "dark" ? "#1f2937" : "#ffffff",
-                            border: `1px solid ${actualTheme === "dark" ? "#374151" : "#e5e7eb"}`,
-                            borderRadius: "8px",
-                            color:
-                              actualTheme === "dark" ? "#ffffff" : "#000000",
-                          }}
-                        />
-                        <Bar
-                          dataKey="totalVolume"
-                          fill="#10b981"
-                          radius={[6, 6, 0, 0]}
-                        />
-                      </BarChart>
+                      <BarChart data={regionalProducts}>
+  <CartesianGrid
+    strokeDasharray="3 3"
+    stroke={actualTheme === "dark" ? "#374151" : "#e5e7eb"}
+  />
+  <XAxis
+    dataKey="product_name"
+    tick={{
+      fontSize: 12,
+      fill: actualTheme === "dark" ? "#d1d5db" : "#6b7280",
+    }}
+    angle={-45}
+    textAnchor="end"
+    height={80}
+  />
+  <YAxis
+    tick={{
+      fontSize: 12,
+      fill: actualTheme === "dark" ? "#d1d5db" : "#6b7280",
+    }}
+  />
+  <Tooltip
+    formatter={(value: number) => [
+      `${value.toLocaleString()} tons`,
+      "Production",
+    ]}
+    contentStyle={{
+      backgroundColor:
+        actualTheme === "dark" ? "#1f2937" : "#ffffff",
+      border: `1px solid ${actualTheme === "dark" ? "#374151" : "#e5e7eb"}`,
+      borderRadius: "8px",
+      color: actualTheme === "dark" ? "#ffffff" : "#000000",
+    }}
+  />
+  <Bar
+    dataKey="expecting_weight"
+    fill="#10b981"
+    radius={[6, 6, 0, 0]}
+  />
+</BarChart>
+
                     </ResponsiveContainer>
                   </div>
                 </CardContent>
@@ -628,54 +656,50 @@ const [loadingRegions, setLoadingRegions] = useState<boolean>(true);
                 <CardContent>
                   <div className="h-96">
                     <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={getFilteredData()}>
-                        <CartesianGrid
-                          strokeDasharray="3 3"
-                          stroke={
-                            actualTheme === "dark" ? "#374151" : "#e5e7eb"
-                          }
-                        />
-                        <XAxis
-                          dataKey="region"
-                          tick={{
-                            fontSize: 12,
-                            fill:
-                              actualTheme === "dark" ? "#d1d5db" : "#6b7280",
-                          }}
-                          angle={-45}
-                          textAnchor="end"
-                          height={80}
-                        />
-                        <YAxis
-                          tick={{
-                            fontSize: 12,
-                            fill:
-                              actualTheme === "dark" ? "#d1d5db" : "#6b7280",
-                          }}
-                        />
-                        <Tooltip
-                          formatter={(value: number) => [
-                            `${value.toFixed(2)} tons/ha`,
-                            "Efficiency",
-                          ]}
-                          contentStyle={{
-                            backgroundColor:
-                              actualTheme === "dark" ? "#1f2937" : "#ffffff",
-                            border: `1px solid ${actualTheme === "dark" ? "#374151" : "#e5e7eb"}`,
-                            borderRadius: "8px",
-                            color:
-                              actualTheme === "dark" ? "#ffffff" : "#000000",
-                          }}
-                        />
-                        <Area
-                          type="monotone"
-                          dataKey="efficiency"
-                          stroke="#10b981"
-                          fill="#10b981"
-                          fillOpacity={0.3}
-                          strokeWidth={2}
-                        />
-                      </AreaChart>
+                      <AreaChart data={regionalProducts}>
+  <CartesianGrid
+    strokeDasharray="3 3"
+    stroke={actualTheme === "dark" ? "#374151" : "#e5e7eb"}
+  />
+  <XAxis
+    dataKey="product_name"
+    tick={{
+      fontSize: 12,
+      fill: actualTheme === "dark" ? "#d1d5db" : "#6b7280",
+    }}
+    angle={-45}
+    textAnchor="end"
+    height={80}
+  />
+  <YAxis
+    tick={{
+      fontSize: 12,
+      fill: actualTheme === "dark" ? "#d1d5db" : "#6b7280",
+    }}
+  />
+  <Tooltip
+    formatter={(value: number) => [
+      `${value.toFixed(2)} tons/ha`,
+      "Efficiency",
+    ]}
+    contentStyle={{
+      backgroundColor:
+        actualTheme === "dark" ? "#1f2937" : "#ffffff",
+      border: `1px solid ${actualTheme === "dark" ? "#374151" : "#e5e7eb"}`,
+      borderRadius: "8px",
+      color: actualTheme === "dark" ? "#ffffff" : "#000000",
+    }}
+  />
+  <Area
+    type="monotone"
+    dataKey="wph"
+    stroke="#10b981"
+    fill="#10b981"
+    fillOpacity={0.3}
+    strokeWidth={2}
+  />
+</AreaChart>
+
                     </ResponsiveContainer>
                   </div>
                 </CardContent>
@@ -705,58 +729,22 @@ const [loadingRegions, setLoadingRegions] = useState<boolean>(true);
                   <div className="h-96">
                     <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={trendData}>
-                        <CartesianGrid
-                          strokeDasharray="3 3"
-                          stroke={
-                            actualTheme === "dark" ? "#374151" : "#e5e7eb"
-                          }
-                        />
-                        <XAxis
-                          dataKey="month"
-                          tick={{
-                            fontSize: 12,
-                            fill:
-                              actualTheme === "dark" ? "#d1d5db" : "#6b7280",
-                          }}
-                        />
-                        <YAxis
-                          tick={{
-                            fontSize: 12,
-                            fill:
-                              actualTheme === "dark" ? "#d1d5db" : "#6b7280",
-                          }}
-                        />
-                        <Tooltip
-                          contentStyle={{
-                            backgroundColor:
-                              actualTheme === "dark" ? "#1f2937" : "#ffffff",
-                            border: `1px solid ${actualTheme === "dark" ? "#374151" : "#e5e7eb"}`,
-                            borderRadius: "8px",
-                            color:
-                              actualTheme === "dark" ? "#ffffff" : "#000000",
-                          }}
-                        />
-                        {products.map((product, index) => {
-                          const colors = [
-                            "#10b981",
-                            "#3b82f6",
-                            "#8b5cf6",
-                            "#f59e0b",
-                            "#ef4444",
-                          ];
-                          return (
-                            <Line
-                              key={product.id}
-                              type="monotone"
-                              dataKey={product.name}
-                              stroke={colors[index % colors.length]}
-                              strokeWidth={3}
-                              dot={{ r: 6, strokeWidth: 2 }}
-                              activeDot={{ r: 8, strokeWidth: 2 }}
-                            />
-                          );
-                        })}
-                      </LineChart>
+  <CartesianGrid strokeDasharray="3 3" />
+  <XAxis dataKey="month" />
+  <YAxis />
+  <Tooltip formatter={(value: number) => [`${value} tons`, "Production"]} />
+  <Line
+  type="monotone"
+  dataKey="expecting_weight"
+  stroke="#10b981"
+  strokeWidth={3}
+  dot={{ r: 6, strokeWidth: 2 }}
+  activeDot={{ r: 8, strokeWidth: 2 }}
+/>
+
+</LineChart>
+
+
                     </ResponsiveContainer>
                   </div>
                 </CardContent>
