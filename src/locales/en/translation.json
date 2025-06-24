@@ -19,6 +19,13 @@
     "joined": "Joined",
     "personal_info": "Personal Info",
     "activity": "Activity",
-    "personal_inform": "Personal Information"
+    "personal_inform": "Personal Information",
+    "save_success": "Saved successfully",
+    "cancel": "Cancel",
+    "save": "Save",
+    "save_changes": "Save Changes",
+    "edit_profile": "Edit Profile",
+    "first_name": "First Name",
+    "last_name": "Last Name"
   }
   

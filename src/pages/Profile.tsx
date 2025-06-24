@@ -691,7 +691,7 @@ const Profile = () => {
                     {saveStatus === "success" && (
                       <Badge className="ml-3 bg-green-500 text-white border-0">
                         <Check className="h-3 w-3 mr-1" />
-                        Saved Successfully
+                        {t("save_success")}
                       </Badge>
                     )}
                     {saveStatus === "error" && (
@@ -714,7 +714,7 @@ const Profile = () => {
                         disabled={isSaving}
                       >
                         <X className="h-4 w-4 mr-2" />
-                        Cancel
+                        {t("cancel")}
                       </Button>
                     )}
                     <Button
@@ -725,17 +725,17 @@ const Profile = () => {
                       {isSaving ? (
                         <>
                           <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                          Saving...
+                          {t("save")}...
                         </>
                       ) : isEditing ? (
                         <>
                           <Save className="h-4 w-4 mr-2" />
-                          Save Changes
+                          {t("save_changes")}
                         </>
                       ) : (
                         <>
                           <Edit className="h-4 w-4 mr-2" />
-                          Edit Profile
+                          {t("edit_profile")}
                         </>
                       )}
                     </Button>
@@ -753,7 +753,7 @@ const Profile = () => {
                             : "text-gray-700",
                         )}
                       >
-                        First Name
+                        {t("first_name")}
                       </Label>
                       <Input
                         id="first_name"
@@ -783,7 +783,7 @@ const Profile = () => {
                             : "text-gray-700",
                         )}
                       >
-                        Last Name
+                        {t("last_name")}
                       </Label>
                       <Input
                         id="last_name"

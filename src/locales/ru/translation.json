@@ -19,5 +19,12 @@
     "joined": "Присоединился",
     "personal_info": "Личная информация",
     "activity": "Активность",
-    "personal_inform": "Персональная информация"
+    "personal_inform": "Персональная информация",
+    "save_success": "Сохранено успешно",
+    "cancel": "Отмена",
+    "save": "сохранять",
+    "save_changes": "Cохранить изменения",
+    "edit_profile": "Редактировать профиль",
+    "first_name": "Имя",
+    "last_name": "Фамилия"
 }

@@ -19,6 +19,13 @@
   "joined": "Qo'shilgan",
   "personal_info": "Shaxsiy Ma'lumotlar",
   "activity": "Faoliyat",
-  "personal_inform": "Shaxsiy Ma'lumot"
+  "personal_inform": "Shaxsiy Ma'lumot",
+  "save_success": "Muvaffaqiyatli saqlandi",
+  "cancel": "Bekor qilish",
+  "save": "Saqlanmoqda",
+  "save_changes": "O'zgarishlarni saqlash",
+  "edit_profile": "Profilni tahrirlash",
+  "first_name": "Ism",
+  "last_name": "Familiya"
 }
   
