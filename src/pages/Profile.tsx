@@ -46,6 +46,7 @@ import { Base_Url } from "@/App";
 import userStore from "@/store/UserStore";
 import { shallow } from "zustand/shallow";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 const Profile = () => {
   const { actualTheme } = useTheme();
@@ -60,6 +61,7 @@ const Profile = () => {
   const [saveStatus, setSaveStatus] = useState("idle");
   const [error, setError] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const { t } = useTranslation();
 
   type Activity = {
     id: number;
@@ -464,7 +466,7 @@ const Profile = () => {
                         {profile.verified && (
                           <Badge className="bg-green-500 text-white border-0">
                             <Shield className="h-3 w-3 mr-1" />
-                            Verified
+                            {t("verified")}
                           </Badge>
                         )}
                       </div>
@@ -482,7 +484,7 @@ const Profile = () => {
                         >
                           {profile.completedTransactions}
                         </p>
-                        <p className="text-green-500 text-sm">Transactions</p>
+                        <p className="text-green-500 text-sm">{t("transactions")}</p>
                       </div>
                       <div className="text-center">
                         <p
@@ -495,7 +497,7 @@ const Profile = () => {
                         >
                           {profile.totalVolume}t
                         </p>
-                        <p className="text-green-500 text-sm">Total Volume</p>
+                        <p className="text-green-500 text-sm">{t("total_volume")}</p>
                       </div>
                     </div>
                   </div>
@@ -607,7 +609,7 @@ const Profile = () => {
                             : "bg-gray-900 text-white",
                         )}
                       >
-                        Joined {new Date(profile.date_joined).toLocaleDateString()}
+                        {t("joined")} {new Date(profile.date_joined).toLocaleDateString()}
                         <div
                           className={cn(
                             "absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent",
@@ -639,28 +641,28 @@ const Profile = () => {
                 className="data-[state=active]:bg-green-500 data-[state=active]:text-white"
               >
                 <User className="h-4 w-4 mr-2" />
-                Personal Info
+                {t("personal_info")}
               </TabsTrigger>
               <TabsTrigger
                 value="activity"
                 className="data-[state=active]:bg-green-500 data-[state=active]:text-white"
               >
                 <Activity className="h-4 w-4 mr-2" />
-                Activity
+                {t("activity")}
               </TabsTrigger>
               <TabsTrigger
                 value="analytics"
                 className="data-[state=active]:bg-green-500 data-[state=active]:text-white"
               >
                 <BarChart3 className="h-4 w-4 mr-2" />
-                Analytics
+                {t("analytics")}
               </TabsTrigger>
               <TabsTrigger
                 value="settings"
                 className="data-[state=active]:bg-green-500 data-[state=active]:text-white"
               >
                 <Target className="h-4 w-4 mr-2" />
-                Settings
+                {t("settings")}
               </TabsTrigger>
             </TabsList>
 
@@ -685,7 +687,7 @@ const Profile = () => {
                       className="w-8 h-8 mr-3"
                     />
                     {/* <Leaf className="h-6 w-6 mr-2 text-green-500" /> */}
-                    Personal Information
+                    {t("personal_inform")}
                     {saveStatus === "success" && (
                       <Badge className="ml-3 bg-green-500 text-white border-0">
                         <Check className="h-3 w-3 mr-1" />

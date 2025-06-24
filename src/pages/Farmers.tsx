@@ -14,6 +14,7 @@ const Farmers = () => {
   useEffect(() => {
     fetchFarmers();
   }, []);
+  //Fetch
 
   const fetchFarmers = async () => {
     try {
@@ -30,15 +31,18 @@ const Farmers = () => {
 
   const filteredFarmers = farmers.filter(
     (farmer) =>
-      farmer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      farmer.farmName.toLowerCase().includes(searchTerm.toLowerCase()),
+      `${farmer.first_name} ${farmer.last_name}`
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      (farmer.email && farmer.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (farmer.phone_number && farmer.phone_number.includes(searchTerm))
   );
 
   return (
     <div
       className={cn(
         "min-h-screen flex",
-        actualTheme === "dark" ? "bg-gray-900" : "bg-gray-50",
+        actualTheme === "dark" ? "bg-gray-900" : "bg-gray-50"
       )}
     >
       <div className="w-full container py-8 px-4">
@@ -50,23 +54,44 @@ const Farmers = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredFarmers.map((farmer) => (
             <Card key={farmer.id}>
               <CardHeader>
-                <CardTitle>{farmer.name}</CardTitle>
+                <CardTitle>
+                  {farmer.first_name} {farmer.last_name}
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <p>{farmer.farmName}</p>
-                <p>Specialization: {farmer.specialization.join(", ")}</p>
-                <p>Region: {farmer.region}</p>
-                <p>Experience: {farmer.experience} years</p>
+                <p><strong>Email:</strong> {farmer.email}</p>
+                <p><strong>Phone:</strong> {farmer.phone_number}</p>
+                <p><strong>Region:</strong> {farmer.region}</p>
+
+                <div className="mt-4">
+                  <h4 className="font-bold mb-2">Planted Products:</h4>
+                  {farmer.planted_products && farmer.planted_products.length > 0 ? (
+                    <ul className="list-disc ml-6 space-y-1">
+                      {farmer.planted_products.map((product, index) => (
+                        <li key={index}>
+                          <strong>{product.product.name}</strong> —{" "}
+                          {product.planting_area} ha /{" "}
+                          {product.expecting_weight} tons /{" "}
+                          {product.wph} % 
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>No planted products.</p>
+                  )}
+                </div>
               </CardContent>
             </Card>
           ))}
         </div>
 
-        {filteredFarmers.length === 0 && <p>No farmers found.</p>}
+        {filteredFarmers.length === 0 && (
+          <p className="text-center text-gray-500 mt-6">No farmers found.</p>
+        )}
       </div>
       <Sidebar />
     </div>

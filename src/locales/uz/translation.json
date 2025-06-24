@@ -7,7 +7,18 @@
   "settings": "Sozlamalar",
   "profile": "Profil",
   "farmers": "Fermerlar",
-  "login": "Login",
-  "register": "Ro'yxatdan o'tish"
+  "login": "Kirish",
+  "register": "Ro'yxatdan o'tish",
+  "logout": "Chiqish",
+  "agri_platform": "Qishloq xo'jaligi platformasi",
+  "agri_dashboard": "Qishloq xo'jaligi boshqaruv paneli",
+  "dash_navbar": "Dehqonchilik faoliyatingiz haqida real vaqtda tushunchalar",
+  "verified": "Tasdiqlangan",
+  "transactions": "Tranzaksiyalar",
+  "total_volume": "Umumiy hajm",
+  "joined": "Qo'shilgan",
+  "personal_info": "Shaxsiy Ma'lumotlar",
+  "activity": "Faoliyat",
+  "personal_inform": "Shaxsiy Ma'lumot"
 }
   

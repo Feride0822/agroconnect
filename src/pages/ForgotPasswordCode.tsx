@@ -12,6 +12,7 @@ import axios from "axios";
 import { Base_Url } from "@/App";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useTranslation } from "react-i18next";
 
 const ForgotPasswordCode = () => {
   const { actualTheme } = useTheme();
@@ -25,6 +26,7 @@ const ForgotPasswordCode = () => {
   const [error, setError] = useState("");
   const [resendCooldown, setResendCooldown] = useState(0);
   const [isResending, setIsResending] = useState(false);
+  const { t } = useTranslation();
   const showToastMessage = (
     message: string,
     type: "success" | "error" | "info",
@@ -203,7 +205,7 @@ const ForgotPasswordCode = () => {
                   actualTheme === "dark" ? "text-gray-400" : "text-gray-600",
                 )}
               >
-                Agricultural Platform
+                {t("agri_platform")}
               </span>
             </div>
           </Link>

@@ -38,6 +38,7 @@ import { useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import userStore from "@/store/UserStore";
 import { Base_Url } from "@/App";
+import { useTranslation } from "react-i18next";
 
 const Dashboard = () => {
   const { actualTheme } = useTheme();
@@ -45,6 +46,7 @@ const Dashboard = () => {
    const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const login = userStore((state) => state.login);
+  const { t } = useTranslation();
 
   // Calculate key metrics
   const totalProduction = regions.reduce(
@@ -135,7 +137,7 @@ const Dashboard = () => {
                     actualTheme === "dark" ? "text-white" : "text-gray-900",
                   )}
                 >
-                  Agricultural Dashboard
+                  {t("agri_dashboard")}
                 </h1>
                 <p
                   className={cn(
@@ -143,7 +145,7 @@ const Dashboard = () => {
                     actualTheme === "dark" ? "text-gray-300" : "text-gray-600",
                   )}
                 >
-                  Real-time insights into your farming operations
+                  {t("dash_navbar")}
                 </p>
               </div>
             </div>

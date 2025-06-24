@@ -178,7 +178,7 @@ const Sidebar = () => {
                     actualTheme === "dark" ? "text-gray-400" : "text-gray-600",
                   )}
                 >
-                  Agricultural Platform
+                  {t("agri_platform")}
                 </span>
               </div>
             </Link>
@@ -218,7 +218,7 @@ const Sidebar = () => {
                 )}
               >
                 <LogIn className="h-5 w-5 transform rotate-180" />
-                <span className="font-medium">Logout</span>
+                <span className="font-medium">{t("logout")}</span>
               </button>
             )}
           </nav>

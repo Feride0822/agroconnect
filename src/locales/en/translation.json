@@ -8,6 +8,17 @@
     "profile": "Profile",
     "farmers": "Farmers",
     "login": "Login",
-    "register": "Register"
+    "register": "Register",
+    "logout": "Logout",
+    "agri_platform": "Agricultural Platform",
+    "agri_dashboard": "Agricultural Dashboard",
+    "dash_navbar": "Real-time insights into your farming operations",
+    "verified": "Verified",
+    "transactions": "Transactions",
+    "total_volume": "Total Volume",
+    "joined": "Joined",
+    "personal_info": "Personal Info",
+    "activity": "Activity",
+    "personal_inform": "Personal Information"
   }
   
