@@ -36,6 +36,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Base_Url } from "@/App";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const Settings = () => {
   const { theme, setTheme, actualTheme } = useTheme();
@@ -694,7 +695,7 @@ const Settings = () => {
                         Language
                       </Label>
                       <Select value={language} onValueChange={setLanguage}>
-                        <SelectTrigger
+                        {/* <SelectTrigger
                           className={cn(
                             actualTheme === "dark"
                               ? "bg-gray-700 border-gray-600 text-white"
@@ -702,13 +703,9 @@ const Settings = () => {
                           )}
                         >
                           <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="en">English</SelectItem>
-                          <SelectItem value="uz">Uzbek</SelectItem>
-                          <SelectItem value="ru">Russian</SelectItem>
-                          <SelectItem value="es">Spanish</SelectItem>
-                        </SelectContent>
+                        </SelectTrigger> */}
+                        
+                        <LanguageSwitcher />
                       </Select>
                     </div>
 

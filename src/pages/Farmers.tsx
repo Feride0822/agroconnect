@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Base_Url } from "@/App";
 
 const Farmers = () => {
   const [farmers, setFarmers] = useState([]);
@@ -12,7 +13,11 @@ const Farmers = () => {
 
   const fetchFarmers = async () => {
     try {
-      const response = await axios.get("https://your-api-url.com/api/farmers");
+      const response = await axios.get(`${Base_Url}/accounts/farmers/`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
       setFarmers(response.data);
     } catch (error) {
       console.error("Error fetching farmers", error);

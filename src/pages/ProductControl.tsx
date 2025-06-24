@@ -9,17 +9,21 @@ import axios from "axios";
 import { Base_Url } from "@/App";
 import { useNavigate } from "react-router-dom";
 import userStore from "@/store/UserStore";
+import { useTranslation } from "react-i18next";
 
 const ProductControl = () => {
   const { actualTheme } = useTheme();
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
-  const [nextProductsUrl, setNextProductsUrl] = useState(`${Base_Url}/products/products/`);
+  const [nextProductsUrl, setNextProductsUrl] = useState(
+    `${Base_Url}/products/products/`,
+  );
   const [userProducts, setUserProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const user = userStore((state) => state.user);
   const token = localStorage.getItem("access_token");
+  const { t } = useTranslation();
 
   const fetchNextProducts = async () => {
     if (!nextProductsUrl) return;
@@ -38,9 +42,12 @@ const ProductControl = () => {
 
   const fetchPlantedProducts = async () => {
     try {
-      const res = await axios.get(`${Base_Url}/products/planted-products/?owner=${user.id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.get(
+        `${Base_Url}/products/planted-products/?owner=${user.id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
       setUserProducts(res.data.results || res.data);
     } catch (err) {
       console.error("Failed to fetch planted products", err);
@@ -57,24 +64,41 @@ const ProductControl = () => {
 
   const handleDelete = async (productId: number) => {
     try {
-      await axios.delete(`${Base_Url}/products/planted-products/${productId}/`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.delete(
+        `${Base_Url}/products/planted-products/${productId}/`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
       setUserProducts((prev) => prev.filter((p) => p.id !== productId));
     } catch (err) {
       console.error("Failed to delete planted product", err);
     }
   };
 
-  if (loading) return <p className="text-center text-sm my-10">Loading products...</p>;
-  if (error) return <p className="text-center text-sm text-red-500 my-10">{error}</p>;
+  if (loading)
+    return <p className="text-center text-sm my-10">Loading products...</p>;
+  if (error)
+    return <p className="text-center text-sm text-red-500 my-10">{error}</p>;
 
   return (
-    <div className={cn("min-h-screen flex gap-1", actualTheme === "dark" ? "bg-gray-900" : "bg-gray-50")}>
+    <div
+      className={cn(
+        "min-h-screen flex gap-1",
+        actualTheme === "dark" ? "bg-gray-900" : "bg-gray-50",
+      )}
+    >
       <div className="w-full flex flex-col container py-8">
         <header className="mb-6 flex items-center gap-3">
           <BarChart3 className="h-8 w-8 text-green-500" />
-          <h1 className={cn("text-3xl font-bold", actualTheme === "dark" ? "text-white" : "text-gray-900")}>Product Control</h1>
+          <h1
+            className={cn(
+              "text-3xl font-bold",
+              actualTheme === "dark" ? "text-white" : "text-gray-900",
+            )}
+          >
+            {t("product_control")}
+          </h1>
         </header>
 
         <section className="w-full grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -92,14 +116,20 @@ const ProductControl = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => navigate(`/product-control/add/${product.id}`)}
+                    onClick={() =>
+                      navigate(`/product-control/add/${product.id}`)
+                    }
                   >
                     <Plus className="h-4 w-4" />
                   </Button>
                 </div>
               ))}
               {nextProductsUrl && (
-                <Button onClick={fetchNextProducts} variant="secondary" className="mt-2 w-full">
+                <Button
+                  onClick={fetchNextProducts}
+                  variant="secondary"
+                  className="mt-2 w-full"
+                >
                   Load More Products
                 </Button>
               )}
@@ -122,7 +152,9 @@ const ProductControl = () => {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => navigate(`/product-control/edit/${planted.id}`)}
+                        onClick={() =>
+                          navigate(`/product-control/edit/${planted.id}`)
+                        }
                       >
                         <Pencil className="h-4 w-4" />
                       </Button>
@@ -137,7 +169,9 @@ const ProductControl = () => {
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-center py-4">No products added yet.</p>
+                <p className="text-sm text-center py-4">
+                  No products added yet.
+                </p>
               )}
             </CardContent>
           </Card>

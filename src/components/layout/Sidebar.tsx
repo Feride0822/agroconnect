@@ -20,6 +20,7 @@ import userStore from "@/store/UserStore";
 import { useNavigate } from "react-router-dom";
 import { Base_Url } from "@/App";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 const Sidebar = () => {
   const location = useLocation();
@@ -30,6 +31,7 @@ const Sidebar = () => {
   const logout = userStore((state) => state.logout);
   const navigate = useNavigate();
   const hideOnRoutes = ["/login", "/register", "/confirm"];
+  const { t } = useTranslation();
   if (hideOnRoutes.includes(location.pathname)) return null;
 
   const handleLogout = async () => {
@@ -65,7 +67,7 @@ const Sidebar = () => {
           { path: "/dashboard", label: "Dashboard", icon: BarChart3 },
           { path: "/statistics", label: "Analytics", icon: TrendingUp },
           { path: "/profile", label: "Profile", icon: User },
-          { path: "/product-control", label: "Product Control", icon: Leaf },
+          { path: "/product-control", label: t("product_control"), icon: Leaf },
           { path: "/settings", label: "Settings", icon: Settings },
         ]
       : role === "Exporters"

@@ -26,6 +26,7 @@ import {
   Mail,
   Building,
   Calendar,
+  Trash2,
   Star,
   TrendingUp,
   BarChart3,
@@ -58,6 +59,7 @@ const Profile = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState("idle");
   const [error, setError] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   type Activity = {
     id: number;
@@ -92,6 +94,34 @@ const Profile = () => {
       });
   }, [token]);
 
+  const handleDeleteAccount = async () => {
+    if (!confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+      return;
+    }
+
+    setIsDeleting(true);
+    const accessToken = localStorage.getItem("access_token");
+
+    try {
+      const response = await axios.delete(`${Base_Url}/accounts/delete/`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (response.status === 200) {
+        alert("Your account has been deleted successfully.");
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+        navigate("/register"); // Redirect explicitly to register/login page
+      }
+    } catch (error: any) {
+      console.error("Failed to delete account:", error);
+      alert("Failed to delete account. Please try again later.");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
   // Load profile data on mount
   useEffect(() => {
     const fetchProfile = async () => {
@@ -832,45 +862,6 @@ const Profile = () => {
                       />
                     </div>
 
-                    {/* <div className="space-y-2">
-                      <Label
-                        htmlFor="role"
-                        className={cn(
-                          "font-medium",
-                          actualTheme === "dark"
-                            ? "text-gray-300"
-                            : "text-gray-700",
-                        )}
-                      >
-                        Role
-                      </Label>
-                      <Select
-                        value={isEditing ? formData.role : profile.role}
-                        disabled={!isEditing}
-                        onValueChange={(value) =>
-                          handleInputChange("role", value)
-                        }
-                      >
-                        <SelectTrigger
-                          className={cn(
-                            "focus:ring-green-500 focus:border-green-500",
-                            actualTheme === "dark"
-                              ? "bg-gray-700 border-gray-600 text-white"
-                              : "bg-white border-gray-300",
-                          )}
-                        >
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Farmers">Farmer</SelectItem>
-                          <SelectItem value="Exporters">Exporter</SelectItem>
-                          <SelectItem value="Analysts">
-                            Market Analyst
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div> */}
-
                     <div className="space-y-2">
                       <Label
                         htmlFor="region"
@@ -914,118 +905,6 @@ const Profile = () => {
               </Card>
             </TabsContent>
 
-            {/* Other tabs content remains the same... */}
-            {/* <TabsContent value="activity" className="space-y-8">
-              <Card
-                className={cn(
-                  actualTheme === "dark"
-                    ? "bg-gray-800 border-gray-700"
-                    : "bg-white border-gray-200",
-                )}
-              >
-                <CardHeader>
-                  <CardTitle
-                    className={cn(
-                      "text-2xl flex items-center",
-                      actualTheme === "dark" ? "text-white" : "text-gray-900",
-                    )}
-                  >
-                    <Activity className="h-6 w-6 mr-2 text-green-500" />
-                    Recent Activity
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-6">
-                    {[
-                      {
-                        action: "Completed harvest transaction",
-                        product: "Organic Wheat",
-                        amount: "75 tons",
-                        date: "2024-04-15",
-                        status: "success",
-                      },
-                      {
-                        action: "Price inquiry submitted",
-                        product: "Cotton Export",
-                        amount: "150 tons",
-                        date: "2024-04-14",
-                        status: "pending",
-                      },
-                      {
-                        action: "Market report viewed",
-                        product: "Apple Trends",
-                        amount: "",
-                        date: "2024-04-13",
-                        status: "info",
-                      },
-                      {
-                        action: "Profile information updated",
-                        product: "",
-                        amount: "",
-                        date: "2024-04-12",
-                        status: "info",
-                      },
-                      {
-                        action: "New partnership established",
-                        product: "Export Network",
-                        amount: "",
-                        date: "2024-04-11",
-                        status: "success",
-                      },
-                    ].map((activity, index) => (
-                      <div
-                        key={index}
-                        className={cn(
-                          "flex items-center justify-between py-4 border-b last:border-b-0",
-                          actualTheme === "dark"
-                            ? "border-gray-700"
-                            : "border-gray-200",
-                        )}
-                      >
-                        <div className="flex items-center space-x-4">
-                          <div
-                            className={`w-3 h-3 rounded-full ${
-                              activity.status === "success"
-                                ? "bg-green-500"
-                                : activity.status === "pending"
-                                  ? "bg-yellow-500"
-                                  : "bg-blue-500"
-                            }`}
-                          />
-                          <div>
-                            <p
-                              className={cn(
-                                "font-medium",
-                                actualTheme === "dark"
-                                  ? "text-white"
-                                  : "text-gray-900",
-                              )}
-                            >
-                              {activity.action}
-                            </p>
-                            {activity.product && (
-                              <p
-                                className={cn(
-                                  actualTheme === "dark"
-                                    ? "text-gray-300"
-                                    : "text-gray-600",
-                                )}
-                              >
-                                {activity.product}{" "}
-                                {activity.amount && `- ${activity.amount}`}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                        <span className="text-green-500">
-                          {new Date(activity.date).toLocaleDateString()}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent> */}
             <TabsContent value="activity" className="space-y-8">
               <Card
                 className={cn(
@@ -1377,9 +1256,15 @@ const Profile = () => {
                     <h3 className="text-xl font-semibold mb-6 text-red-500">
                       Danger Zone
                     </h3>
-                    <Button className="w-full bg-red-500 hover:bg-red-600 text-white">
-                      Delete Account
-                    </Button>
+                    <Button
+  variant="destructive"
+  className="bg-red-600 hover:bg-red-700 text-white"
+  onClick={handleDeleteAccount}
+  disabled={isDeleting}
+>
+  <Trash2 className="h-4 w-4 mr-2" />
+  {isDeleting ? "Deleting..." : "Delete Account"}
+</Button>
                     <p
                       className={cn(
                         "text-sm mt-3",
