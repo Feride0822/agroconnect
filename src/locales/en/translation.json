@@ -1,6 +1,13 @@
 {
     "welcome": "Welcome",
     "product_control": "Product Control",
-    "load_more": "Load More Products"
+    "load_more": "Load More Products",
+    "dashboard": "Dashboard",
+    "analytics": "Analytics",
+    "settings": "Settings",
+    "profile": "Profile",
+    "farmers": "Farmers",
+    "login": "Login",
+    "register": "Register"
   }
   

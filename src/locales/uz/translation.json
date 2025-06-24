@@ -1,6 +1,13 @@
 {
   "welcome": "Xush kelibsiz",
   "product_control": "Mahsulotlarni boshqarish",
-  "load_more": "Yana yuklash"
+  "load_more": "Yana yuklash",
+  "dashboard": "Boshqaruv paneli",
+  "analytics": "Analitika",
+  "settings": "Sozlamalar",
+  "profile": "Profil",
+  "farmers": "Fermerlar",
+  "login": "Login",
+  "register": "Ro'yxatdan o'tish"
 }
   

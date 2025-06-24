@@ -64,33 +64,33 @@ const Sidebar = () => {
   const navItems = user
     ? role === "Farmers"
       ? [
-          { path: "/dashboard", label: "Dashboard", icon: BarChart3 },
-          { path: "/statistics", label: "Analytics", icon: TrendingUp },
-          { path: "/profile", label: "Profile", icon: User },
+          { path: "/dashboard", label: t("dashboard"), icon: BarChart3 },
+          { path: "/statistics", label: t("analytics"), icon: TrendingUp },
+          { path: "/profile", label: t("profile"), icon: User },
           { path: "/product-control", label: t("product_control"), icon: Leaf },
-          { path: "/settings", label: "Settings", icon: Settings },
+          { path: "/settings", label: t("settings"), icon: Settings },
         ]
       : role === "Exporters"
         ? [
-            { path: "/dashboard", label: "Dashboard", icon: BarChart3 },
-            { path: "/farmers", label: "Farmers", icon: Users },
-            { path: "/profile", label: "Profile", icon: User },
-            { path: "/settings", label: "Settings", icon: Settings },
+            { path: "/dashboard", label: t("dashboard"), icon: BarChart3 },
+            { path: "/farmers", label: t("farmers"), icon: Users },
+            { path: "/profile", label: t("profile"), icon: User },
+            { path: "/settings", label: t("settings"), icon: Settings },
           ]
         : role === "Analysts"
           ? [
-              { path: "/dashboard", label: "Dashboard", icon: BarChart3 },
-              { path: "/statistics", label: "Analytics", icon: TrendingUp },
-              { path: "/profile", label: "Profile", icon: User },
-              { path: "/settings", label: "Settings", icon: Settings },
+              { path: "/dashboard", label: t("dashboard"), icon: BarChart3 },
+              { path: "/statistics", label: t("analytics"), icon: TrendingUp },
+              { path: "/profile", label: t("profile"), icon: User },
+              { path: "/settings", label: t("settings"), icon: Settings },
             ]
           : []
     : [
         { path: "/", label: "Home", icon: Home },
-        { path: "/login", label: "Login", icon: LogIn },
-        { path: "/register", label: "Register", icon: User },
+        { path: "/login", label: t("login"), icon: LogIn },
+        { path: "/register", label: t("register"), icon: User },
         { path: "/news", label: "News", icon: BookOpen },
-        { path: "/settings", label: "Settings", icon: Settings },
+        { path: "/settings", label: t("settings"), icon: Settings },
       ];
 
   const sidebarClasses = cn(
