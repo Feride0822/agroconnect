@@ -26,6 +26,20 @@
   "save_changes": "O'zgarishlarni saqlash",
   "edit_profile": "Profilni tahrirlash",
   "first_name": "Ism",
-  "last_name": "Familiya"
+  "last_name": "Familiya",
+  "email": "Elektron pochta",
+  "phone_number": "Telefon raqam",
+  "region": "Viloyat",
+  "recent_activity": "Oxirgi Faoliyat",
+  "no_recent_activity": "Oxirgi Faoliyat Yo'q",
+  "total_transact": "Umumiy Tranzaksiyalar",
+  "account_sets": "Akkount Sozlamalari",
+  "not_prefs": "Bildirishnoma Sozlamalari",
+  "security_options": "Xavfsizlik imkoniyatlari",
+  "change_pass": "Parolni o'zgartirish",
+  "two_fac_auth": "Ikki bosqichli parol",
+  "down_acc_data": "Akkount ma'lumotlarini yuklash",
+  "danger_z": "Xavfli hudud",
+  "action": "Bu amalni ortga qaytarib bo‘lmaydi. Sizning barcha ma'lumotlaringiz bo'ladi"
 }
   

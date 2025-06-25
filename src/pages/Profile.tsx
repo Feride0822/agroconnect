@@ -813,7 +813,7 @@ const Profile = () => {
                             : "text-gray-700",
                         )}
                       >
-                        Email
+                        {t("email")}
                       </Label>
                       <Input
                         id="email"
@@ -842,7 +842,7 @@ const Profile = () => {
                             : "text-gray-700",
                         )}
                       >
-                        Phone Number
+                        {t("phone_number")}
                       </Label>
                       <Input
                         id="phone_number"
@@ -874,7 +874,7 @@ const Profile = () => {
                             : "text-gray-700",
                         )}
                       >
-                        Region
+                        {t("region")}
                       </Label>
                       <Select
                         value={isEditing ? formData.region : profile.region}
@@ -923,7 +923,7 @@ const Profile = () => {
                     )}
                   >
                     <Activity className="h-6 w-6 mr-2 text-green-500" />
-                    Recent Activity
+                    {t("recent_activity")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -986,7 +986,7 @@ const Profile = () => {
                       ))
                     ) : (
                       <p className="text-sm text-center text-gray-500">
-                        No recent activity.
+                        {t("no_recent_activity")}
                       </p>
                     )}
                   </div>
@@ -1012,7 +1012,7 @@ const Profile = () => {
                           : "text-gray-600",
                       )}
                     >
-                      Total Transactions
+                      {t("total_transact")}
                     </CardTitle>
                     <BarChart3 className="h-4 w-4 text-green-500" />
                   </CardHeader>
@@ -1150,7 +1150,7 @@ const Profile = () => {
                     )}
                   >
                     <Target className="h-6 w-6 mr-2 text-green-500" />
-                    Account Settings
+                    {t("account_sets")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-8">
@@ -1163,7 +1163,7 @@ const Profile = () => {
                           : "text-gray-800",
                       )}
                     >
-                      Notification Preferences
+                      {t("not_prefs")}
                     </h3>
                     <div className="space-y-4">
                       {[
@@ -1215,7 +1215,7 @@ const Profile = () => {
                           : "text-gray-800",
                       )}
                     >
-                      Security Options
+                      {t("security_options")}
                     </h3>
                     <div className="space-y-4">
                       <Button
@@ -1227,7 +1227,7 @@ const Profile = () => {
                         )}
                       >
                         <Shield className="h-4 w-4 mr-2" />
-                        Change Password
+                        {t("change_password")}
                       </Button>
                       <Button
                         className={cn(
@@ -1238,7 +1238,7 @@ const Profile = () => {
                         )}
                       >
                         <Zap className="h-4 w-4 mr-2" />
-                        Two-Factor Authentication
+                        {t("two_fac_auth")}
                       </Button>
                       <Button
                         className={cn(
@@ -1249,14 +1249,14 @@ const Profile = () => {
                         )}
                       >
                         <Activity className="h-4 w-4 mr-2" />
-                        Download Account Data
+                        {t("down_acc_data")}
                       </Button>
                     </div>
                   </div>
 
                   <div>
                     <h3 className="text-xl font-semibold mb-6 text-red-500">
-                      Danger Zone
+                    {t("danger_z")}
                     </h3>
                     <Button
   variant="destructive"
@@ -1273,10 +1273,9 @@ const Profile = () => {
                         actualTheme === "dark"
                           ? "text-gray-400"
                           : "text-gray-500",
-                      )}
-                    >
-                      This action cannot be undone. All your data will be
-                      permanently deleted.
+                      )}                   
+                    >{t("action")}
+                    
                     </p>
                   </div>
                 </CardContent>

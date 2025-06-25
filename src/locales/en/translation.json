@@ -26,6 +26,20 @@
     "save_changes": "Save Changes",
     "edit_profile": "Edit Profile",
     "first_name": "First Name",
-    "last_name": "Last Name"
+    "last_name": "Last Name",
+    "email": "Email",
+    "phone_number": "Phone Number",
+    "region": "Region",
+    "recent_activity": "Recent Activity",
+    "no_recent_activity": "No Recent Activity",
+    "total_transact": "Total Transactions",
+    "account_sets": "Account Settings",
+    "not_prefs": "Notification Preferences",
+    "security_options": "Security Options",
+    "change_pass": "Change Password",
+    "two_fac_auth": "Two Factor Authentication",
+    "down_acc_data": "Download account data",
+    "danger_z": "Danger Zone",
+    "action": "This action cannot be undone. All your data will be permanently deleted."
   }
   
