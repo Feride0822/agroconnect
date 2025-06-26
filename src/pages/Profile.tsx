@@ -338,7 +338,7 @@ const Profile = () => {
                 actualTheme === "dark" ? "text-gray-300" : "text-gray-600",
               )}
             >
-              Loading your profile...
+              {t("loading")}
             </p>
           </div>
         </div>
@@ -374,7 +374,7 @@ const Profile = () => {
                     actualTheme === "dark" ? "text-white" : "text-gray-900",
                   )}
                 >
-                  Failed to Load Profile
+                  {t("fail_load")}
                 </h3>
                 <p
                   className={cn(
@@ -389,7 +389,7 @@ const Profile = () => {
                   onClick={() => window.location.reload()}
                   className="bg-green-500 hover:bg-green-600 text-white"
                 >
-                  Retry
+                  {t("retry")}
                 </Button>
               </CardContent>
             </Card>

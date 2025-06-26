@@ -26,15 +26,16 @@ import {
 import { regions } from "@/lib/agricultural-data";
 import axios from "axios";
 import { Base_Url } from "@/App";
-import { toast, ToastContainer } from "react-toastify"; // Re-added react-toastify imports
-import "react-toastify/dist/ReactToastify.css"; // Re-added react-toastify CSS import
+import { toast, ToastContainer } from "react-toastify"; 
+import "react-toastify/dist/ReactToastify.css"; 
+import { useTranslation } from "react-i18next";
 
 const Register = () => {
   const { actualTheme } = useTheme();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    first_name: "", // Consistent with your requirement
-    last_name: "", // Consistent with your requirement
+    first_name: "", 
+    last_name: "", 
     email: "",
     password: "",
     confirmPassword: "",
@@ -48,6 +49,7 @@ const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const { t } = useTranslation();
 
   // Helper for showing toasts - Re-added for proper feedback
   const showToastMessage = (
@@ -258,7 +260,7 @@ const Register = () => {
                     actualTheme === "dark" ? "text-gray-400" : "text-gray-600",
                   )}
                 >
-                  Agricultural Platform
+                  {t("agri_platform")}
                 </span>
               </div>
             </Link>
@@ -268,7 +270,7 @@ const Register = () => {
                 actualTheme === "dark" ? "text-gray-300" : "text-gray-600",
               )}
             >
-              Join the farming community
+              {t("join")}
             </p>
           </div>
 
@@ -288,15 +290,14 @@ const Register = () => {
                   actualTheme === "dark" ? "text-white" : "text-gray-900",
                 )}
               >
-                Create Account
+                {t("create_acc")}
               </CardTitle>
               <p
                 className={cn(
                   "text-center",
                   actualTheme === "dark" ? "text-gray-300" : "text-gray-600",
                 )}
-              >
-                Sign up to access agricultural management tools
+              >{t("sign_up")}
               </p>
             </CardHeader>
             <CardContent>
@@ -327,7 +328,7 @@ const Register = () => {
                           : "text-gray-700",
                       )}
                     >
-                      First Name *
+                      {t("first_name")} *
                     </Label>
                     <Input
                       id="first_name" // Consistent id
@@ -357,7 +358,7 @@ const Register = () => {
                           : "text-gray-700",
                       )}
                     >
-                      Last Name *
+                      {t("last_name")} *
                     </Label>
                     <Input
                       id="last_name" // Consistent id
@@ -390,7 +391,7 @@ const Register = () => {
                           : "text-gray-700",
                       )}
                     >
-                      Email *
+                      {t("email")} *
                     </Label>
                     <Input
                       id="email"
@@ -406,7 +407,7 @@ const Register = () => {
                           ? "bg-gray-700 border-gray-600 text-white placeholder:text-gray-400"
                           : "bg-white border-gray-300",
                       )}
-                      required // Made required
+                      required 
                     />
                   </div>
                   {/* Phone */}
@@ -420,11 +421,11 @@ const Register = () => {
                           : "text-gray-700",
                       )}
                     >
-                      Phone Number *
+                      {t("phone_number")} *
                     </Label>
                     <Input
                       id="phone_number"
-                      type="tel" // Use type="tel" for phone numbers
+                      type="tel" 
                       placeholder="+998 XX XXX XX XX"
                       value={formData.phone_number}
                       onChange={(e) =>
@@ -453,7 +454,7 @@ const Register = () => {
                           : "text-gray-700",
                       )}
                     >
-                      Password *
+                      {t("pass")} *
                     </Label>
                     <div className="relative">
                       <Input
@@ -503,7 +504,7 @@ const Register = () => {
                           : "text-gray-700",
                       )}
                     >
-                      Confirm Password *
+                      {t("con_pass")} *
                     </Label>
                     <div className="relative">
                       <Input
@@ -558,14 +559,14 @@ const Register = () => {
                           : "text-gray-700",
                       )}
                     >
-                      Role *
+                      {t("role")} *
                     </Label>
                     <Select
                       value={formData.role}
                       onValueChange={
-                        (value) => handleSelectChange("role", value) // Changed to handleSelectChange
+                        (value) => handleSelectChange("role", value) 
                       }
-                      required // Mark select as required
+                      required 
                     >
                       <SelectTrigger
                         className={cn(
@@ -578,9 +579,9 @@ const Register = () => {
                         <SelectValue placeholder="Select your role" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Farmers">Farmer</SelectItem>
-                        <SelectItem value="Exporters">Exporter</SelectItem>
-                        <SelectItem value="Analysts">Market Analyst</SelectItem>
+                        <SelectItem value="Farmers">{t("farmer")}</SelectItem>
+                        <SelectItem value="Exporters">{t("exporter")}</SelectItem>
+                        <SelectItem value="Analysts">{t("mar_anal")}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -596,7 +597,7 @@ const Register = () => {
                           : "text-gray-700",
                       )}
                     >
-                      Region *
+                      {t("region")} *
                     </Label>
                     <Select
                       value={formData.region}
@@ -642,19 +643,19 @@ const Register = () => {
                         : "text-gray-700",
                     )}
                   >
-                    I agree to the{" "}
+                    {t("agree")}{" "}
                     <Link
                       to="#"
                       className="text-green-500 hover:text-green-600 transition-colors"
                     >
-                      Terms of Service
+                      {t("terms")}
                     </Link>{" "}
-                    and{" "}
+                    {t("and")}{" "}
                     <Link
                       to="#"
                       className="text-green-500 hover:text-green-600 transition-colors"
                     >
-                      Privacy Policy
+                      {t("privacy_pol")}
                     </Link>
                   </Label>
                 </div>
@@ -667,12 +668,12 @@ const Register = () => {
                   {isLoading ? (
                     <div className="flex items-center">
                       <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
-                      Creating Account...
+                      {t("creating_acc")}
                     </div>
                   ) : (
                     <div className="flex items-center">
                       <Sprout className="h-5 w-5 mr-2" />
-                      Create Account
+                      {t("create_acc")}
                     </div>
                   )}
                 </Button>
@@ -699,7 +700,7 @@ const Register = () => {
     alt="Google logo"
     className="w-5 h-5"
   />
-  <span>Continue with Google</span>
+  <span>{t("cont_google")}</span>
 </Button>
 
               </div>
@@ -710,12 +711,12 @@ const Register = () => {
                     actualTheme === "dark" ? "text-gray-300" : "text-gray-600",
                   )}
                 >
-                  Already have an account?{" "}
+                  {t("have_acc")}{" "}
                   <Link
                     to="/login"
                     className="text-green-500 hover:text-green-600 font-medium transition-colors"
                   >
-                    Sign In
+                    {t("sign_in")}
                   </Link>
                 </p>
               </div>
@@ -730,11 +731,11 @@ const Register = () => {
                 actualTheme === "dark" ? "text-gray-400" : "text-gray-500",
               )}
             >
-              &copy; 2025 AgroConnect. All rights reserved.
+              &copy; {t("rights")}
             </p>
           </div>
         </div>
-      <ToastContainer /> {/* Make sure ToastContainer is rendered */}
+      <ToastContainer />
     </div>
   );
 };

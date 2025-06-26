@@ -11,7 +11,8 @@ import axios from "axios";
 import { Base_Url } from "@/App";
 import userStore from "@/store/UserStore";
 import { useParams, useNavigate } from "react-router-dom";
-import { toast } from "sonner"; // Assuming sonner is used for toasts
+import { toast } from "sonner"; 
+import { useTranslation } from "react-i18next";
 
 type Region = {
   id: number;
@@ -20,17 +21,16 @@ type Region = {
 
 const ProductAdd = () => {
   const { actualTheme } = useTheme();
-  const { productId } = useParams(); // This productId is for the 'general product' type to add, not a planted product ID
+  const { productId } = useParams(); 
   const navigate = useNavigate();
-
   const { user } = userStore();
-
   const [planting_area, setArea] = useState("");
   const [expecting_weight, setExpectedVolume] = useState("");
   const [selectedRegion, setSelectedRegion] = useState<number | null>(null);
   const [efficiency, setEfficiency] = useState<number | null>(null);
   const [regions, setRegions] = useState<Region[]>([]);
   const [loadingRegions, setLoadingRegions] = useState(true);
+  const { t } = useTranslation();
 
   useEffect(() => {
     axios.get(`${Base_Url}/regions/`)
@@ -89,12 +89,12 @@ const ProductAdd = () => {
       <div className="flex-1 p-8">
         <Card className={cn("w-full max-w-2xl mx-auto", actualTheme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200")}>
           <CardHeader>
-            <CardTitle className={cn("text-2xl font-bold", actualTheme === "dark" ? "text-white" : "text-gray-900")}>Add New Planted Product</CardTitle>
+            <CardTitle className={cn("text-2xl font-bold", actualTheme === "dark" ? "text-white" : "text-gray-900")}>{t("add_pr")}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-6">
               <div>
-                <Label htmlFor="planting_area">Planting Area (hectares)</Label>
+                <Label htmlFor="planting_area">{t("pl_area")} ({t("hectares")})</Label>
                 <Input
                   id="planting_area"
                   type="number"
@@ -104,7 +104,7 @@ const ProductAdd = () => {
                 />
               </div>
               <div>
-                <Label htmlFor="expecting_weight">Expected Volume (tons)</Label>
+                <Label htmlFor="expecting_weight">{t("ex_vol")} (tons)</Label>
                 <Input
                   id="expecting_weight"
                   type="number"
@@ -114,7 +114,7 @@ const ProductAdd = () => {
                 />
               </div>
               <div>
-                <Label htmlFor="region">Region</Label>
+                <Label htmlFor="region">{t("region")}</Label>
                 <Select value={selectedRegion?.toString() || ""} onValueChange={(value) => setSelectedRegion(Number(value))} disabled={loadingRegions}>
                   <SelectTrigger id="region">
                     <SelectValue placeholder="Select region" />
@@ -128,13 +128,13 @@ const ProductAdd = () => {
                   </SelectContent>
                 </Select>
               </div>
-              <Button onClick={calculateEfficiency} className="mr-3">Calculate Efficiency</Button>
+              <Button onClick={calculateEfficiency} className="mr-3">{t("cal_eff")}</Button>
               {efficiency !== null && (
                 <div className="mt-4 p-3 bg-green-100 border border-green-200 rounded">
-                  <strong>Efficiency:</strong> {efficiency.toFixed(2)} tons/hectare
+                  <strong>{t("eff")}:</strong> {efficiency.toFixed(2)} {t("ton_hec")}
                 </div>
               )}
-              <Button onClick={handleSubmit} className="mt-4 bg-green-800">Submit Product</Button>
+              <Button onClick={handleSubmit} className="mt-4 bg-green-800">{t("sub_pr")}</Button>
             </div>
           </CardContent>
         </Card>

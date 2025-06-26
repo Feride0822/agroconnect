@@ -16,6 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 type Region = {
   id: number;
@@ -49,7 +50,8 @@ const ProductEdit = () => {
   const [regions, setRegions] = useState<Region[]>([]);
   const [loadingRegions, setLoadingRegions] = useState(true);
   const [loadingProduct, setLoadingProduct] = useState(true);
-  const [product, setProduct] = useState<Product | null>(null); // This holds the fetched PlantedProduct details
+  const [product, setProduct] = useState<Product | null>(null);
+  const { t } = useTranslation();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -146,7 +148,7 @@ const ProductEdit = () => {
       <div className={cn("flex min-h-screen", actualTheme === "dark" ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900")}>
         <Sidebar />
         <div className="flex-1 flex items-center justify-center">
-          <p>Loading product data...</p>
+          <p>{t("load_data")}</p>
         </div>
       </div>
     );
@@ -157,7 +159,7 @@ const ProductEdit = () => {
       <div className={cn("flex min-h-screen", actualTheme === "dark" ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900")}>
         <Sidebar />
         <div className="flex-1 flex items-center justify-center">
-          <p>Product not found or not accessible.</p>
+          <p>{t("pr_notfound")}</p>
         </div>
       </div>
     );
@@ -169,7 +171,7 @@ const ProductEdit = () => {
         <Card className={cn("w-full max-w-2xl mx-auto", actualTheme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200")}>
           <CardHeader>
             <CardTitle className={cn("text-2xl font-bold", actualTheme === "dark" ? "text-white" : "text-gray-900")}>
-              Edit Product: {product.product_name}
+            {t("edit_pr")}: {product.product_name}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -180,7 +182,7 @@ const ProductEdit = () => {
                   name="planting_area"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Planting Area (hectares)</FormLabel>
+                      <FormLabel>{t("pl_area")} ({t("hectares")})</FormLabel>
                       <FormControl>
                         <Input
                           type="number"
@@ -199,7 +201,7 @@ const ProductEdit = () => {
                   name="expecting_weight"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Expected Volume (tons)</FormLabel>
+                      <FormLabel>{t("ex_vol")} (tons)</FormLabel>
                       <FormControl>
                         <Input
                           type="number"
@@ -218,7 +220,7 @@ const ProductEdit = () => {
                   name="selectedRegion"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Region</FormLabel>
+                      <FormLabel>{t("region")}</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value} disabled={loadingRegions}>
                         <FormControl>
                           <SelectTrigger>
@@ -239,16 +241,16 @@ const ProductEdit = () => {
                 />
 
                 <Button type="button" onClick={calculateEfficiency} className="mr-3">
-                  Calculate Efficiency
+                {t("cal_eff")}
                 </Button>
                 {efficiency !== null && (
                   <div className="mt-4 p-3 bg-green-100 border border-green-200 rounded">
-                    <strong>Efficiency:</strong> {efficiency.toFixed(2)} tons/hectare
+                    <strong>{t("eff")}:</strong> {efficiency.toFixed(2)} {t("ton_hec")}
                   </div>
                 )}
 
                 <Button type="submit" className="mt-4 bg-green-800">
-                  Save Changes
+                {t("save_chn")}
                 </Button>
               </form>
             </Form>

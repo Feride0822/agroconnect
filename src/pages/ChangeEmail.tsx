@@ -5,6 +5,7 @@ import userStore from "@/store/UserStore";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const ChangeEmail = () => {
   const location = useLocation();
@@ -14,7 +15,7 @@ const ChangeEmail = () => {
   const [code, setCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-
+  const { t } = useTranslation();
   const newEmail = location.state?.newEmail;
 
   const handleVerifyCode = async () => {
@@ -46,8 +47,8 @@ const ChangeEmail = () => {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
-      <h2 className="text-2xl font-bold mb-4">Verify Your New Email</h2>
-      <p className="mb-6">Enter the 4-digit code sent to <strong>{newEmail}</strong></p>
+      <h2 className="text-2xl font-bold mb-4">{t("new_email")}</h2>
+      <p className="mb-6">{t("enter_co")}<strong>{newEmail}</strong></p>
 
       <Input
         className="text-center mb-4 w-48"

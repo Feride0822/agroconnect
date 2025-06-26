@@ -227,7 +227,7 @@ const ForgotPasswordCode = () => {
                 actualTheme === "dark" ? "text-white" : "text-gray-900",
               )}
             >
-              Verify Code
+              {t("ver_c")}
             </CardTitle>
             <p
               className={cn(
@@ -235,10 +235,10 @@ const ForgotPasswordCode = () => {
                 actualTheme === "dark" ? "text-gray-300" : "text-gray-600",
               )}
             >
-              A 4-digit code has been sent to{" "}
+              {t("code_s")}{" "}
               <span className="font-semibold text-green-400">{email}</span>.
-              Please enter it below.
-              <span className="text-red-700 font-semibold">Important! Don't forget to check spam!</span>
+              {t("enter_c")}
+              <span className="text-red-700 font-semibold">{t("important")}</span>
             </p>
           </CardHeader>
           <CardContent>
@@ -265,7 +265,7 @@ const ForgotPasswordCode = () => {
                     actualTheme === "dark" ? "text-gray-300" : "text-gray-700",
                   )}
                 >
-                  Verification Code
+                  {t("verif_c")}
                 </Label>
                 <Input
                   id="code"
@@ -300,12 +300,12 @@ const ForgotPasswordCode = () => {
                 {isLoading ? (
                   <div className="flex items-center justify-center">
                     <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                    Verifying Code...
+                    {t("verifying_c")}
                   </div>
                 ) : (
                   <div className="flex items-center justify-center">
                     <Key className="h-4 w-4 mr-2" />
-                    Verify Code
+                    {t("ver_c")}
                   </div>
                 )}
               </Button>
@@ -331,13 +331,13 @@ const ForgotPasswordCode = () => {
                   actualTheme === "dark" ? "text-gray-400" : "text-gray-600",
                 )}
               >
-                or
+                {t("or")}
               </span>{" "}
               <Link
                 to="/login"
                 className="text-green-500 hover:text-green-600 font-medium transition-colors"
               >
-                Back to Login
+                {t("back_log")}
               </Link>
             </div>
           </CardContent>
@@ -351,7 +351,7 @@ const ForgotPasswordCode = () => {
               actualTheme === "dark" ? "text-gray-400" : "text-gray-500",
             )}
           >
-            &copy; 2025 AgroConnect. All rights reserved.
+            &copy; {t("rights")}
           </p>
         </div>
       </div>

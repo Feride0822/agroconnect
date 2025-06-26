@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -37,6 +36,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Base_Url } from "@/App";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { useTranslation } from "react-i18next";
 
 const Settings = () => {
   const { theme, setTheme, actualTheme } = useTheme();
@@ -57,6 +57,7 @@ const Settings = () => {
   const [timezone, setTimezone] = useState("UTC");
    const navigate = useNavigate();
   const [isDeleting, setIsDeleting] = useState(false);
+  const { t } = useTranslation();
 
   const themeOptions = [
     { value: "light", label: "Light", icon: Sun },
@@ -140,7 +141,7 @@ const Settings = () => {
                     actualTheme === "dark" ? "text-white" : "text-gray-900",
                   )}
                 >
-                  Settings
+                  {t("settings")}
                 </h1>
                 <p
                   className={cn(
@@ -148,7 +149,7 @@ const Settings = () => {
                     actualTheme === "dark" ? "text-gray-400" : "text-gray-600",
                   )}
                 >
-                  Manage your account preferences and application settings
+                  {t("manage_pref")}
                 </p>
               </div>
             </div>
@@ -172,7 +173,7 @@ const Settings = () => {
                 )}
               >
                 <Palette className="h-4 w-4 mr-2" />
-                Appearance
+                {t("appearance")}
               </TabsTrigger>
               <TabsTrigger
                 value="notifications"
@@ -182,7 +183,7 @@ const Settings = () => {
                 )}
               >
                 <Bell className="h-4 w-4 mr-2" />
-                Notifications
+                {t("notifications")}
               </TabsTrigger>
               <TabsTrigger
                 value="privacy"
@@ -192,7 +193,7 @@ const Settings = () => {
                 )}
               >
                 <Shield className="h-4 w-4 mr-2" />
-                Privacy
+                {t("privacy")}
               </TabsTrigger>
               <TabsTrigger
                 value="regional"
@@ -202,7 +203,7 @@ const Settings = () => {
                 )}
               >
                 <Globe className="h-4 w-4 mr-2" />
-                Regional
+                {t("regional")}
               </TabsTrigger>
               <TabsTrigger
                 value="advanced"
@@ -212,7 +213,7 @@ const Settings = () => {
                 )}
               >
                 <Smartphone className="h-4 w-4 mr-2" />
-                Advanced
+                {t("advanced")}
               </TabsTrigger>
             </TabsList>
 
@@ -233,7 +234,7 @@ const Settings = () => {
                     )}
                   >
                     <Palette className="h-5 w-5 mr-2 text-green-500" />
-                    Appearance & Theme
+                    {t("app_theme")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -246,7 +247,7 @@ const Settings = () => {
                           : "text-gray-700",
                       )}
                     >
-                      Theme Mode
+                      {t("theme_mode")}
                     </Label>
                     <p
                       className={cn(
@@ -256,7 +257,7 @@ const Settings = () => {
                           : "text-gray-600",
                       )}
                     >
-                      Choose your preferred theme or follow system settings
+                      {t("choose_pref")}
                     </p>
                     <div className="grid grid-cols-3 gap-3">
                       {themeOptions.map(({ value, label, icon: Icon }) => (
@@ -295,7 +296,7 @@ const Settings = () => {
                           : "text-gray-700",
                       )}
                     >
-                      Interface Preferences
+                      {t("inter_pref")}
                     </Label>
                     <div className="mt-3 space-y-4">
                       <div className="flex items-center justify-between">
@@ -307,7 +308,7 @@ const Settings = () => {
                                 : "text-gray-700",
                             )}
                           >
-                            High contrast mode
+                            {t("high_contr")}
                           </Label>
                           <p
                             className={cn(
@@ -317,7 +318,7 @@ const Settings = () => {
                                 : "text-gray-600",
                             )}
                           >
-                            Increase contrast for better accessibility
+                            {t("incr_contr")}
                           </p>
                         </div>
                         <Switch />
@@ -331,7 +332,7 @@ const Settings = () => {
                                 : "text-gray-700",
                             )}
                           >
-                            Reduce animations
+                            {t("red_anim")}
                           </Label>
                           <p
                             className={cn(
@@ -341,7 +342,7 @@ const Settings = () => {
                                 : "text-gray-600",
                             )}
                           >
-                            Minimize motion for better performance
+                            {t("min_motion")}
                           </p>
                         </div>
                         <Switch />
@@ -369,7 +370,7 @@ const Settings = () => {
                     )}
                   >
                     <Bell className="h-5 w-5 mr-2 text-green-500" />
-                    Notification Preferences
+                    {t("not_pref")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -383,7 +384,7 @@ const Settings = () => {
                               : "text-gray-700",
                           )}
                         >
-                          Email notifications
+                          {t("email_nots")}
                         </Label>
                         <p
                           className={cn(
@@ -393,7 +394,7 @@ const Settings = () => {
                               : "text-gray-600",
                           )}
                         >
-                          Receive updates about your agricultural activities
+                          {t("rec_ups")}
                         </p>
                       </div>
                       <Switch
@@ -416,7 +417,7 @@ const Settings = () => {
                               : "text-gray-700",
                           )}
                         >
-                          Push notifications
+                          {t("push_nots")}
                         </Label>
                         <p
                           className={cn(
@@ -426,7 +427,7 @@ const Settings = () => {
                               : "text-gray-600",
                           )}
                         >
-                          Get instant updates on your device
+                          {t("get_ups")}
                         </p>
                       </div>
                       <Switch
@@ -449,7 +450,7 @@ const Settings = () => {
                               : "text-gray-700",
                           )}
                         >
-                          SMS notifications
+                          {t("sms_nots")}
                         </Label>
                         <p
                           className={cn(
@@ -459,7 +460,7 @@ const Settings = () => {
                               : "text-gray-600",
                           )}
                         >
-                          Receive critical alerts via text message
+                          {t("rec_alerts")}
                         </p>
                       </div>
                       <Switch
@@ -482,7 +483,7 @@ const Settings = () => {
                               : "text-gray-700",
                           )}
                         >
-                          Marketing communications
+                          {t("mar_coms")}
                         </Label>
                         <p
                           className={cn(
@@ -492,7 +493,7 @@ const Settings = () => {
                               : "text-gray-600",
                           )}
                         >
-                          Receive news and promotional content
+                          {t("rec_news")}
                         </p>
                       </div>
                       <Switch
@@ -527,7 +528,7 @@ const Settings = () => {
                     )}
                   >
                     <Shield className="h-5 w-5 mr-2 text-green-500" />
-                    Privacy & Security
+                    {t("pr_sec")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -541,7 +542,7 @@ const Settings = () => {
                               : "text-gray-700",
                           )}
                         >
-                          Analytics & performance
+                          {t("anal_per")}
                         </Label>
                         <p
                           className={cn(
@@ -551,7 +552,7 @@ const Settings = () => {
                               : "text-gray-600",
                           )}
                         >
-                          Help improve the platform with usage data
+                          {t("help_impr")}
                         </p>
                       </div>
                       <Switch
@@ -574,7 +575,7 @@ const Settings = () => {
                               : "text-gray-700",
                           )}
                         >
-                          Cookies & tracking
+                          {t("cookies")}
                         </Label>
                         <p
                           className={cn(
@@ -584,7 +585,7 @@ const Settings = () => {
                               : "text-gray-600",
                           )}
                         >
-                          Allow cookies for personalized experience
+                          {t("all_cookies")}
                         </p>
                       </div>
                       <Switch
@@ -604,7 +605,7 @@ const Settings = () => {
                               : "text-gray-700",
                           )}
                         >
-                          Location access
+                          {t("loc_access")}
                         </Label>
                         <p
                           className={cn(
@@ -614,7 +615,7 @@ const Settings = () => {
                               : "text-gray-600",
                           )}
                         >
-                          Share location for weather and regional data
+                          {t("share_loc")}
                         </p>
                       </div>
                       <Switch
@@ -634,7 +635,7 @@ const Settings = () => {
                               : "text-gray-700",
                           )}
                         >
-                          Public profile
+                          {t("pub_profile")}
                         </Label>
                         <p
                           className={cn(
@@ -644,7 +645,7 @@ const Settings = () => {
                               : "text-gray-600",
                           )}
                         >
-                          Make your profile visible to other users
+                          {t("make_pub")}
                         </p>
                       </div>
                       <Switch
@@ -679,7 +680,7 @@ const Settings = () => {
                     )}
                   >
                     <Globe className="h-5 w-5 mr-2 text-green-500" />
-                    Regional & Language Settings
+                    {t("reg_sets")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -692,7 +693,7 @@ const Settings = () => {
                             : "text-gray-700",
                         )}
                       >
-                        Language
+                        {t("lang")}
                       </Label>
                       <Select value={language} onValueChange={setLanguage}>
                         {/* <SelectTrigger
@@ -717,7 +718,7 @@ const Settings = () => {
                             : "text-gray-700",
                         )}
                       >
-                        Currency
+                        {t("curr")}
                       </Label>
                       <Select value={currency} onValueChange={setCurrency}>
                         <SelectTrigger
@@ -746,7 +747,7 @@ const Settings = () => {
                             : "text-gray-700",
                         )}
                       >
-                        Timezone
+                        {t("timezone")}
                       </Label>
                       <Select value={timezone} onValueChange={setTimezone}>
                         <SelectTrigger
@@ -795,7 +796,7 @@ const Settings = () => {
                       )}
                     >
                       <Smartphone className="h-5 w-5 mr-2 text-green-500" />
-                      Data Management
+                      {t("data_man")}
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
@@ -810,7 +811,7 @@ const Settings = () => {
                       )}
                     >
                       <Download className="h-4 w-4 mr-2" />
-                      Export Account Data
+                      {t("export_acc_data")}
                     </Button>
 
                     <Button
@@ -823,7 +824,7 @@ const Settings = () => {
                       )}
                     >
                       <RefreshCw className="h-4 w-4 mr-2" />
-                      Clear Cache
+                      {t("clear")}
                     </Button>
                   </CardContent>
                 </Card>
@@ -839,7 +840,7 @@ const Settings = () => {
                   <CardHeader>
                     <CardTitle className="flex items-center text-xl text-red-600">
                       <Trash2 className="h-5 w-5 mr-2" />
-                      Danger Zone
+                      {t("danger_z")}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -851,8 +852,7 @@ const Settings = () => {
                           : "text-gray-600",
                       )}
                     >
-                      Once you delete your account, there is no going back.
-                      Please be certain.
+                      {t("deleting")}
                     </p>
                     <Button
   variant="destructive"
@@ -881,7 +881,7 @@ const Settings = () => {
               )}
             >
               <Save className="h-4 w-4 mr-2" />
-              Save All Changes
+              {t("save_ch")}
             </Button>
           </div>
         </div>

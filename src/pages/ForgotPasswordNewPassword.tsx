@@ -1,4 +1,3 @@
-// src/pages/ForgotPasswordNewPassword.tsx
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -8,11 +7,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useTheme } from "@/contexts/ThemeContext";
 import { cn } from "@/lib/utils";
-import { Lock, Eye, EyeOff, Loader2, AlertCircle } from "lucide-react"; // Added Lock icon
+import { Lock, Eye, EyeOff, Loader2, AlertCircle } from "lucide-react"; 
 import axios from "axios";
 import { Base_Url } from "@/App";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useTranslation } from "react-i18next";
 
 const ForgotPasswordNewPassword = () => {
   const { actualTheme } = useTheme();
@@ -28,6 +28,7 @@ const ForgotPasswordNewPassword = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const { t } = useTranslation();
 
   useEffect(() => {
     // If uid or token are missing, redirect back to the start of the flow
@@ -143,7 +144,7 @@ const ForgotPasswordNewPassword = () => {
                   actualTheme === "dark" ? "text-gray-400" : "text-gray-600",
                 )}
               >
-                Agricultural Platform
+                {t("agri_platform")}
               </span>
             </div>
           </Link>
@@ -165,7 +166,7 @@ const ForgotPasswordNewPassword = () => {
                 actualTheme === "dark" ? "text-white" : "text-gray-900",
               )}
             >
-              Set New Password
+              {t("setn_pass")}
             </CardTitle>
             <p
               className={cn(
@@ -173,7 +174,7 @@ const ForgotPasswordNewPassword = () => {
                 actualTheme === "dark" ? "text-gray-300" : "text-gray-600",
               )}
             >
-              Enter your new password below.
+              {t("en_newp")}
             </p>
           </CardHeader>
           <CardContent>
@@ -200,7 +201,7 @@ const ForgotPasswordNewPassword = () => {
                     actualTheme === "dark" ? "text-gray-300" : "text-gray-700",
                   )}
                 >
-                  New Password
+                  {t("new_pass")}
                 </Label>
                 <div className="relative">
                   <Input
@@ -246,7 +247,7 @@ const ForgotPasswordNewPassword = () => {
                     actualTheme === "dark" ? "text-gray-300" : "text-gray-700",
                   )}
                 >
-                  Confirm New Password
+                  {t("con_newp")}
                 </Label>
                 <div className="relative">
                   <Input
@@ -292,12 +293,12 @@ const ForgotPasswordNewPassword = () => {
                 {isLoading ? (
                   <div className="flex items-center justify-center">
                     <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                    Setting Password...
+                    {t("setting_pass")}
                   </div>
                 ) : (
                   <div className="flex items-center justify-center">
                     <Lock className="h-4 w-4 mr-2" />
-                    Reset Password
+                    {t("reset_pass")}
                   </div>
                 )}
               </Button>
@@ -308,7 +309,7 @@ const ForgotPasswordNewPassword = () => {
                 to="/login"
                 className="text-green-500 hover:text-green-600 font-medium transition-colors"
               >
-                Back to Login
+                {t("back_log")}
               </Link>
             </div>
           </CardContent>
@@ -322,7 +323,7 @@ const ForgotPasswordNewPassword = () => {
               actualTheme === "dark" ? "text-gray-400" : "text-gray-500",
             )}
           >
-            &copy; 2025 AgroConnect. All rights reserved.
+            &copy; {t("rights")}
           </p>
         </div>
       </div>

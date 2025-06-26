@@ -45,6 +45,7 @@ import {
 import { useEffect } from "react";
 import axios from "axios";
 import { Base_Url } from "@/App";
+import { useTranslation } from "react-i18next";
 
 
 const Statistics = () => {
@@ -62,6 +63,7 @@ const Statistics = () => {
   const [highestWPH, setHighestWPH] = useState<number>(0);
   const [loadingStats, setLoadingStats] = useState<boolean>(true);
 const [topPerformingRegion, setTopPerformingRegion] = useState<any>(null);
+const { t } = useTranslation();
 
 // ADD THIS NEW useEffect TO FETCH TOP PERFORMING REGION
 useEffect(() => {
@@ -268,7 +270,7 @@ useEffect(() => {
                     actualTheme === "dark" ? "text-white" : "text-gray-900",
                   )}
                 >
-                  Analytics Center
+                  {t("anal_centr")}
                 </h1>
                 <p
                   className={cn(
@@ -276,7 +278,7 @@ useEffect(() => {
                     actualTheme === "dark" ? "text-gray-300" : "text-gray-600",
                   )}
                 >
-                  Comprehensive agricultural data insights across Uzbekistan
+                  {t("compr_agri")}
                 </p>
               </div>
             </div>
@@ -287,7 +289,7 @@ useEffect(() => {
                 className="bg-green-500 hover:bg-green-600 text-white shadow-lg"
               >
                 <Download className="h-4 w-4 mr-2" />
-                Export Data
+                {t("export")}
               </Button>
             </div>
           </div>
@@ -309,7 +311,7 @@ useEffect(() => {
                 )}
               >
                 <Filter className="h-6 w-6 mr-3 text-green-500" />
-                Data Filters
+                {t("data_filtr")}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -323,7 +325,7 @@ useEffect(() => {
                         : "text-gray-700",
                     )}
                   >
-                    Region Analysis
+                   {t("reg_anal")}
                   </label>
                   <Select
                     value={selectedRegion}
@@ -368,28 +370,28 @@ useEffect(() => {
                 className="data-[state=active]:bg-green-500 data-[state=active]:text-white"
               >
                 <Activity className="h-4 w-4 mr-2" />
-                Overview
+                {t("overview")}
               </TabsTrigger>
               <TabsTrigger
                 value="regional"
                 className="data-[state=active]:bg-green-500 data-[state=active]:text-white"
               >
                 <BarChart3 className="h-4 w-4 mr-2" />
-                Regional
+                {t("regional")}
               </TabsTrigger>
               <TabsTrigger
                 value="trends"
                 className="data-[state=active]:bg-green-500 data-[state=active]:text-white"
               >
                 <TrendingUp className="h-4 w-4 mr-2" />
-                Trends
+                {t("trends")}
               </TabsTrigger>
               <TabsTrigger
                 value="analysis"
                 className="data-[state=active]:bg-green-500 data-[state=active]:text-white"
               >
                 <Leaf className="h-4 w-4 mr-2" />
-                Analysis
+                {t("analysis")}
               </TabsTrigger>
             </TabsList>
 
@@ -412,7 +414,7 @@ useEffect(() => {
                     )}
                   >
                     <img src="/AgroConnect 2.png" alt="Logo" className="w-8 h-8 mr-3"/>
-                    Key Performance Insights
+                    {t("keys")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -426,7 +428,7 @@ useEffect(() => {
   )}
 >
   <h3 className="font-bold text-green-600 text-lg mb-3">
-    Top Performing Region
+  {t("top_reg")}
   </h3>
   <p
     className={cn(
@@ -444,7 +446,7 @@ useEffect(() => {
     {loadingStats ? "Loading..." : (
       topPerformingRegion?.total_production?.toLocaleString() || "0"
     )} 
-      tons produced
+      {t("tons")}
   </p>
   <div
     className={cn(
@@ -467,7 +469,7 @@ useEffect(() => {
                       )}
                     >
                       <h3 className="font-bold text-blue-600 text-lg mb-3">
-                        Highest Efficiency (WPH)
+                      {t("high_eff")} (WPH)
                       </h3>
                       <p
                         className={cn(
@@ -480,7 +482,7 @@ useEffect(() => {
                         {loadingStats ? "Loading..." : highestWPH.toFixed(2)}
                       </p>
                       <p className="text-blue-600 text-sm mb-3">
-                        tons/hectare (Weight Per Hectare)
+                      {t("ton_hec")} (Weight Per Hectare)
                       </p>
                       <div
                         className={cn(
@@ -503,7 +505,7 @@ useEffect(() => {
                       )}
                     >
                       <h3 className="font-bold text-purple-600 text-lg mb-3">
-                        Total Production This Month
+                      {t("total_month")}
                       </h3>
                       <p
                         className={cn(
@@ -516,7 +518,7 @@ useEffect(() => {
                         {loadingStats ? "Loading..." : totalProduction.toLocaleString()} hectares
                       </p>
                       <p className="text-purple-600 text-sm mb-3">
-                        Total planting area this month
+                      {t("tot_area_m")}
                       </p>
                       <div
                         className={cn(
@@ -550,7 +552,7 @@ useEffect(() => {
                     )}
                   >
                     <BarChart3 className="h-5 w-5 mr-2 text-green-500" />
-                    Regional Performance Comparison
+                    {t("reg_per")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -616,7 +618,7 @@ useEffect(() => {
                     )}
                   >
                     <TrendingUp className="h-5 w-5 mr-2 text-green-500" />
-                    Efficiency Analysis
+                    {t("eff_anal")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -687,7 +689,7 @@ useEffect(() => {
                     )}
                   >
                     <TrendingUp className="h-5 w-5 mr-2 text-green-500" />
-                    Production Trends by Product
+                    {t("pr_trends")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -729,14 +731,14 @@ useEffect(() => {
                     )}
                   >
                     <img src="/AgroConnect 2.png" alt="Logo" className="w-8 h-8 mr-3"/>
-                    Agricultural Market Analysis
+                    {t("market")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <div>
                       <h3 className="text-xl font-bold text-orange-600 mb-6">
-                        Growth Opportunities
+                      {t("growth")}
                       </h3>
                       <div className="space-y-4">
                         {regions
@@ -768,16 +770,15 @@ useEffect(() => {
                                     : "text-gray-700",
                                 )}
                               >
-                                Efficiency:{" "}
+                                {t("eff")}:{" "}
                                 {(
                                   getTotalVolumeByRegion(region.id) /
                                   region.agriculturalArea
                                 ).toFixed(2)}{" "}
-                                tons/ha
+                                {t("ton_ha")}
                               </p>
                               <p className="text-orange-600 text-sm">
-                                Potential for improvement through better farming
-                                techniques
+                              {t("potential")}
                               </p>
                               <div
                                 className={cn(
@@ -799,7 +800,7 @@ useEffect(() => {
 
                     <div>
                       <h3 className="text-xl font-bold text-green-600 mb-6">
-                        High Performers
+                      {t("high_per")}
                       </h3>
                       <div className="space-y-4">
                         {regions
@@ -831,16 +832,15 @@ useEffect(() => {
                                     : "text-gray-700",
                                 )}
                               >
-                                Efficiency:{" "}
+                                {t("eff")}:{" "}
                                 {(
                                   getTotalVolumeByRegion(region.id) /
                                   region.agriculturalArea
                                 ).toFixed(2)}{" "}
-                                tons/ha
+                                {t("ton_ha")}
                               </p>
                               <p className="text-green-600 text-sm">
-                                Excellent farming practices and resource
-                                utilization
+                              {t("excellent")}
                               </p>
                               <div
                                 className={cn(

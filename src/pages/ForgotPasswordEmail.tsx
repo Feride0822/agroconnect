@@ -12,6 +12,7 @@ import axios from "axios";
 import { Base_Url } from "@/App"; // Ensure Base_Url is imported
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useTranslation } from "react-i18next";
 
 const ForgotPasswordEmail = () => {
   const { actualTheme } = useTheme();
@@ -19,6 +20,7 @@ const ForgotPasswordEmail = () => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const { t } = useTranslation();
 
   const showToastMessage = (message: string, type: "success" | "error") => {
     toast[type](message, {
@@ -45,14 +47,9 @@ const ForgotPasswordEmail = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          withCredentials: true, // Only if backend uses cookies
+          withCredentials: true, 
         },
       );
-
-      //   // API call to request password reset code
-      //   const response = await axios.post(`${Base_Url}/accounts/password-reset/request/`, {
-      //     email,
-      //   });
 
       console.log("Password reset request successful:", response.data);
       showToastMessage(
@@ -72,7 +69,7 @@ const ForgotPasswordEmail = () => {
         const errorData = err.response.data;
 
         if (status === 400 && errorData.email) {
-          setError(errorData.email[0]); // Specific error for email field
+          setError(errorData.email[0]); 
         } else if (errorData.detail) {
           setError(errorData.detail);
         } else {
@@ -121,7 +118,7 @@ const ForgotPasswordEmail = () => {
                   actualTheme === "dark" ? "text-gray-400" : "text-gray-600",
                 )}
               >
-                Agricultural Platform
+                {t("agri_platform")}
               </span>
             </div>
           </Link>
@@ -143,7 +140,7 @@ const ForgotPasswordEmail = () => {
                 actualTheme === "dark" ? "text-white" : "text-gray-900",
               )}
             >
-              Forgot Password
+              {t("for_pass")}
             </CardTitle>
             <p
               className={cn(
@@ -151,7 +148,7 @@ const ForgotPasswordEmail = () => {
                 actualTheme === "dark" ? "text-gray-300" : "text-gray-600",
               )}
             >
-              Enter your email to receive a password reset code.
+              {t("enter_email")}
             </p>
           </CardHeader>
           <CardContent>
@@ -178,7 +175,7 @@ const ForgotPasswordEmail = () => {
                     actualTheme === "dark" ? "text-gray-300" : "text-gray-700",
                   )}
                 >
-                  Email
+                  {t("email")}
                 </Label>
                 <Input
                   id="email"
@@ -204,12 +201,12 @@ const ForgotPasswordEmail = () => {
                 {isLoading ? (
                   <div className="flex items-center justify-center">
                     <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                    Sending Code...
+                    {t("sending_c")}
                   </div>
                 ) : (
                   <div className="flex items-center justify-center">
                     <Mail className="h-4 w-4 mr-2" />
-                    Send Reset Code
+                    {t("send_re")}
                   </div>
                 )}
               </Button>
@@ -220,7 +217,7 @@ const ForgotPasswordEmail = () => {
                 to="/login"
                 className="text-green-500 hover:text-green-600 font-medium transition-colors"
               >
-                Back to Login
+                {t("back_log")}
               </Link>
             </div>
           </CardContent>
@@ -234,7 +231,7 @@ const ForgotPasswordEmail = () => {
               actualTheme === "dark" ? "text-gray-400" : "text-gray-500",
             )}
           >
-            &copy; 2025 AgroConnect. All rights reserved.
+            &copy; {t("rights")}
           </p>
         </div>
       </div>

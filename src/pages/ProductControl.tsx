@@ -77,7 +77,7 @@ const ProductControl = () => {
   };
 
   if (loading)
-    return <p className="text-center text-sm my-10">Loading products...</p>;
+    return <p className="text-center text-sm my-10">{t("loading_pr")}.</p>;
   if (error)
     return <p className="text-center text-sm text-red-500 my-10">{error}</p>;
 
@@ -104,7 +104,7 @@ const ProductControl = () => {
         <section className="w-full grid grid-cols-1 md:grid-cols-2 gap-2">
           <Card className="shadow-sm overflow-auto">
             <CardHeader>
-              <CardTitle>Products (A–Z)</CardTitle>
+              <CardTitle>{t("products")} (A–Z)</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-2">
               {products.map((product) => (
@@ -130,7 +130,7 @@ const ProductControl = () => {
                   variant="secondary"
                   className="mt-2 w-full"
                 >
-                  Load More Products
+                  {t("load_more")}
                 </Button>
               )}
             </CardContent>
@@ -138,7 +138,7 @@ const ProductControl = () => {
 
           <Card className="shadow-sm overflow-auto">
             <CardHeader>
-              <CardTitle>My Planted Products</CardTitle>
+              <CardTitle>{t("my_pr")}</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-2">
               {userProducts.length > 0 ? (
@@ -170,7 +170,7 @@ const ProductControl = () => {
                 ))
               ) : (
                 <p className="text-sm text-center py-4">
-                  No products added yet.
+                  {t("no_pr")}
                 </p>
               )}
             </CardContent>

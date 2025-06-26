@@ -5,11 +5,13 @@ import { Base_Url } from "@/App";
 import Sidebar from "@/components/layout/Sidebar";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useTranslation } from "react-i18next";
 
 const Farmers = () => {
   const [farmers, setFarmers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const { actualTheme } = useTheme();
+  const { t } = useTranslation();
 
   useEffect(() => {
     fetchFarmers();
@@ -47,7 +49,7 @@ const Farmers = () => {
     >
       <div className="w-full container py-12 px-4 sm:px-6 lg:px-8">
         <h2 className="text-4xl font-extrabold mb-8 text-center tracking-tight">
-          Farmers Directory
+        {t("far_dir")}
         </h2>
         <input
           type="text"
@@ -76,39 +78,39 @@ const Farmers = () => {
               </CardHeader>
               <CardContent className="pt-6 space-y-3 text-base">
                 <p>
-                  <strong className="text-gray-700 dark:text-gray-300">Email:</strong>{" "}
+                  <strong className="text-gray-700 dark:text-gray-300">{t("email")}:</strong>{" "}
                   <span className={actualTheme === "dark" ? "text-gray-300" : "text-gray-600"}>
                     {farmer.email || "N/A"}
                   </span>
                 </p>
                 <p>
-                  <strong className="text-gray-700 dark:text-gray-300">Phone:</strong>{" "}
+                  <strong className="text-gray-700 dark:text-gray-300">{t("phone")}:</strong>{" "}
                   <span className={actualTheme === "dark" ? "text-gray-300" : "text-gray-600"}>
                     {farmer.phone_number || "N/A"}
                   </span>
                 </p>
                 <p>
-                  <strong className="text-gray-700 dark:text-gray-300">Region:</strong>{" "}
+                  <strong className="text-gray-700 dark:text-gray-300">{t("region")}:</strong>{" "}
                   <span className={actualTheme === "dark" ? "text-gray-300" : "text-gray-600"}>
                     {farmer.region || "N/A"}
                   </span>
                 </p>
 
                 <div className="mt-5 pt-5 border-t border-dashed border-gray-300 dark:border-gray-700">
-                  <h4 className="font-bold mb-3 text-xl text-green-400">Planted Products:</h4>
+                  <h4 className="font-bold mb-3 text-xl text-green-400">{t("pl_pr")}:</h4>
                   {farmer.planted_products && farmer.planted_products.length > 0 ? (
                     <ul className="list-disc ml-6 space-y-2 text-gray-600 dark:text-gray-300">
                       {farmer.planted_products.map((product, index) => (
                         <li key={index} className="text-base leading-relaxed">
                           <strong className="text-green-600 dark:text-green-300">{product.product.name}</strong> —{" "}
-                          <span className="font-semibold">{product.planting_area} ha</span> /{" "}
+                          <span className="font-semibold">{product.planting_area} {t("ha")}</span> /{" "}
                           <span className="font-semibold">{product.expecting_weight} tons</span> /{" "}
                           <span className="font-semibold">{product.wph ? `${product.wph.toFixed(2)} %` : 'N/A'}</span>
                         </li>
                       ))}
                     </ul>
                   ) : (
-                    <p className="text-gray-500 italic text-center mt-4">No planted products recorded for this farmer.</p>
+                    <p className="text-gray-500 italic text-center mt-4">{t("no_farm")}</p>
                   )}
                 </div>
               </CardContent>
@@ -118,7 +120,7 @@ const Farmers = () => {
 
         {filteredFarmers.length === 0 && (
           <p className="text-center text-gray-500 mt-10 text-xl font-medium">
-            No farmers found matching your search criteria. Try a different search term.
+            {t("not_farm")}
           </p>
         )}
       </div>

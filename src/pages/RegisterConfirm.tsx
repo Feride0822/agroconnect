@@ -7,22 +7,21 @@ import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import { Base_Url } from "@/App";
 import "react-toastify/dist/ReactToastify.css";
-import { Alert, AlertDescription } from "@/components/ui/alert"; // Import Alert and AlertDescription for better error display
-import { AlertCircle, Loader2 } from "lucide-react"; // Import AlertCircle and Loader2 icons
-import { useTheme } from "@/contexts/ThemeContext"; // Import useTheme
-import { cn } from "@/lib/utils"; // Import cn
+import { Alert, AlertDescription } from "@/components/ui/alert"; 
+import { AlertCircle, Loader2 } from "lucide-react"; 
+import { useTheme } from "@/contexts/ThemeContext"; 
+import { cn } from "@/lib/utils"; 
+import { useTranslation } from "react-i18next";
 
 const RegisterConfirm = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { actualTheme } = useTheme(); // Use theme context
-
-  // Passed via navigate("/confirm", { state: { email } }) from the Register page
+  const { actualTheme } = useTheme(); 
   const email = location.state?.email || "";
-
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { t } = useTranslation();
 
   // Redirect if email is not present (e.g., direct access or refresh)
   useEffect(() => {
@@ -101,7 +100,7 @@ const RegisterConfirm = () => {
               actualTheme === "dark" ? "text-white" : "text-gray-900",
             )}
           >
-            Email Verification
+            {t("email_ver")}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -114,8 +113,8 @@ const RegisterConfirm = () => {
                   : "text-gray-600",
               )}
             >
-              We've sent a 4-digit verification code to{" "}
-              <span className="text-red-700">Important! Don't forget to check spam messages!</span>
+              {t("sent_code")}{" "}
+              <span className="text-red-700">{t("important")}</span>
               <strong className={cn(actualTheme === "dark" ? "text-green-400" : "text-green-600")}>
                 {email || "your email"}
               </strong>
@@ -125,8 +124,8 @@ const RegisterConfirm = () => {
             <Input
               type="text"
               maxLength={4}
-              inputMode="numeric" // Optimize for numeric input on mobile
-              pattern="\d{4}" // HTML5 pattern for 4 digits
+              inputMode="numeric" 
+              pattern="\d{4}" 
               placeholder="Enter 4-digit code"
               value={code}
               onChange={(e) => setCode(e.target.value)}
@@ -166,7 +165,7 @@ const RegisterConfirm = () => {
               {isSubmitting ? (
                 <div className="flex items-center justify-center">
                   <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                  Verifying...
+                  {t("verify")}
                 </div>
               ) : (
                 "Verify"

@@ -14,6 +14,7 @@ import axios from "axios";
 import { Base_Url } from "@/App";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useTranslation } from "react-i18next";
 
 const Login = () => {
   const { actualTheme } = useTheme();
@@ -24,23 +25,13 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const login = userStore((state) => state.login);
+  const { t } = useTranslation();
 
   const showToastMessage = (message, type = "success") => {
     toast[type](message, {
       position: "top-right",
     });
   };
-  // interface CrudCrudUser {
-  //   _id: string; // CRUDCrud adds this automatically
-  //   email?: string;
-  //   phone_number?: string; // If you store phone as a separate field
-  //   password: string; // WARNING: Storing plain text password is BAD for real apps!
-  //   role: "Farmers" | "Exporters" | "Analysts" | string;
-  //   first_name?: string;
-  //   last_name?: string;
-  //   region?: string;
-  //   re_password: string;
-  // }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,11 +41,10 @@ const Login = () => {
     try {
       // Send login request to your Django API
       const response = await axios.post(`${Base_Url}/accounts/login/`, {
-        login_field: emailOrPhone, // This matches your Django serializer field name
+        login_field: emailOrPhone, 
         password: password,
       });
 
-      // Your Django API returns: { message, tokens: { refresh, access }, user }
       const { tokens, user } = response.data;
 
       console.log("Login successful:", response.data);
@@ -72,10 +62,8 @@ const Login = () => {
         last_name: user.last_name || "",
         phone_number: user.phone_number || "",
         region: user.region || "",
-        // re_password: user.re_password || "", // You might not need this
       };
 
-      // Updated validation - only check for ID since we provide default role
       if (!userForStore.id) {
         throw new Error("User data from API is incomplete (missing user ID).");
       }
@@ -170,7 +158,7 @@ const Login = () => {
                     actualTheme === "dark" ? "text-gray-400" : "text-gray-600",
                   )}
                 >
-                  Agricultural Platform
+                  {t("agri_platform")}
                 </span>
               </div>
             </Link>
@@ -180,11 +168,10 @@ const Login = () => {
                 actualTheme === "dark" ? "text-gray-300" : "text-gray-600",
               )}
             >
-              Welcome back to your farming dashboard
+              {t("wel_back")}
             </p>
           </div>
 
-          {/* Login Form */}
           <Card
             className={cn(
               "shadow-xl",
@@ -200,7 +187,7 @@ const Login = () => {
                   actualTheme === "dark" ? "text-white" : "text-gray-900",
                 )}
               >
-                Sign In
+                {t("sign_in")}
               </CardTitle>
               <p
                 className={cn(
@@ -208,7 +195,7 @@ const Login = () => {
                   actualTheme === "dark" ? "text-gray-300" : "text-gray-600",
                 )}
               >
-                Access your agricultural management platform
+                {t("acc_manage")}
               </p>
             </CardHeader>
             <CardContent>
@@ -237,7 +224,7 @@ const Login = () => {
                         : "text-gray-700",
                     )}
                   >
-                    Email
+                    {t("email")}
                   </Label>
                   <Input
                     id="logenter"
@@ -265,7 +252,7 @@ const Login = () => {
                         : "text-gray-700",
                     )}
                   >
-                    Password
+                    {t("pass")}
                   </Label>
                   <div className="relative">
                     <Input
@@ -318,14 +305,14 @@ const Login = () => {
                           : "text-gray-700",
                       )}
                     >
-                      Remember me
+                      {t("remember")}
                     </Label>
                   </div>
                   <Link
                     to="forgot-password"
                     className="text-green-500 hover:text-green-600 transition-colors"
                   >
-                    Forgot password?
+                   {t("for_pass")}
                   </Link>
                 </div>
 
@@ -337,12 +324,12 @@ const Login = () => {
                   {isLoading ? (
                     <div className="flex items-center">
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      Signing in...
+                      {t("signing")}
                     </div>
                   ) : (
                     <div className="flex items-center">
                       <Sprout className="h-4 w-4 mr-2" />
-                      Sign In
+                      {t("sign_in")}
                     </div>
                   )}
                 </Button>
@@ -354,7 +341,7 @@ const Login = () => {
                     actualTheme === "dark" ? "text-white" : "text-gray-700",
                   )}
                 >
-                  or
+                  {t("or")}
                 </p>
                 <Button
                   variant="outline"
@@ -368,67 +355,10 @@ const Login = () => {
                     alt="Google logo"
                     className="w-5 h-5"
                   />
-                  <span>Continue with Google</span>
+                  <span>{t("cont_google")}</span>
                 </Button>
               </div>
 
-              {/* <div className="mt-8">
-                <div className="relative">
-                  <div className="absolute inset-0 flex items-center">
-                    <div
-                      className={cn(
-                        "w-full border-t",
-                        actualTheme === "dark"
-                          ? "border-gray-600"
-                          : "border-gray-300",
-                      )}
-                    />
-                  </div>
-                  <div className="relative flex justify-center text-sm">
-                    <span
-                      className={cn(
-                        "px-2",
-                        actualTheme === "dark"
-                          ? "bg-gray-800 text-gray-400"
-                          : "bg-white text-gray-500",
-                      )}
-                    >
-                      Demo Account
-                    </span>
-                  </div>
-                </div>
-
-                <div
-                  className={cn(
-                    "mt-6 p-4 rounded-lg border",
-                    actualTheme === "dark"
-                      ? "bg-green-900/20 border-green-800/50"
-                      : "bg-green-50 border-green-200",
-                  )}
-                >
-                  <p className="text-xs text-green-600 text-center mb-3">
-                    For demonstration purposes, use:
-                  </p>
-                  <div className="text-sm space-y-2 text-center">
-                    <div
-                      className={cn(
-                        "font-medium",
-                        actualTheme === "dark" ? "text-white" : "text-gray-900",
-                      )}
-                    >
-                      <strong>Email:</strong> demo@agroconnect.uz
-                    </div>
-                    <div
-                      className={cn(
-                        "font-medium",
-                        actualTheme === "dark" ? "text-white" : "text-gray-900",
-                      )}
-                    >
-                      <strong>Password:</strong> demo123
-                    </div>
-                  </div>
-                </div>
-              </div> */}
 
               <div className="mt-8 text-center">
                 <p
@@ -436,12 +366,12 @@ const Login = () => {
                     actualTheme === "dark" ? "text-gray-300" : "text-gray-600",
                   )}
                 >
-                  Don't have an account?{" "}
+                  {t("nh_acc")}{" "}
                   <Link
                     to="/register"
                     className="text-green-500 hover:text-green-600 font-medium transition-colors"
                   >
-                    Create Account
+                    {t("create_acc")}
                   </Link>
                 </p>
               </div>
@@ -456,7 +386,7 @@ const Login = () => {
                 actualTheme === "dark" ? "text-gray-400" : "text-gray-500",
               )}
             >
-              &copy; 2025 AgroConnect. All rights reserved.
+              &copy; {t("rights")}
             </p>
           </div>
         </div>
