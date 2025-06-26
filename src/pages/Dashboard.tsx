@@ -167,8 +167,7 @@ const Dashboard = () => {
                     "text-sm font-medium",
                     actualTheme === "dark" ? "text-gray-300" : "text-gray-600",
                   )}
-                >
-                  Total Production
+                >{t("tot_pr")}
                 </CardTitle>
                 <div
                   className={cn(
@@ -192,7 +191,7 @@ const Dashboard = () => {
                 </div>
                 <p className="text-xs text-green-600 flex items-center mt-2">
                   <TrendingUp className="h-3 w-3 mr-1" />
-                  +12.5% vs last month
+                  {t("per_m")}
                 </p>
               </CardContent>
             </Card>
@@ -211,8 +210,7 @@ const Dashboard = () => {
                     "text-sm font-medium",
                     actualTheme === "dark" ? "text-gray-300" : "text-gray-600",
                   )}
-                >
-                  Average Price
+                >{t("avg_price")}
                 </CardTitle>
                 <div
                   className={cn(
@@ -246,7 +244,7 @@ const Dashboard = () => {
                     }
                   >
                     {averagePriceChange > 0 ? "+" : ""}
-                    {averagePriceChange.toFixed(1)}% change
+                    {averagePriceChange.toFixed(1)}{t("per_ch")}
                   </span>
                 </div>
               </CardContent>
@@ -267,7 +265,7 @@ const Dashboard = () => {
                     actualTheme === "dark" ? "text-gray-300" : "text-gray-600",
                   )}
                 >
-                  Active Regions
+                  {t("ac_reg")}
                 </CardTitle>
                 <div
                   className={cn(
@@ -291,7 +289,7 @@ const Dashboard = () => {
                 </div>
                 <p className="text-xs text-green-600 flex items-center mt-2">
                   <Zap className="h-3 w-3 mr-1" />
-                  All regions active
+                  {t("all_ac")}
                 </p>
               </CardContent>
             </Card>
@@ -311,7 +309,7 @@ const Dashboard = () => {
                     actualTheme === "dark" ? "text-gray-300" : "text-gray-600",
                   )}
                 >
-                  Price Alerts
+                  {t("price_al")}
                 </CardTitle>
                 <div
                   className={cn(
@@ -330,7 +328,7 @@ const Dashboard = () => {
                 </div>
                 <p className="text-xs text-orange-500 flex items-center mt-2">
                   <Target className="h-3 w-3 mr-1" />
-                  Needs attention
+                  {t("need_att")}
                 </p>
               </CardContent>
             </Card>
@@ -349,7 +347,7 @@ const Dashboard = () => {
               <CardHeader>
                 <CardTitle className="flex items-center text-orange-600">
                   <AlertTriangle className="h-6 w-6 mr-3" />
-                  Market Alert Center
+                  {t("mar_alert")}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -376,19 +374,18 @@ const Dashboard = () => {
                           {product.name}
                         </span>
                         <p className="text-orange-600 text-sm">
-                          High volatility detected
+                        {t("high_vol")}
                         </p>
                       </div>
                       <Badge className="bg-orange-500 text-white border-0">
-                        RISK
+                      {t("risk")}
                       </Badge>
                     </div>
                   ))}
                 </div>
                 {unstableProducts.length > 3 && (
                   <p className="text-orange-600 text-sm mt-4 text-center">
-                    +{unstableProducts.length - 3} more products flagged for
-                    review
+                    +{unstableProducts.length - 3} {t("pr_flag")} 
                   </p>
                 )}
               </CardContent>
@@ -428,7 +425,7 @@ const Dashboard = () => {
                   className="h-8 w-8 mr-3"
                 />
                 {/* <Leaf className="h-6 w-6 mr-3 text-green-500" /> */}
-                Regional Performance Overview
+                {t("reg_pero")}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -482,7 +479,7 @@ const Dashboard = () => {
                                 : "text-gray-600",
                             )}
                           >
-                            Production:
+                            {t("pro")}:
                           </span>
                           <span
                             className={cn(
@@ -504,7 +501,7 @@ const Dashboard = () => {
                                 : "text-gray-600",
                             )}
                           >
-                            Efficiency:
+                            {t("eff")}:
                           </span>
                           <Dialog>
                             <DialogTrigger asChild>
@@ -549,7 +546,7 @@ const Dashboard = () => {
                                 >
                                   <Activity className="h-6 w-6 text-green-500" />
                                   <span>
-                                    Efficiency Analysis - {region.name}
+                                  {t("eff_anal")} - {region.name}
                                   </span>
                                 </DialogTitle>
                               </DialogHeader>
@@ -573,7 +570,7 @@ const Dashboard = () => {
                                     )}
                                   >
                                     <BarChart3 className="h-5 w-5 mr-2 text-green-500" />
-                                    Current Performance
+                                    {t("cur_per")}
                                   </h3>
                                   <div className="grid grid-cols-2 gap-4">
                                     <div>
@@ -585,7 +582,7 @@ const Dashboard = () => {
                                             : "text-gray-600",
                                         )}
                                       >
-                                        Productivity Rate
+                                        {t("pr_rate")}
                                       </p>
                                       <p className="text-2xl font-bold text-green-500">
                                         {productivity.toFixed(2)} t/ha
@@ -600,7 +597,7 @@ const Dashboard = () => {
                                             : "text-gray-600",
                                         )}
                                       >
-                                        Efficiency Status
+                                        {t("eff_st")}
                                       </p>
                                       <Badge
                                         className={cn(
@@ -626,7 +623,7 @@ const Dashboard = () => {
                                             : "text-gray-600",
                                         )}
                                       >
-                                        Performance Score
+                                        {t("per_sc")}
                                       </span>
                                       <span
                                         className={cn(
@@ -671,7 +668,7 @@ const Dashboard = () => {
                                     )}
                                   >
                                     <Target className="h-5 w-5 mr-2 text-green-500" />
-                                    Detailed Metrics
+                                    {t("det_met")}
                                   </h3>
                                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div className="text-center p-3 rounded border border-gray-200 dark:border-gray-600">
@@ -684,7 +681,7 @@ const Dashboard = () => {
                                             : "text-gray-600",
                                         )}
                                       >
-                                        Total Production
+                                        {t("tot_pr")}
                                       </p>
                                       <p
                                         className={cn(
@@ -707,7 +704,7 @@ const Dashboard = () => {
                                             : "text-gray-600",
                                         )}
                                       >
-                                        Agricultural Area
+                                        {t("agri_area")}
                                       </p>
                                       <p
                                         className={cn(
@@ -718,7 +715,7 @@ const Dashboard = () => {
                                         )}
                                       >
                                         {region.agriculturalArea.toLocaleString()}{" "}
-                                        ha
+                                        {t("ha")}
                                       </p>
                                     </div>
                                     <div className="text-center p-3 rounded border border-gray-200 dark:border-gray-600">
@@ -731,7 +728,7 @@ const Dashboard = () => {
                                             : "text-gray-600",
                                         )}
                                       >
-                                        Efficiency Index
+                                        {t("eff_in")}
                                       </p>
                                       <p
                                         className={cn(
@@ -756,38 +753,31 @@ const Dashboard = () => {
                                   >
                                     <h3 className="font-semibold mb-3 flex items-center text-red-700 dark:text-red-400">
                                       <AlertTriangle className="h-5 w-5 mr-2" />
-                                      Improvement Recommendations
+                                      {t("impr_rec")}
                                     </h3>
                                     <ul className="space-y-2 text-sm text-red-600 dark:text-red-300">
                                       <li className="flex items-start">
                                         <span className="mr-2">•</span>
                                         <span>
-                                          Consider implementing modern
-                                          irrigation systems to improve water
-                                          efficiency
+                                        {t("consider")}
                                         </span>
                                       </li>
                                       <li className="flex items-start">
                                         <span className="mr-2">•</span>
                                         <span>
-                                          Explore soil health improvement
-                                          through crop rotation and organic
-                                          fertilizers
+                                        {t("explore")}
                                         </span>
                                       </li>
                                       <li className="flex items-start">
                                         <span className="mr-2">•</span>
                                         <span>
-                                          Invest in precision agriculture
-                                          technologies for better resource
-                                          management
+                                        {t("invest")}
                                         </span>
                                       </li>
                                       <li className="flex items-start">
                                         <span className="mr-2">•</span>
                                         <span>
-                                          Provide farmer training programs on
-                                          best agricultural practices
+                                        {t("provide")}
                                         </span>
                                       </li>
                                     </ul>
@@ -812,7 +802,7 @@ const Dashboard = () => {
                                     )}
                                   >
                                     <TrendingUp className="h-5 w-5 mr-2 text-green-500" />
-                                    Performance Benchmarks
+                                    {t("per_b")}
                                   </h3>
                                   <div className="space-y-3">
                                     <div className="flex justify-between items-center">
@@ -829,7 +819,7 @@ const Dashboard = () => {
                                       <div className="flex items-center space-x-2">
                                         <div className="w-16 h-2 bg-red-200 dark:bg-red-800 rounded"></div>
                                         <span className="text-sm text-red-500">
-                                          Below Average
+                                        {t("bel_avg")}
                                         </span>
                                       </div>
                                     </div>
@@ -847,7 +837,7 @@ const Dashboard = () => {
                                       <div className="flex items-center space-x-2">
                                         <div className="w-16 h-2 bg-yellow-200 dark:bg-yellow-800 rounded"></div>
                                         <span className="text-sm text-yellow-500">
-                                          Average
+                                        {t("avg")}
                                         </span>
                                       </div>
                                     </div>
@@ -860,12 +850,12 @@ const Dashboard = () => {
                                             : "text-gray-600",
                                         )}
                                       >
-                                        Excellent (&gt; 2.5 t/ha)
+                                       {t("excel")} (&gt; 2.5 t/ha)
                                       </span>
                                       <div className="flex items-center space-x-2">
                                         <div className="w-16 h-2 bg-green-200 dark:bg-green-800 rounded"></div>
                                         <span className="text-sm text-green-500">
-                                          Above Average
+                                        {t("above_avg")}
                                         </span>
                                       </div>
                                     </div>
@@ -900,7 +890,7 @@ const Dashboard = () => {
                               : "text-gray-500",
                           )}
                         >
-                          {productivity.toFixed(2)} tons/hectare
+                          {productivity.toFixed(2)} {t("ton_hec")}
                         </p>
                       </div>
                     </div>

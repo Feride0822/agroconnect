@@ -89,7 +89,7 @@ const Sidebar = () => {
         { path: "/", label: "Home", icon: Home },
         { path: "/login", label: t("login"), icon: LogIn },
         { path: "/register", label: t("register"), icon: User },
-        { path: "/news", label: "News", icon: BookOpen },
+        // { path: "/news", label: "News", icon: BookOpen },
         { path: "/settings", label: t("settings"), icon: Settings },
       ];
 

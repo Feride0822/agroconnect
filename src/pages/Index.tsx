@@ -40,12 +40,14 @@ import {
   Phone,
   Mail,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const Index = () => {
   const { actualTheme } = useTheme();
   const [currentStatIndex, setCurrentStatIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const { t } = useTranslation();
 
   useEffect(() => {
     setIsVisible(true);
@@ -296,10 +298,10 @@ const Index = () => {
                     : "transform translate-y-10 opacity-0",
                 )}
               >
-                Modern Agriculture
+                {t("mod_agri")}
                 <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-600">
-                  Made Simple
+                {t("made_s")}
                 </span>
               </h1>
 
@@ -312,14 +314,12 @@ const Index = () => {
                     : "transform translate-y-10 opacity-0",
                 )}
               >
-                Join{" "}
+                {t("joinus")}{" "}
                 <span className="text-green-500 font-semibold">
                   15,247 farmers
                 </span>{" "}
-                using modern agricultural tools and market insights to increase
-                yields by{" "}
-                <span className="text-green-500 font-semibold">47%</span> while
-                reducing costs and connecting with agricultural professionals.
+                {t("using_m")}{" "}
+                <span className="text-green-500 font-semibold">47%</span>{t("while_r")}
               </p>
 
               <div
@@ -336,7 +336,7 @@ const Index = () => {
                     className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-10 py-6 text-xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
                   >
                     <Zap className="mr-3 h-6 w-6" />
-                    Join The Platform
+                    {t("join_pl")}
                     <ArrowRight className="ml-3 h-6 w-6" />
                   </Button>
                 </Link>
@@ -352,7 +352,7 @@ const Index = () => {
                     )}
                   >
                     <PlayCircle className="mr-3 h-6 w-6" />
-                    Explore Platform
+                    {t("ex_pl")}
                   </Button>
                 </Link>
               </div>
@@ -369,7 +369,7 @@ const Index = () => {
                         : "text-gray-600",
                     )}
                   >
-                    Government Certified
+                    {t("gov_cert")}
                   </span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -382,7 +382,7 @@ const Index = () => {
                         : "text-gray-600",
                     )}
                   >
-                    Award Winning Platform
+                    {t("award_pl")}
                   </span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -395,7 +395,7 @@ const Index = () => {
                         : "text-gray-600",
                     )}
                   >
-                    15K+ Active Users
+                    15K+ {t("ac_users")}
                   </span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -408,7 +408,7 @@ const Index = () => {
                         : "text-gray-600",
                     )}
                   >
-                    Regional Coverage
+                    {t("reg_cov")}
                   </span>
                 </div>
               </div>
@@ -434,10 +434,10 @@ const Index = () => {
                 )}
               >
                 <Activity className="h-6 w-6 mr-3 text-green-500" />
-                Live Market Data
+                {t("live_data")}
               </h3>
               <Badge className="bg-green-500 text-white animate-pulse">
-                LIVE
+              {t("live")}
               </Badge>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -516,7 +516,7 @@ const Index = () => {
                   actualTheme === "dark" ? "text-white" : "text-gray-900",
                 )}
               >
-                Growing Success Stories
+                {t("gr_suc")}
               </h2>
               <p
                 className={cn(
@@ -524,7 +524,7 @@ const Index = () => {
                   actualTheme === "dark" ? "text-gray-300" : "text-gray-600",
                 )}
               >
-                Real results from real farmers
+                {t("real_res")}
               </p>
             </div>
 
@@ -609,7 +609,7 @@ const Index = () => {
                   actualTheme === "dark" ? "text-white" : "text-gray-900",
                 )}
               >
-                Modern Farm Management
+                {t("mod_manage")}
               </h2>
               <p
                 className={cn(
@@ -617,8 +617,7 @@ const Index = () => {
                   actualTheme === "dark" ? "text-gray-300" : "text-gray-600",
                 )}
               >
-                Digital tools that help you manage, monitor, and grow your
-                agricultural business
+                {t("digital_t")}
               </p>
             </div>
 
@@ -687,7 +686,7 @@ const Index = () => {
                         size="sm"
                         className="mt-4 text-green-600 hover:text-green-700 p-0 h-auto font-semibold group"
                       >
-                        Learn more
+                        {t("learn_m")}
                         <ChevronRight className="h-4 w-4 ml-1 transition-transform group-hover:translate-x-1" />
                       </Button>
                     </CardContent>
@@ -707,8 +706,7 @@ const Index = () => {
                   "text-4xl font-bold mb-4",
                   actualTheme === "dark" ? "text-white" : "text-gray-900",
                 )}
-              >
-                Success Stories from Our Community
+              >{t("suc_str")}
               </h2>
               <p
                 className={cn(
@@ -716,7 +714,7 @@ const Index = () => {
                   actualTheme === "dark" ? "text-gray-300" : "text-gray-600",
                 )}
               >
-                Real farmers, real results
+                {t("real_f")}
               </p>
             </div>
 
@@ -824,20 +822,19 @@ const Index = () => {
                     actualTheme === "dark" ? "text-white" : "text-gray-900",
                   )}
                 >
-                  Latest Agriculture News
+                  {t("latest_ag")}
                 </h2>
                 <p
                   className={cn(
                     "text-lg",
                     actualTheme === "dark" ? "text-gray-300" : "text-gray-600",
                   )}
-                >
-                  Stay updated with industry trends
+                >{t("stay_up")}
                 </p>
               </div>
               <Link to="/news">
                 <Button variant="outline" className="hidden sm:flex">
-                  View All News
+                {t("view_al")}
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
               </Link>
@@ -908,12 +905,10 @@ const Index = () => {
                 <Zap className="h-10 w-10 text-white" />
               </div>
               <h2 className="text-5xl font-bold text-white mb-6">
-                Ready to Transform Your Farm?
+              {t("ready_tr")}
               </h2>
               <p className="text-xl text-green-100 mb-8 max-w-3xl mx-auto">
-                Join thousands of smart farmers who've improved their
-                agricultural operations using our comprehensive platform and
-                community network.
+              {t("join_th")}
               </p>
             </div>
 
@@ -924,7 +919,7 @@ const Index = () => {
                   className="bg-white text-green-600 hover:bg-gray-100 px-10 py-6 text-xl font-semibold shadow-xl transform hover:scale-105 transition-all duration-300"
                 >
                   <Sprout className="mr-3 h-6 w-6" />
-                  Get Started Now
+                  {t("str_now")}
                   <ArrowRight className="ml-3 h-6 w-6" />
                 </Button>
               </Link>
@@ -962,14 +957,12 @@ const Index = () => {
                       AgroConnect
                     </span>
                     <p className="text-green-400 text-sm">
-                      Agricultural Platform
+                    {t("agri_pl")}
                     </p>
                   </div>
                 </div>
                 <p className="text-gray-300 max-w-md mb-6 leading-relaxed">
-                  Empowering farmers across Uzbekistan with modern tools,
-                  real-time market data, and a comprehensive network of
-                  agricultural professionals.
+                {t("empowering")}
                 </p>
                 <div className="flex space-x-4">
                   <Button
@@ -978,11 +971,11 @@ const Index = () => {
                     className="border-gray-600 text-gray-300 hover:bg-gray-800"
                   >
                     <Mail className="h-4 w-4 mr-2" />
-                    Contact Us
+                    {t("contact")}
                   </Button>
                   <Button size="sm" className="bg-green-600 hover:bg-green-700">
                     <MessageCircle className="h-4 w-4 mr-2" />
-                    Live Chat
+                    {t("live_chat")}
                   </Button>
                 </div>
               </div>
@@ -995,7 +988,7 @@ const Index = () => {
                       to="/dashboard"
                       className="hover:text-green-400 transition-colors"
                     >
-                      Dashboard
+                      {t("dashboard")}
                     </Link>
                   </li>
                   <li>
@@ -1003,7 +996,7 @@ const Index = () => {
                       to="/farmers"
                       className="hover:text-green-400 transition-colors"
                     >
-                      Farmers Network
+                      {t("farm_net")}
                     </Link>
                   </li>
                   <li>
@@ -1011,7 +1004,7 @@ const Index = () => {
                       to="/statistics"
                       className="hover:text-green-400 transition-colors"
                     >
-                      Market Analytics
+                      {t("mar_analy")}
                     </Link>
                   </li>
                   <li>
@@ -1019,7 +1012,7 @@ const Index = () => {
                       to="/profile"
                       className="hover:text-green-400 transition-colors"
                     >
-                      My Profile
+                      {t("my_prof")}
                     </Link>
                   </li>
                 </ul>
@@ -1033,7 +1026,7 @@ const Index = () => {
                       to="/login"
                       className="hover:text-green-400 transition-colors"
                     >
-                      Login
+                      {t("login")}
                     </Link>
                   </li>
                   <li>
@@ -1041,7 +1034,7 @@ const Index = () => {
                       to="/register"
                       className="hover:text-green-400 transition-colors"
                     >
-                      Sign Up
+                      {t("signup")}
                     </Link>
                   </li>
                   <li>
@@ -1049,7 +1042,7 @@ const Index = () => {
                       to="/settings"
                       className="hover:text-green-400 transition-colors"
                     >
-                      Settings
+                      {t("settings")}
                     </Link>
                   </li>
                   <li>
@@ -1057,7 +1050,7 @@ const Index = () => {
                       href="#"
                       className="hover:text-green-400 transition-colors"
                     >
-                      Support
+                      {t("support")}
                     </a>
                   </li>
                 </ul>
@@ -1066,7 +1059,7 @@ const Index = () => {
 
             <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
               <p className="text-gray-400 text-sm">
-                &copy; 2025 AgroConnect. All rights reserved. Made with 💚 for
+                &copy; {t("rights")} Made with 💚 for
                 farmers.
               </p>
               <div className="flex space-x-6 mt-4 md:mt-0">
@@ -1074,19 +1067,19 @@ const Index = () => {
                   href="#"
                   className="text-gray-400 hover:text-green-400 text-sm transition-colors"
                 >
-                  Privacy Policy
+                  {t("privacy_pol")}
                 </a>
                 <a
                   href="#"
                   className="text-gray-400 hover:text-green-400 text-sm transition-colors"
                 >
-                  Terms of Service
+                  {t("terms")}
                 </a>
                 <a
                   href="#"
                   className="text-gray-400 hover:text-green-400 text-sm transition-colors"
                 >
-                  Help Center
+                  {t("help_c")}
                 </a>
               </div>
             </div>
