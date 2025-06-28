@@ -26,8 +26,8 @@ import GoogleOAuthHandler from "./components/auth/GoogleOAuthHandler";
 import ProductAdd from "./pages/ProductAdd";
 import ProductEdit from "./pages/ProductEdit";
 
-// export const Base_Url = "http://192.168.83.230:8000";
-export const Base_Url = "http://agroconnect.com.uz";
+export const Base_Url = "http://127.0.0.1:8000/api";
+// export const Base_Url = "http://agroconnect.com.uz";
 // export const Base_Url = "http://example/api";
 const queryClient = new QueryClient();
 

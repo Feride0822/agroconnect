@@ -147,7 +147,10 @@ const ProductControl = () => {
                     key={planted.id}
                     className="flex justify-between items-center bg-gray-100 dark:bg-gray-800 px-4 py-2 rounded-md"
                   >
-                    <span className="truncate">{planted.product_name}</span>
+                    <span className="truncate">
+                      {planted.product?.name || "Unnamed Product"}
+                    </span>
+
                     <div className="flex gap-2 flex-shrink-0">
                       <Button
                         variant="outline"
@@ -169,9 +172,7 @@ const ProductControl = () => {
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-center py-4">
-                  {t("no_pr")}
-                </p>
+                <p className="text-sm text-center py-4">{t("no_pr")}</p>
               )}
             </CardContent>
           </Card>
