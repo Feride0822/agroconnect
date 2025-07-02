@@ -14,21 +14,30 @@ import { useTranslation } from "react-i18next";
 const ProductControl = () => {
   const { actualTheme } = useTheme();
   const navigate = useNavigate();
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<any[]>([]);
   const [nextProductsUrl, setNextProductsUrl] = useState(
     `${Base_Url}/products/products/`,
   );
-  const [userProducts, setUserProducts] = useState([]);
+  const [userProducts, setUserProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const user = userStore((state) => state.user);
   const token = localStorage.getItem("access_token");
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  // 1️⃣ Whenever the i18n language changes, update axios default header
+  useEffect(() => {
+    axios.defaults.headers.common["Accept-Language"] = i18n.language;
+  }, [i18n.language]);
 
   const fetchNextProducts = async () => {
     if (!nextProductsUrl) return;
     try {
-      const res = await axios.get(nextProductsUrl);
+      const res = await axios.get(nextProductsUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`, // optional, if products endpoint needs auth
+        },
+      });
       const fetched = res.data.results || res.data;
       const combined = [...products, ...fetched];
       combined.sort((a, b) => a.name.localeCompare(b.name));
@@ -45,7 +54,9 @@ const ProductControl = () => {
       const res = await axios.get(
         `${Base_Url}/products/planted-products/?owner=${user.id}`,
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
       );
       setUserProducts(res.data.results || res.data);
@@ -58,9 +69,11 @@ const ProductControl = () => {
   };
 
   useEffect(() => {
+    // initial header setup
+    axios.defaults.headers.common["Accept-Language"] = i18n.language;
     fetchNextProducts();
     fetchPlantedProducts();
-  }, [user.id, token]);
+  }, [user.id, token, i18n.language]);
 
   const handleDelete = async (productId: number) => {
     try {
@@ -77,7 +90,7 @@ const ProductControl = () => {
   };
 
   if (loading)
-    return <p className="text-center text-sm my-10">{t("loading_pr")}.</p>;
+    return <p className="text-center text-sm my-10">{t("loading_pr")}…</p>;
   if (error)
     return <p className="text-center text-sm text-red-500 my-10">{error}</p>;
 
@@ -112,6 +125,7 @@ const ProductControl = () => {
                   key={product.id}
                   className="flex justify-between items-center bg-gray-100 dark:bg-gray-800 px-4 py-2 rounded-md"
                 >
+                  {/* product.name will now be in the language set by i18n.language */}
                   <span className="truncate">{product.name}</span>
                   <Button
                     variant="outline"
@@ -148,9 +162,8 @@ const ProductControl = () => {
                     className="flex justify-between items-center bg-gray-100 dark:bg-gray-800 px-4 py-2 rounded-md"
                   >
                     <span className="truncate">
-                      {planted.product?.name || "Unnamed Product"}
+                      {planted.product?.name || t("unnamed_pr")}
                     </span>
-
                     <div className="flex gap-2 flex-shrink-0">
                       <Button
                         variant="outline"

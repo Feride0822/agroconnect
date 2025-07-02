@@ -68,7 +68,7 @@ const ProductEdit = () => {
   const [loadingRegions, setLoadingRegions] = useState(true);
   const [loadingProduct, setLoadingProduct] = useState(true);
   const [product, setProduct] = useState<Product | null>(null);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -82,7 +82,11 @@ const ProductEdit = () => {
   useEffect(() => {
     // Fetch regions
     axios
-      .get(`${Base_Url}/regions/`)
+      .get(`${Base_Url}/regions/`, {
+        headers: {
+          'Accept-Language': i18n.language
+        }
+      })
       .then((res) => {
         setRegions(res.data);
         setLoadingRegions(false);
@@ -99,6 +103,7 @@ const ProductEdit = () => {
         .get(`${Base_Url}/products/planted-products/${productId}/`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            'Accept-Language': i18n.language
           },
         })
         .then((res) => {
@@ -118,7 +123,7 @@ const ProductEdit = () => {
           setLoadingProduct(false);
         });
     }
-  }, [productId, form]);
+  }, [productId, form, i18n.language]);
 
   const calculateEfficiency = () => {
     const area = parseFloat(form.getValues("planting_area"));
@@ -154,6 +159,7 @@ const ProductEdit = () => {
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            'Accept-Language': i18n.language
           },
         },
       );
