@@ -4,7 +4,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import Sidebar from "@/components/layout/Sidebar";
 import { cn } from "@/lib/utils";
 import axios from "axios";
@@ -14,7 +20,15 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 
@@ -23,11 +37,12 @@ type Region = {
   name: string;
 };
 
-// Updated Product type to include the 'product' field (ID of the general Product type)
 type Product = {
   id: number; // PlantedProduct ID
-  product: number; // The ID of the general Product that this PlantedProduct is an instance of
-  product_name: string; // The name of the general Product
+  product: {
+    id: number;
+    name: string;
+  };
   planting_area: string;
   expecting_weight: string;
   region: number;
@@ -36,7 +51,9 @@ type Product = {
 
 const formSchema = z.object({
   planting_area: z.string().min(1, { message: "Planting area is required." }),
-  expecting_weight: z.string().min(1, { message: "Expected volume is required." }),
+  expecting_weight: z
+    .string()
+    .min(1, { message: "Expected volume is required." }),
   selectedRegion: z.string().min(1, { message: "Region is required." }),
 });
 
@@ -64,12 +81,13 @@ const ProductEdit = () => {
 
   useEffect(() => {
     // Fetch regions
-    axios.get(`${Base_Url}/regions/`)
-      .then(res => {
+    axios
+      .get(`${Base_Url}/regions/`)
+      .then((res) => {
         setRegions(res.data);
         setLoadingRegions(false);
       })
-      .catch(err => {
+      .catch((err) => {
         console.error("Failed to load regions", err);
         toast.error("Failed to load regions.");
         setLoadingRegions(false);
@@ -77,12 +95,13 @@ const ProductEdit = () => {
 
     // Fetch product data (the specific PlantedProduct to edit)
     if (productId) {
-      axios.get(`${Base_Url}/products/planted-products/${productId}/`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      })
-        .then(res => {
+      axios
+        .get(`${Base_Url}/products/planted-products/${productId}/`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        })
+        .then((res) => {
           setProduct(res.data);
           form.reset({
             planting_area: res.data.planting_area.toString(),
@@ -91,9 +110,11 @@ const ProductEdit = () => {
           });
           setLoadingProduct(false);
         })
-        .catch(err => {
+        .catch((err) => {
           console.error("Failed to load product", err);
-          toast.error("Failed to load product data. Make sure it's your product.");
+          toast.error(
+            "Failed to load product data. Make sure it's your product.",
+          );
           setLoadingProduct(false);
         });
     }
@@ -106,7 +127,9 @@ const ProductEdit = () => {
       setEfficiency(volume / area);
     } else {
       setEfficiency(null);
-      toast.error("Please enter valid numbers for planting area and expected volume.");
+      toast.error(
+        "Please enter valid numbers for planting area and expected volume.",
+      );
     }
   };
 
@@ -122,21 +145,27 @@ const ProductEdit = () => {
         expecting_weight: parseFloat(values.expecting_weight),
         region: parseInt(values.selectedRegion),
         owner: user.id, // MODIFIED: Explicitly send owner ID
-        product: product.product, // MODIFIED: Explicitly send the associated general product ID
+        product: product.product.id,
       };
 
-      await axios.put(`${Base_Url}/products/planted-products/${productId}/`, payload, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      await axios.put(
+        `${Base_Url}/products/planted-products/${productId}/`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
         },
-      });
+      );
       toast.success("Product updated successfully!");
       navigate("/profile"); // Redirect to profile page after successful update
     } catch (error) {
       console.error("Failed to update product:", error);
       // More detailed error message from backend if available
       if (axios.isAxiosError(error) && error.response && error.response.data) {
-        toast.error(`Failed to update product: ${JSON.stringify(error.response.data)}`);
+        toast.error(
+          `Failed to update product: ${JSON.stringify(error.response.data)}`,
+        );
       } else {
         toast.error("Failed to update product. Please try again.");
       }
@@ -145,7 +174,14 @@ const ProductEdit = () => {
 
   if (loadingProduct || loadingRegions) {
     return (
-      <div className={cn("flex min-h-screen", actualTheme === "dark" ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900")}>
+      <div
+        className={cn(
+          "flex min-h-screen",
+          actualTheme === "dark"
+            ? "bg-gray-900 text-white"
+            : "bg-gray-100 text-gray-900",
+        )}
+      >
         <Sidebar />
         <div className="flex-1 flex items-center justify-center">
           <p>{t("load_data")}</p>
@@ -156,7 +192,14 @@ const ProductEdit = () => {
 
   if (!product) {
     return (
-      <div className={cn("flex min-h-screen", actualTheme === "dark" ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900")}>
+      <div
+        className={cn(
+          "flex min-h-screen",
+          actualTheme === "dark"
+            ? "bg-gray-900 text-white"
+            : "bg-gray-100 text-gray-900",
+        )}
+      >
         <Sidebar />
         <div className="flex-1 flex items-center justify-center">
           <p>{t("pr_notfound")}</p>
@@ -166,29 +209,53 @@ const ProductEdit = () => {
   }
 
   return (
-    <div className={cn("flex min-h-screen", actualTheme === "dark" ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900")}>
+    <div
+      className={cn(
+        "flex min-h-screen",
+        actualTheme === "dark"
+          ? "bg-gray-900 text-white"
+          : "bg-gray-100 text-gray-900",
+      )}
+    >
       <div className="flex-1 p-8">
-        <Card className={cn("w-full max-w-2xl mx-auto", actualTheme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200")}>
+        <Card
+          className={cn(
+            "w-full max-w-2xl mx-auto",
+            actualTheme === "dark"
+              ? "bg-gray-800 border-gray-700"
+              : "bg-white border-gray-200",
+          )}
+        >
           <CardHeader>
-            <CardTitle className={cn("text-2xl font-bold", actualTheme === "dark" ? "text-white" : "text-gray-900")}>
-            {t("edit_pr")}: {product.product_name}
+            <CardTitle
+              className={cn(
+                "text-2xl font-bold",
+                actualTheme === "dark" ? "text-white" : "text-gray-900",
+              )}
+            >
+              {t("edit_pr")}: {product.product.name}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-6"
+              >
                 <FormField
                   control={form.control}
                   name="planting_area"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t("pl_area")} ({t("hectares")})</FormLabel>
+                      <FormLabel>
+                        {t("pl_area")} ({t("hectares")})
+                      </FormLabel>
                       <FormControl>
                         <Input
                           type="number"
                           placeholder="Enter planting area"
                           {...field}
-                          onChange={e => field.onChange(e.target.value)}
+                          onChange={(e) => field.onChange(e.target.value)}
                         />
                       </FormControl>
                       <FormMessage />
@@ -207,7 +274,7 @@ const ProductEdit = () => {
                           type="number"
                           placeholder="Enter expected volume"
                           {...field}
-                          onChange={e => field.onChange(e.target.value)}
+                          onChange={(e) => field.onChange(e.target.value)}
                         />
                       </FormControl>
                       <FormMessage />
@@ -221,7 +288,11 @@ const ProductEdit = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>{t("region")}</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value} disabled={loadingRegions}>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        disabled={loadingRegions}
+                      >
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select region" />
@@ -229,7 +300,10 @@ const ProductEdit = () => {
                         </FormControl>
                         <SelectContent>
                           {regions.map((region) => (
-                            <SelectItem key={region.id} value={region.id.toString()}>
+                            <SelectItem
+                              key={region.id}
+                              value={region.id.toString()}
+                            >
                               {region.name}
                             </SelectItem>
                           ))}
@@ -240,17 +314,22 @@ const ProductEdit = () => {
                   )}
                 />
 
-                <Button type="button" onClick={calculateEfficiency} className="mr-3">
-                {t("cal_eff")}
+                <Button
+                  type="button"
+                  onClick={calculateEfficiency}
+                  className="mr-3"
+                >
+                  {t("cal_eff")}
                 </Button>
                 {efficiency !== null && (
                   <div className="mt-4 p-3 bg-green-100 border border-green-200 rounded">
-                    <strong>{t("eff")}:</strong> {efficiency.toFixed(2)} {t("ton_hec")}
+                    <strong>{t("eff")}:</strong> {efficiency.toFixed(2)}{" "}
+                    {t("ton_hec")}
                   </div>
                 )}
 
                 <Button type="submit" className="mt-4 bg-green-800">
-                {t("save_chn")}
+                  {t("save_chn")}
                 </Button>
               </form>
             </Form>

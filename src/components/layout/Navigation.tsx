@@ -10,9 +10,11 @@ import {
   Database,
   Sparkles,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const Navigation = () => {
   const location = useLocation();
+  const { t } = useTranslation();
 
   const navItems = [
     { path: "/", label: "Home", icon: Home },
@@ -38,7 +40,7 @@ const Navigation = () => {
                 DataAgri
               </span>
               <span className="text-xs text-gray-400 font-medium">
-                Smart Analytics Platform
+              {t("smart_pl")}
               </span>
             </div>
           </Link>
@@ -74,7 +76,7 @@ const Navigation = () => {
                 className="text-gray-300 hover:text-white hover:bg-white/10 border border-gray-600/50 hover:border-purple-500/50 transition-all duration-300"
               >
                 <LogIn className="h-4 w-4 mr-2" />
-                Login
+                {t("login")}
               </Button>
             </Link>
             <Link to="/register">
@@ -83,7 +85,7 @@ const Navigation = () => {
                 className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 transition-all duration-300"
               >
                 <Sparkles className="h-4 w-4 mr-2" />
-                Get Started
+                {t("get_started")}
               </Button>
             </Link>
           </div>

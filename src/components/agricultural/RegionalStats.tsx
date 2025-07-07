@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTheme } from "@/contexts/ThemeContext";
 import { cn } from "@/lib/utils";
 import { Base_Url } from "@/App";
+import { useTranslation } from "react-i18next";
 
 type Product = {
   product_name: string;
@@ -18,6 +19,7 @@ const RegionalStats = ({ selectedRegion }: { selectedRegion: string }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const { t } = useTranslation();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -44,7 +46,7 @@ const RegionalStats = ({ selectedRegion }: { selectedRegion: string }) => {
   }, [selectedRegion]);
 
   if (loading) {
-    return <p className="text-center text-sm">Loading product statistics...</p>;
+    return <p className="text-center text-sm">{t("loading_st")}</p>;
   }
 
   if (error) {
@@ -73,7 +75,7 @@ const RegionalStats = ({ selectedRegion }: { selectedRegion: string }) => {
               alt="Logo"
               className="w-8 h-8 mr-3"
             />
-            Product Performance Overview
+            {t("pr_pero")}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -96,7 +98,7 @@ const RegionalStats = ({ selectedRegion }: { selectedRegion: string }) => {
                         : "text-gray-700"
                     )}
                   >
-                    Product
+                    {t("product")}
                   </th>
                   <th
                     className={cn(
@@ -106,7 +108,7 @@ const RegionalStats = ({ selectedRegion }: { selectedRegion: string }) => {
                         : "text-gray-700"
                     )}
                   >
-                    Agricultural Area (ha)
+                    {t("agri_area")} ({t("ha")})
                   </th>
                   <th
                     className={cn(
@@ -116,7 +118,7 @@ const RegionalStats = ({ selectedRegion }: { selectedRegion: string }) => {
                         : "text-gray-700"
                     )}
                   >
-                    Total Production (tons)
+                    {t("tot_pr")} (tons)
                   </th>
                   <th
                     className={cn(
@@ -126,7 +128,7 @@ const RegionalStats = ({ selectedRegion }: { selectedRegion: string }) => {
                         : "text-gray-700"
                     )}
                   >
-                    Efficiency Score (WPH)
+                    {t("eff_score")} (WPH)
                   </th>
                 </tr>
               </thead>

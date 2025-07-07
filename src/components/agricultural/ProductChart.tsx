@@ -12,6 +12,7 @@ import { Product } from "@/lib/agricultural-data";
 import { useTheme } from "@/contexts/ThemeContext";
 import { cn } from "@/lib/utils";
 import { TrendingUp, TrendingDown, Leaf } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface ProductChartProps {
   product: Product;
@@ -22,6 +23,7 @@ const ProductChart = ({ product, className }: ProductChartProps) => {
   const { actualTheme } = useTheme();
 
   const formatPrice = (value: number) => `$${value}`;
+  const { t } = useTranslation();
 
   const getChangeColor = () => {
     if (product.priceHistory.length < 2)
@@ -153,14 +155,14 @@ const ProductChart = ({ product, className }: ProductChartProps) => {
                 actualTheme === "dark" ? "text-gray-300" : "text-gray-600",
               )}
             >
-              Category: {product.category}
+              {t("category")}: {product.category}
             </span>
             <span
               className={cn(
                 actualTheme === "dark" ? "text-gray-300" : "text-gray-600",
               )}
             >
-              Unit: {product.unit}
+              {t("unit")}: {product.unit}
             </span>
           </div>
           <div
@@ -171,7 +173,7 @@ const ProductChart = ({ product, className }: ProductChartProps) => {
           >
             {/* <Leaf className="h-3 w-3 text-green-500" /> */}
             <span className="text-green-500 text-xs font-medium">
-              Market Data
+            {t("mar_data")}
             </span>
           </div>
         </div>

@@ -1,18 +1,20 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button"; // Import Button component
-import { Plus } from "lucide-react"; // Import Plus icon
-import { useNavigate } from "react-router-dom"; // Import useNavigate hook
-import { products } from "@/lib/agricultural-data"; // Keep products data
+import { Button } from "@/components/ui/button"; 
+import { Plus } from "lucide-react"; 
+import { useNavigate } from "react-router-dom"; 
+import { products } from "@/lib/agricultural-data"; 
 import { useTheme } from "@/contexts/ThemeContext";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 const RegionalAdds = () => {
   const { actualTheme } = useTheme();
   const navigate = useNavigate(); // Initialize navigate hook
+  const { t } = useTranslation();
 
   // Function to handle navigation to the add product page
   const handleAddProductClick = () => {
-    navigate("/products/add"); // Navigate to your desired add product page route
+    navigate("/products/add"); 
   };
 
   return (
@@ -34,7 +36,7 @@ const RegionalAdds = () => {
             )}
           >
             <img src="/AgroConnect 2.png" alt="Logo" className="w-8 h-8 mr-3" />
-            Product List
+            {t("pr_list")}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -57,7 +59,7 @@ const RegionalAdds = () => {
                         : "text-gray-700",
                     )}
                   >
-                    Product Name
+                    {t("pr_name")}
                   </th>
                 </tr>
               </thead>
@@ -106,7 +108,7 @@ const RegionalAdds = () => {
               actualTheme === "dark" ? "text-white" : "text-gray-900",
             )}
           >
-            Product Control
+            {t("product_control")}
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col items-center justify-center h-[calc(100%-80px)]"> {/* Adjust height for content alignment */}
@@ -120,7 +122,7 @@ const RegionalAdds = () => {
             )}
           >
             <Plus className="h-6 w-6 mr-2" />
-            Add New Product
+            {t("addn_pr")}
           </Button>
         </CardContent>
       </Card>

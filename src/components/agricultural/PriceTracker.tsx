@@ -12,9 +12,11 @@ import {
   AlertTriangle,
   Shield,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const PriceTracker = () => {
   const { actualTheme } = useTheme();
+  const { t } = useTranslation();
 
   const getStabilityColor = (stability: number) => {
     if (stability >= 80) return "bg-green-500";
@@ -57,7 +59,7 @@ const PriceTracker = () => {
           >
             <img src="/AgroConnect 2.png" alt="Logo" className="w-8 h-8 mr-3"/>
             {/* <Leaf className="h-6 w-6 mr-3 text-green-500" /> */}
-            Price Stability Monitor
+            {t("price_stab")}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -99,7 +101,7 @@ const PriceTracker = () => {
                             : "text-gray-600",
                         )}
                       >
-                        Current Price:
+                        {t("cur_price")}:
                       </span>
                       <span
                         className={cn(
@@ -123,7 +125,7 @@ const PriceTracker = () => {
                               : "text-gray-600",
                           )}
                         >
-                          Stability Score:
+                          {t("stab_score")}:
                         </span>
                         <Badge className={getStabilityBadgeColor(stability)}>
                           {stability}%
@@ -153,7 +155,7 @@ const PriceTracker = () => {
                       )}
                     >
                       <span className="text-green-500 text-xs">
-                        Market Analysis
+                      {t("mar_anal")}
                       </span>
                       <span
                         className={`text-xs font-medium ${
@@ -190,7 +192,7 @@ const PriceTracker = () => {
         <CardHeader>
           <CardTitle className="flex items-center text-xl text-orange-600">
             <AlertTriangle className="h-6 w-6 mr-3" />
-            Market Risk Assessment
+            {t("mar_risk")}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -252,8 +254,7 @@ const PriceTracker = () => {
                               isUrgent ? "text-red-500" : "text-yellow-500"
                             }`}
                           >
-                            {isUrgent ? "Critical" : "Medium"} volatility
-                            detected
+                            {isUrgent ? "Critical" : "Medium"} {t("vol_det")}
                           </p>
                           <p
                             className={cn(
@@ -263,7 +264,7 @@ const PriceTracker = () => {
                                 : "text-gray-600",
                             )}
                           >
-                            Recommendation:{" "}
+                            {t("recommendation")}:{" "}
                             {isUrgent
                               ? "Immediate price monitoring"
                               : "Monitor closely"}
@@ -279,7 +280,7 @@ const PriceTracker = () => {
                               : "bg-yellow-500 text-white",
                           )}
                         >
-                          {stability}% stable
+                          {stability}% {t("stable")}
                         </Badge>
                         <div
                           className={cn(
@@ -320,10 +321,9 @@ const PriceTracker = () => {
                     actualTheme === "dark" ? "text-white" : "text-gray-900",
                   )}
                 >
-                  All Markets Stable
+                  {t("all_stable")}
                 </h3>
-                <p className="text-green-500">
-                  All products show stable pricing patterns
+                <p className="text-green-500">{t("product_stable")}
                 </p>
               </div>
             )}
