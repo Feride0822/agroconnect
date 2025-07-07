@@ -118,7 +118,7 @@ const Dashboard = () => {
     >
       <Sidebar />
 
-      <div className="flex-1 md:mr-80">
+      <div className="flex-1 md:mr-[16rem]">
         <div className="container mx-auto px-4 py-8 max-w-6xl">
           <div className="mb-12">
             <div className="flex items-center space-x-4 mb-4">

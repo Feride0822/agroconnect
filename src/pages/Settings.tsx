@@ -156,20 +156,25 @@ const Settings = () => {
           </div>
 
           {/* Settings Tabs */}
-          <Tabs defaultValue="appearance" className="space-y-6">
+          <Tabs defaultValue="appearance" className="w-full max-w-4xl mx-auto flex flex-col gap-3 space-y-4 sm:space-y-6">
             <TabsList
               className={cn(
-                "grid w-full grid-cols-5",
+                "grid h-full w-full grid-cols-1 gap-2 p-2 sm:grid-cols-4 sm:gap-4",
                 actualTheme === "dark"
                   ? "bg-gray-800 border-gray-700"
-                  : "bg-white border-gray-200",
+                  : "bg-gray-100 border-gray-200",
+                "rounded-lg box-border",
               )}
             >
               <TabsTrigger
                 value="appearance"
                 className={cn(
+                  "flex items-center justify-center rounded-md px-4 py-2 min-h-[48px] transition-all w-full box-border",
                   "data-[state=active]:bg-green-500 data-[state=active]:text-white",
-                  actualTheme === "dark" ? "text-gray-300" : "text-gray-700",
+                  actualTheme === "dark"
+                    ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
+                    : "bg-white text-gray-800 hover:bg-gray-50",
+                  "border border-transparent data-[state=active]:border-green-600",
                 )}
               >
                 <Palette className="h-4 w-4 mr-2" />
@@ -178,8 +183,12 @@ const Settings = () => {
               <TabsTrigger
                 value="notifications"
                 className={cn(
+                  "flex items-center justify-center rounded-md px-4 py-2 min-h-[48px] transition-all w-full box-border",
                   "data-[state=active]:bg-green-500 data-[state=active]:text-white",
-                  actualTheme === "dark" ? "text-gray-300" : "text-gray-700",
+                  actualTheme === "dark"
+                    ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
+                    : "bg-white text-gray-800 hover:bg-gray-50",
+                  "border border-transparent data-[state=active]:border-green-600",
                 )}
               >
                 <Bell className="h-4 w-4 mr-2" />
@@ -188,8 +197,12 @@ const Settings = () => {
               <TabsTrigger
                 value="privacy"
                 className={cn(
+                  "flex items-center justify-center rounded-md px-4 py-2 min-h-[48px] transition-all w-full box-border",
                   "data-[state=active]:bg-green-500 data-[state=active]:text-white",
-                  actualTheme === "dark" ? "text-gray-300" : "text-gray-700",
+                  actualTheme === "dark"
+                    ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
+                    : "bg-white text-gray-800 hover:bg-gray-50",
+                  "border border-transparent data-[state=active]:border-green-600",
                 )}
               >
                 <Shield className="h-4 w-4 mr-2" />
@@ -198,8 +211,12 @@ const Settings = () => {
               <TabsTrigger
                 value="regional"
                 className={cn(
+                  "flex items-center justify-center rounded-md px-4 py-2 min-h-[48px] transition-all w-full box-border",
                   "data-[state=active]:bg-green-500 data-[state=active]:text-white",
-                  actualTheme === "dark" ? "text-gray-300" : "text-gray-700",
+                  actualTheme === "dark"
+                    ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
+                    : "bg-white text-gray-800 hover:bg-gray-50",
+                  "border border-transparent data-[state=active]:border-green-600",
                 )}
               >
                 <Globe className="h-4 w-4 mr-2" />
@@ -208,8 +225,12 @@ const Settings = () => {
               <TabsTrigger
                 value="advanced"
                 className={cn(
+                  "flex items-center justify-center rounded-md px-4 py-2 min-h-[48px] transition-all w-full box-border",
                   "data-[state=active]:bg-green-500 data-[state=active]:text-white",
-                  actualTheme === "dark" ? "text-gray-300" : "text-gray-700",
+                  actualTheme === "dark"
+                    ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
+                    : "bg-white text-gray-800 hover:bg-gray-50",
+                  "border border-transparent data-[state=active]:border-green-600",
                 )}
               >
                 <Smartphone className="h-4 w-4 mr-2" />

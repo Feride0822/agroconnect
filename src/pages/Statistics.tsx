@@ -47,7 +47,6 @@ import axios from "axios";
 import { Base_Url } from "@/App";
 import { useTranslation } from "react-i18next";
 
-
 const Statistics = () => {
   const { actualTheme } = useTheme();
   const [selectedRegion, setSelectedRegion] = useState<string>("all");
@@ -57,34 +56,34 @@ const Statistics = () => {
   const [loadingRegions, setLoadingRegions] = useState<boolean>(true);
   const [regionalProducts, setRegionalProducts] = useState<any[]>([]);
   const [trendData, setTrendData] = useState<any[]>([]);
-  
+
   // New state for backend statistics
   const [totalProduction, setTotalProduction] = useState<number>(0);
   const [highestWPH, setHighestWPH] = useState<number>(0);
   const [loadingStats, setLoadingStats] = useState<boolean>(true);
-const [topPerformingRegion, setTopPerformingRegion] = useState<any>(null);
-const { t } = useTranslation();
+  const [topPerformingRegion, setTopPerformingRegion] = useState<any>(null);
+  const { t } = useTranslation();
 
-// ADD THIS NEW useEffect TO FETCH TOP PERFORMING REGION
-useEffect(() => {
-  const fetchTopPerformingRegion = async () => {
-    const token = localStorage.getItem("token");
-    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+  // ADD THIS NEW useEffect TO FETCH TOP PERFORMING REGION
+  useEffect(() => {
+    const fetchTopPerformingRegion = async () => {
+      const token = localStorage.getItem("token");
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
-    try {
-      const response = await axios.get(
-        `${Base_Url}/products/top-performing-region/`,
-        { headers }
-      );
-      setTopPerformingRegion(response.data);
-    } catch (error) {
-      console.error("Error fetching top performing region:", error);
-      setTopPerformingRegion(null);
-    }
-  };
+      try {
+        const response = await axios.get(
+          `${Base_Url}/products/top-performing-region/`,
+          { headers },
+        );
+        setTopPerformingRegion(response.data);
+      } catch (error) {
+        console.error("Error fetching top performing region:", error);
+        setTopPerformingRegion(null);
+      }
+    };
 
-  fetchTopPerformingRegion();
-}, []);
+    fetchTopPerformingRegion();
+  }, []);
   // Prepare comparative data
   const comparativeData = regions.map((region) => {
     const regionProducts = products.map((product) => {
@@ -141,14 +140,14 @@ useEffect(() => {
         // Fetch total production
         const totalProductionResponse = await axios.get(
           `${Base_Url}/products/total-production/`,
-          { headers }
+          { headers },
         );
         setTotalProduction(totalProductionResponse.data.total_weight || 0);
 
         // Fetch highest WPH
         const highestWPHResponse = await axios.get(
           `${Base_Url}/products/highest-wph/`,
-          { headers }
+          { headers },
         );
         setHighestWPH(highestWPHResponse.data.whp || 0);
       } catch (error) {
@@ -241,7 +240,6 @@ useEffect(() => {
       });
   }, [selectedRegion]);
 
-
   return (
     <div
       className={cn(
@@ -325,7 +323,7 @@ useEffect(() => {
                         : "text-gray-700",
                     )}
                   >
-                   {t("reg_anal")}
+                    {t("reg_anal")}
                   </label>
                   <Select
                     value={selectedRegion}
@@ -356,39 +354,68 @@ useEffect(() => {
           </Card>
 
           {/* Analytics Tabs */}
-          <Tabs defaultValue="overview" className="space-y-8">
+          <Tabs defaultValue="overview" className="w-full max-w-4xl mx-auto flex flex-col gap-3 space-y-4 sm:space-y-6">
             <TabsList
               className={cn(
-                "grid w-full grid-cols-4",
+                "grid h-full w-full grid-cols-1 gap-2 p-2 sm:grid-cols-4 sm:gap-4",
                 actualTheme === "dark"
                   ? "bg-gray-800 border-gray-700"
-                  : "bg-white border-gray-200",
+                  : "bg-gray-100 border-gray-200",
+                "rounded-lg box-border",
               )}
             >
               <TabsTrigger
                 value="overview"
-                className="data-[state=active]:bg-green-500 data-[state=active]:text-white"
+                className={cn(
+                  "flex items-center justify-center rounded-md px-4 py-2 min-h-[48px] transition-all w-full box-border",
+                  "data-[state=active]:bg-green-500 data-[state=active]:text-white",
+                  actualTheme === "dark"
+                    ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
+                    : "bg-white text-gray-800 hover:bg-gray-50",
+                  "border border-transparent data-[state=active]:border-green-600",
+                )}
               >
                 <Activity className="h-4 w-4 mr-2" />
                 {t("overview")}
               </TabsTrigger>
               <TabsTrigger
                 value="regional"
-                className="data-[state=active]:bg-green-500 data-[state=active]:text-white"
+                className={cn(
+                  "flex items-center justify-center rounded-md px-4 py-2 min-h-[48px] transition-all w-full box-border",
+                  "data-[state=active]:bg-green-500 data-[state=active]:text-white",
+                  actualTheme === "dark"
+                    ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
+                    : "bg-white text-gray-800 hover:bg-gray-50",
+                  "border border-transparent data-[state=active]:border-green-600",
+                )}
               >
                 <BarChart3 className="h-4 w-4 mr-2" />
                 {t("regional")}
               </TabsTrigger>
               <TabsTrigger
                 value="trends"
-                className="data-[state=active]:bg-green-500 data-[state=active]:text-white"
+                className={cn(
+                  "flex items-center justify-center rounded-md px-4 py-2 min-h-[48px] transition-all w-full box-border",
+                  "data-[state=active]:bg-green-500 data-[state=active]:text-white",
+                  actualTheme === "dark"
+                    ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
+                    : "bg-white text-gray-800 hover:bg-gray-50",
+                  "border border-transparent data-[state=active]:border-green-600",
+                )}
               >
                 <TrendingUp className="h-4 w-4 mr-2" />
                 {t("trends")}
               </TabsTrigger>
               <TabsTrigger
                 value="analysis"
-                className="data-[state=active]:bg-green-500 data-[state=active]:text-white"
+                className={cn(
+                  "flex items-center justify-center rounded-md px-4 py-2 min-h-[48px] transition-all w-full box-border",
+                  "data-[state=active]:bg-green-500 data-[state=active]:text-white",
+                  actualTheme === "dark"
+                    ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
+                    : "bg-white text-gray-800 hover:bg-gray-50",
+                  "border border-transparent data-[state=active]:border-green-600",
+                )}
               >
                 <Leaf className="h-4 w-4 mr-2" />
                 {t("analysis")}
@@ -413,52 +440,57 @@ useEffect(() => {
                       actualTheme === "dark" ? "text-white" : "text-gray-900",
                     )}
                   >
-                    <img src="/AgroConnect 2.png" alt="Logo" className="w-8 h-8 mr-3"/>
+                    <img
+                      src="/AgroConnect 2.png"
+                      alt="Logo"
+                      className="w-8 h-8 mr-3"
+                    />
                     {t("keys")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <div
-  className={cn(
-    "p-6 rounded-xl border border-green-500/20",
-    actualTheme === "dark"
-      ? "bg-green-900/20"
-      : "bg-green-50",
-  )}
->
-  <h3 className="font-bold text-green-600 text-lg mb-3">
-  {t("top_reg")}
-  </h3>
-  <p
-    className={cn(
-      "text-xl font-bold mb-2",
-      actualTheme === "dark"
-        ? "text-white"
-        : "text-gray-900",
-    )}
-  >
-    {loadingStats ? "Loading..." : (
-      topPerformingRegion?.region || "No data"
-    )}
-  </p>
-  <p className="text-green-600 text-sm mb-3">
-    {loadingStats ? "Loading..." : (
-      topPerformingRegion?.total_production?.toLocaleString() || "0"
-    )} 
-      {t("tons")}
-  </p>
-  <div
-    className={cn(
-      "w-full rounded-full h-2",
-      actualTheme === "dark"
-        ? "bg-green-900/30"
-        : "bg-green-200",
-    )}
-  >
-    <div className="bg-green-500 h-2 rounded-full w-4/5"></div>
-  </div>
-</div>
+                      className={cn(
+                        "p-6 rounded-xl border border-green-500/20",
+                        actualTheme === "dark"
+                          ? "bg-green-900/20"
+                          : "bg-green-50",
+                      )}
+                    >
+                      <h3 className="font-bold text-green-600 text-lg mb-3">
+                        {t("top_reg")}
+                      </h3>
+                      <p
+                        className={cn(
+                          "text-xl font-bold mb-2",
+                          actualTheme === "dark"
+                            ? "text-white"
+                            : "text-gray-900",
+                        )}
+                      >
+                        {loadingStats
+                          ? "Loading..."
+                          : topPerformingRegion?.region || "No data"}
+                      </p>
+                      <p className="text-green-600 text-sm mb-3">
+                        {loadingStats
+                          ? "Loading..."
+                          : topPerformingRegion?.total_production?.toLocaleString() ||
+                            "0"}
+                        {t("tons")}
+                      </p>
+                      <div
+                        className={cn(
+                          "w-full rounded-full h-2",
+                          actualTheme === "dark"
+                            ? "bg-green-900/30"
+                            : "bg-green-200",
+                        )}
+                      >
+                        <div className="bg-green-500 h-2 rounded-full w-4/5"></div>
+                      </div>
+                    </div>
 
                     <div
                       className={cn(
@@ -469,7 +501,7 @@ useEffect(() => {
                       )}
                     >
                       <h3 className="font-bold text-blue-600 text-lg mb-3">
-                      {t("high_eff")} (WPH)
+                        {t("high_eff")} (WPH)
                       </h3>
                       <p
                         className={cn(
@@ -482,7 +514,7 @@ useEffect(() => {
                         {loadingStats ? "Loading..." : highestWPH.toFixed(2)}
                       </p>
                       <p className="text-blue-600 text-sm mb-3">
-                      {t("ton_hec")} (Weight Per Hectare)
+                        {t("ton_hec")} (Weight Per Hectare)
                       </p>
                       <div
                         className={cn(
@@ -505,7 +537,7 @@ useEffect(() => {
                       )}
                     >
                       <h3 className="font-bold text-purple-600 text-lg mb-3">
-                      {t("total_month")}
+                        {t("total_month")}
                       </h3>
                       <p
                         className={cn(
@@ -515,10 +547,13 @@ useEffect(() => {
                             : "text-gray-900",
                         )}
                       >
-                        {loadingStats ? "Loading..." : totalProduction.toLocaleString()} hectares
+                        {loadingStats
+                          ? "Loading..."
+                          : totalProduction.toLocaleString()}{" "}
+                        hectares
                       </p>
                       <p className="text-purple-600 text-sm mb-3">
-                      {t("tot_area_m")}
+                        {t("tot_area_m")}
                       </p>
                       <div
                         className={cn(
@@ -561,13 +596,16 @@ useEffect(() => {
                       <BarChart data={regionalProducts}>
                         <CartesianGrid
                           strokeDasharray="3 3"
-                          stroke={actualTheme === "dark" ? "#374151" : "#e5e7eb"}
+                          stroke={
+                            actualTheme === "dark" ? "#374151" : "#e5e7eb"
+                          }
                         />
                         <XAxis
                           dataKey="product_name"
                           tick={{
                             fontSize: 12,
-                            fill: actualTheme === "dark" ? "#d1d5db" : "#6b7280",
+                            fill:
+                              actualTheme === "dark" ? "#d1d5db" : "#6b7280",
                           }}
                           angle={-45}
                           textAnchor="end"
@@ -576,7 +614,8 @@ useEffect(() => {
                         <YAxis
                           tick={{
                             fontSize: 12,
-                            fill: actualTheme === "dark" ? "#d1d5db" : "#6b7280",
+                            fill:
+                              actualTheme === "dark" ? "#d1d5db" : "#6b7280",
                           }}
                         />
                         <Tooltip
@@ -589,7 +628,8 @@ useEffect(() => {
                               actualTheme === "dark" ? "#1f2937" : "#ffffff",
                             border: `1px solid ${actualTheme === "dark" ? "#374151" : "#e5e7eb"}`,
                             borderRadius: "8px",
-                            color: actualTheme === "dark" ? "#ffffff" : "#000000",
+                            color:
+                              actualTheme === "dark" ? "#ffffff" : "#000000",
                           }}
                         />
                         <Bar
@@ -627,13 +667,16 @@ useEffect(() => {
                       <AreaChart data={regionalProducts}>
                         <CartesianGrid
                           strokeDasharray="3 3"
-                          stroke={actualTheme === "dark" ? "#374151" : "#e5e7eb"}
+                          stroke={
+                            actualTheme === "dark" ? "#374151" : "#e5e7eb"
+                          }
                         />
                         <XAxis
                           dataKey="product_name"
                           tick={{
                             fontSize: 12,
-                            fill: actualTheme === "dark" ? "#d1d5db" : "#6b7280",
+                            fill:
+                              actualTheme === "dark" ? "#d1d5db" : "#6b7280",
                           }}
                           angle={-45}
                           textAnchor="end"
@@ -642,7 +685,8 @@ useEffect(() => {
                         <YAxis
                           tick={{
                             fontSize: 12,
-                            fill: actualTheme === "dark" ? "#d1d5db" : "#6b7280",
+                            fill:
+                              actualTheme === "dark" ? "#d1d5db" : "#6b7280",
                           }}
                         />
                         <Tooltip
@@ -655,7 +699,8 @@ useEffect(() => {
                               actualTheme === "dark" ? "#1f2937" : "#ffffff",
                             border: `1px solid ${actualTheme === "dark" ? "#374151" : "#e5e7eb"}`,
                             borderRadius: "8px",
-                            color: actualTheme === "dark" ? "#ffffff" : "#000000",
+                            color:
+                              actualTheme === "dark" ? "#ffffff" : "#000000",
                           }}
                         />
                         <Area
@@ -699,7 +744,12 @@ useEffect(() => {
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="month" />
                         <YAxis />
-                        <Tooltip formatter={(value: number) => [`${value} tons`, "Production"]} />
+                        <Tooltip
+                          formatter={(value: number) => [
+                            `${value} tons`,
+                            "Production",
+                          ]}
+                        />
                         <Line
                           type="monotone"
                           dataKey="expecting_weight"
@@ -730,7 +780,11 @@ useEffect(() => {
                       actualTheme === "dark" ? "text-white" : "text-gray-900",
                     )}
                   >
-                    <img src="/AgroConnect 2.png" alt="Logo" className="w-8 h-8 mr-3"/>
+                    <img
+                      src="/AgroConnect 2.png"
+                      alt="Logo"
+                      className="w-8 h-8 mr-3"
+                    />
                     {t("market")}
                   </CardTitle>
                 </CardHeader>
@@ -738,7 +792,7 @@ useEffect(() => {
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <div>
                       <h3 className="text-xl font-bold text-orange-600 mb-6">
-                      {t("growth")}
+                        {t("growth")}
                       </h3>
                       <div className="space-y-4">
                         {regions
@@ -778,7 +832,7 @@ useEffect(() => {
                                 {t("ton_ha")}
                               </p>
                               <p className="text-orange-600 text-sm">
-                              {t("potential")}
+                                {t("potential")}
                               </p>
                               <div
                                 className={cn(
@@ -800,7 +854,7 @@ useEffect(() => {
 
                     <div>
                       <h3 className="text-xl font-bold text-green-600 mb-6">
-                      {t("high_per")}
+                        {t("high_per")}
                       </h3>
                       <div className="space-y-4">
                         {regions
@@ -840,7 +894,7 @@ useEffect(() => {
                                 {t("ton_ha")}
                               </p>
                               <p className="text-green-600 text-sm">
-                              {t("excellent")}
+                                {t("excellent")}
                               </p>
                               <div
                                 className={cn(

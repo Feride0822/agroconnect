@@ -97,7 +97,11 @@ const Profile = () => {
   }, [token]);
 
   const handleDeleteAccount = async () => {
-    if (!confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+    if (
+      !confirm(
+        "Are you sure you want to delete your account? This action cannot be undone.",
+      )
+    ) {
       return;
     }
 
@@ -175,12 +179,12 @@ const Profile = () => {
 
     try {
       const response = await fetch(`${Base_Url}/accounts/profile/`, {
-        method: "PUT", // ✅ Correct method explicitly set
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // ✅ Auth token explicitly included
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(updates), // ✅ send updated profile data explicitly
+        body: JSON.stringify(updates),
       });
 
       if (!response.ok) {
@@ -271,7 +275,7 @@ const Profile = () => {
               Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
-              user_id: profile.id, // ✅ explicitly included user ID here
+              user_id: profile.id,
               new_email: formData.email,
             }),
           },
@@ -283,7 +287,7 @@ const Profile = () => {
 
         navigate("/profile/change-email", {
           state: { newEmail: formData.email, userId: profile.id },
-        }); // explicitly pass userId as well
+        });
       } catch (error) {
         console.error("Error initiating email change:", error);
         setError("Failed to send verification code to new email.");
@@ -422,7 +426,7 @@ const Profile = () => {
             )}
           >
             <CardContent className="pt-8">
-              <div className="flex flex-col lg:flex-row items-start lg:items-center space-y-6 lg:space-y-0 lg:space-x-8">
+              <div className="flex flex-col sm:flex-row gap-y-2 items-start lg:items-center space-y-6 lg:space-y-0 lg:space-x-8">
                 <div className="relative">
                   <div className="absolute inset-0 bg-green-500 rounded-full blur opacity-50"></div>
                   <Avatar
@@ -484,7 +488,9 @@ const Profile = () => {
                         >
                           {profile.completedTransactions}
                         </p>
-                        <p className="text-green-500 text-sm">{t("transactions")}</p>
+                        <p className="text-green-500 text-sm">
+                          {t("transactions")}
+                        </p>
                       </div>
                       <div className="text-center">
                         <p
@@ -497,7 +503,9 @@ const Profile = () => {
                         >
                           {profile.totalVolume}t
                         </p>
-                        <p className="text-green-500 text-sm">{t("total_volume")}</p>
+                        <p className="text-green-500 text-sm">
+                          {t("total_volume")}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -556,7 +564,6 @@ const Profile = () => {
                             "absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent",
                             actualTheme === "dark"
                               ? "border-t-gray-800"
-                              
                               : "border-t-gray-900",
                           )}
                         />
@@ -609,7 +616,8 @@ const Profile = () => {
                             : "bg-gray-900 text-white",
                         )}
                       >
-                        {t("joined")} {new Date(profile.date_joined).toLocaleDateString()}
+                        {t("joined")}{" "}
+                        {new Date(profile.date_joined).toLocaleDateString()}
                         <div
                           className={cn(
                             "absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent",
@@ -627,46 +635,78 @@ const Profile = () => {
           </Card>
 
           {/* Profile Tabs */}
-          <Tabs defaultValue="personal" className="space-y-8">
+          <Tabs
+            defaultValue="personal"
+            className="w-full max-w-4xl mx-auto flex flex-col gap-3 space-y-4 sm:space-y-6"
+          >
             <TabsList
               className={cn(
-                "grid w-full grid-cols-4",
+                "grid h-full w-full grid-cols-1 gap-2 p-2 sm:grid-cols-4 sm:gap-4",
                 actualTheme === "dark"
                   ? "bg-gray-800 border-gray-700"
-                  : "bg-white border-gray-200",
+                  : "bg-gray-100 border-gray-200",
+                "rounded-lg box-border",
               )}
             >
               <TabsTrigger
                 value="personal"
-                className="data-[state=active]:bg-green-500 data-[state=active]:text-white"
+                className={cn(
+                  "flex items-center justify-center rounded-md px-4 py-2 min-h-[48px] transition-all w-full box-border",
+                  "data-[state=active]:bg-green-500 data-[state=active]:text-white",
+                  actualTheme === "dark"
+                    ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
+                    : "bg-white text-gray-800 hover:bg-gray-50",
+                  "border border-transparent data-[state=active]:border-green-600",
+                )}
               >
                 <User className="h-4 w-4 mr-2" />
                 {t("personal_info")}
               </TabsTrigger>
               <TabsTrigger
                 value="activity"
-                className="data-[state=active]:bg-green-500 data-[state=active]:text-white"
+                className={cn(
+                  "flex items-center justify-center rounded-md px-4 py-2 min-h-[48px] transition-all w-full box-border",
+                  "data-[state=active]:bg-green-500 data-[state=active]:text-white",
+                  actualTheme === "dark"
+                    ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
+                    : "bg-white text-gray-800 hover:bg-gray-50",
+                  "border border-transparent data-[state=active]:border-green-600",
+                )}
               >
                 <Activity className="h-4 w-4 mr-2" />
                 {t("activity")}
               </TabsTrigger>
               <TabsTrigger
                 value="analytics"
-                className="data-[state=active]:bg-green-500 data-[state=active]:text-white"
+                className={cn(
+                  "flex items-center justify-center rounded-md px-4 py-2 min-h-[48px] transition-all w-full box-border",
+                  "data-[state=active]:bg-green-500 data-[state=active]:text-white",
+                  actualTheme === "dark"
+                    ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
+                    : "bg-white text-gray-800 hover:bg-gray-50",
+                  "border border-transparent data-[state=active]:border-green-600",
+                )}
               >
                 <BarChart3 className="h-4 w-4 mr-2" />
                 {t("analytics")}
               </TabsTrigger>
               <TabsTrigger
                 value="settings"
-                className="data-[state=active]:bg-green-500 data-[state=active]:text-white"
+                className={cn(
+                  "flex items-center justify-center rounded-md px-4 py-2 min-h-[48px] transition-all w-full box-border",
+                  "data-[state=active]:bg-green-500 data-[state=active]:text-white",
+                  actualTheme === "dark"
+                    ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
+                    : "bg-white text-gray-800 hover:bg-gray-50",
+                  "border border-transparent data-[state=active]:border-green-600",
+                )}
               >
                 <Target className="h-4 w-4 mr-2" />
                 {t("settings")}
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="personal" className="space-y-8">
+            <TabsContent value="personal" className="w-full h-full space-y-4">
               <Card
                 className={cn(
                   actualTheme === "dark"
@@ -677,7 +717,7 @@ const Profile = () => {
                 <CardHeader className="flex flex-row items-center justify-between">
                   <CardTitle
                     className={cn(
-                      "text-2xl flex items-center",
+                      "text-xl sm:text-2xl flex items-center",
                       actualTheme === "dark" ? "text-white" : "text-gray-900",
                     )}
                   >
@@ -1227,7 +1267,7 @@ const Profile = () => {
                         )}
                       >
                         <Shield className="h-4 w-4 mr-2" />
-                        {t("change_password")}
+                        {t("change_pass")}
                       </Button>
                       <Button
                         className={cn(
@@ -1256,26 +1296,26 @@ const Profile = () => {
 
                   <div>
                     <h3 className="text-xl font-semibold mb-6 text-red-500">
-                    {t("danger_z")}
+                      {t("danger_z")}
                     </h3>
                     <Button
-  variant="destructive"
-  className="bg-red-600 hover:bg-red-700 text-white"
-  onClick={handleDeleteAccount}
-  disabled={isDeleting}
->
-  <Trash2 className="h-4 w-4 mr-2" />
-  {isDeleting ? "Deleting..." : "Delete Account"}
-</Button>
+                      variant="destructive"
+                      className="bg-red-600 hover:bg-red-700 text-white"
+                      onClick={handleDeleteAccount}
+                      disabled={isDeleting}
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      {isDeleting ? "Deleting..." : "Delete Account"}
+                    </Button>
                     <p
                       className={cn(
                         "text-sm mt-3",
                         actualTheme === "dark"
                           ? "text-gray-400"
                           : "text-gray-500",
-                      )}                   
-                    >{t("action")}
-                    
+                      )}
+                    >
+                      {t("action")}
                     </p>
                   </div>
                 </CardContent>

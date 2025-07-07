@@ -93,13 +93,15 @@ const Sidebar = () => {
         { path: "/settings", label: t("settings"), icon: Settings },
       ];
 
-  const sidebarClasses = cn(
-    "fixed right-0 top-0 h-full w-1/4 lg:w-1/5 z-50 transition-transform duration-300 ease-in-out",
-    actualTheme === "dark"
-      ? "bg-gray-900 border-l border-gray-700"
-      : "bg-white border-l border-gray-200",
-    isOpen ? "translate-x-0" : "translate-x-full",
-  );
+      const sidebarClasses = cn(
+        "fixed top-0 right-0 h-full z-50 w-64 transition-transform duration-300 ease-in-out",
+        actualTheme === "dark"
+          ? "bg-gray-900 border-l border-gray-700"
+          : "bg-white border-l border-gray-200",
+        isOpen ? "translate-x-0" : "translate-x-full",
+        "md:translate-x-0" // Always visible on desktop
+      );
+      
   useEffect(() => {
     if (isOpen) {
       document.body.classList.add("overflow-hidden");
@@ -116,18 +118,18 @@ const Sidebar = () => {
     <>
       {/* Mobile Toggle Button */}
       <Button
-        onClick={() => setIsOpen(!isOpen)}
-        className={cn(
-          "fixed top-4 right-4 z-50 md:hidden",
-          actualTheme === "dark"
-            ? "bg-green-600 hover:bg-green-700"
-            : "bg-green-500 hover:bg-green-600",
-          "text-white shadow-lg",
-        )}
-        size="sm"
-      >
-        {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-      </Button>
+    onClick={() => setIsOpen(!isOpen)}
+    className={cn(
+      "fixed top-4 right-4 z-50 md:hidden",
+      actualTheme === "dark"
+        ? "bg-green-600 hover:bg-green-700"
+        : "bg-green-500 hover:bg-green-600",
+      "text-white shadow-lg"
+    )}
+    size="sm"
+  >
+    {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+  </Button>
 
       {/* Overlay */}
       {isOpen && (
@@ -226,7 +228,7 @@ const Sidebar = () => {
       </aside>
 
       {/* Main content spacing for desktop */}
-      <div className="hidden md:block w-80" />
+      <div className="hidden md:block md:mr-64" />
     </>
   );
 };

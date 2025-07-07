@@ -250,7 +250,7 @@ const Index = () => {
     >
       <Sidebar />
 
-      <div className="flex-1 md:mr-80">
+      <div className="flex-1 md:mr-[16rem]">
         {/* Hero Section with Animation */}
         <section
           className={cn(
