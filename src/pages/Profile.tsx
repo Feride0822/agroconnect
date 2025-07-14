@@ -138,18 +138,18 @@ const Profile = () => {
           throw new Error("No user or token available from store");
         }
         const response = await fetch(`${Base_Url}/accounts/profile/`, {
-          // corrected URL explicitly
+          
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // correct JWT token explicitly
+            Authorization: `Bearer ${token}`, 
           },
         });
         if (!response.ok) {
           throw new Error("Failed to fetch profile data");
         }
         const profileData = await response.json(); // directly assign profile data
-        setProfile(profileData); // clearly fixed this step
+        setProfile(profileData); 
       } catch (error) {
         setError("Failed to fetch profile data");
         console.log("Error fetching profile data:", error);
@@ -196,7 +196,7 @@ const Profile = () => {
       setSaveStatus("success");
       setIsEditing(false);
 
-      // Optional: clear success message after a short delay
+      // clear success message after a short delay
       setTimeout(() => setSaveStatus("idle"), 3000);
     } catch (error) {
       console.error("Error saving profile:", error);
@@ -714,7 +714,7 @@ const Profile = () => {
                     : "bg-white border-gray-200",
                 )}
               >
-                <CardHeader className="flex flex-row items-center justify-between">
+                <CardHeader className="flex flex-col md:flex-row items-center justify-between">
                   <CardTitle
                     className={cn(
                       "text-xl sm:text-2xl flex items-center",
@@ -741,7 +741,7 @@ const Profile = () => {
                       </Badge>
                     )}
                   </CardTitle>
-                  <div className="flex space-x-2">
+                  <div className="flex flex-col md:flex-row space-y-2 space-x-2">
                     {isEditing && (
                       <Button
                         onClick={handleCancel}

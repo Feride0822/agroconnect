@@ -244,7 +244,7 @@ const Index = () => {
   return (
     <div
       className={cn(
-        "min-h-screen transition-colors duration-300",
+        "min-h-screen w-full transition-colors duration-300",
         actualTheme === "dark" ? "bg-gray-900" : "bg-gray-50",
       )}
     >
@@ -254,7 +254,7 @@ const Index = () => {
         {/* Hero Section with Animation */}
         <section
           className={cn(
-            "relative py-20 px-4 overflow-hidden",
+            "w-full relative py-20 px-4 overflow-hidden",
             actualTheme === "dark"
               ? "bg-gradient-to-br from-gray-900 via-green-900/20 to-gray-900"
               : "bg-gradient-to-br from-green-50 via-emerald-100 to-green-50",
@@ -291,7 +291,7 @@ const Index = () => {
 
               <h1
                 className={cn(
-                  "text-5xl md:text-7xl font-bold mb-8 transition-all duration-1000 delay-300",
+                  "text-4xl md:text-6xl font-bold mb-8 transition-all duration-1000 delay-300",
                   actualTheme === "dark" ? "text-white" : "text-gray-900",
                   isVisible
                     ? "transform translate-y-0 opacity-100"
@@ -324,7 +324,7 @@ const Index = () => {
 
               <div
                 className={cn(
-                  "flex flex-col sm:flex-row gap-6 justify-center transition-all duration-1000 delay-700",
+                  "flex flex-col sm:flex-row gap-6 justify-center items-center transition-all duration-1000 delay-700",
                   isVisible
                     ? "transform translate-y-0 opacity-100"
                     : "transform translate-y-10 opacity-0",
@@ -333,7 +333,7 @@ const Index = () => {
                 <Link to="/register">
                   <Button
                     size="lg"
-                    className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-10 py-6 text-xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
+                    className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 py-6 text-xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
                   >
                     <Zap className="mr-3 h-6 w-6" />
                     {t("join_pl")}
@@ -345,7 +345,7 @@ const Index = () => {
                     size="lg"
                     variant="outline"
                     className={cn(
-                      "px-10 py-6 text-xl border-2 hover:scale-105 transition-all duration-300",
+                      "px-8 py-6 text-xl border-2 hover:scale-105 transition-all duration-300",
                       actualTheme === "dark"
                         ? "border-green-600 text-green-400 hover:bg-green-600/10"
                         : "border-green-500 text-green-600 hover:bg-green-50",
@@ -512,7 +512,7 @@ const Index = () => {
             <div className="text-center mb-12">
               <h2
                 className={cn(
-                  "text-4xl font-bold mb-4",
+                  "text-3xl font-bold mb-4",
                   actualTheme === "dark" ? "text-white" : "text-gray-900",
                 )}
               >
@@ -605,7 +605,7 @@ const Index = () => {
             <div className="text-center mb-16">
               <h2
                 className={cn(
-                  "text-5xl font-bold mb-6",
+                  "text-4xl font-bold mb-6",
                   actualTheme === "dark" ? "text-white" : "text-gray-900",
                 )}
               >
@@ -703,7 +703,7 @@ const Index = () => {
             <div className="text-center mb-16">
               <h2
                 className={cn(
-                  "text-4xl font-bold mb-4",
+                  "text-3xl font-bold mb-4",
                   actualTheme === "dark" ? "text-white" : "text-gray-900",
                 )}
               >{t("suc_str")}
@@ -904,7 +904,7 @@ const Index = () => {
               <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 rounded-full mb-6">
                 <Zap className="h-10 w-10 text-white" />
               </div>
-              <h2 className="text-5xl font-bold text-white mb-6">
+              <h2 className="text-4xl font-bold text-white mb-6">
               {t("ready_tr")}
               </h2>
               <p className="text-xl text-green-100 mb-8 max-w-3xl mx-auto">
@@ -912,7 +912,7 @@ const Index = () => {
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
               <Link to="/register">
                 <Button
                   size="lg"
@@ -950,21 +950,20 @@ const Index = () => {
                 <div className="flex items-center space-x-3 mb-6">
                   <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-green-600">
                   <img src="/AgroConnect 3.png" alt="Logo" />
-                    {/* <Leaf className="h-6 w-6 text-white" /> */}
                   </div>
                   <div>
                     <span className="text-2xl font-bold text-white">
                       AgroConnect
                     </span>
                     <p className="text-green-400 text-sm">
-                    {t("agri_pl")}
+                    {t("agri_platform")}
                     </p>
                   </div>
                 </div>
                 <p className="text-gray-300 max-w-md mb-6 leading-relaxed">
                 {t("empowering")}
                 </p>
-                <div className="flex space-x-4">
+                <div className="flex flex-col md:flex-row items-center space-x-4 space-y-4">
                   <Button
                     size="sm"
                     variant="outline"
